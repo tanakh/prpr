@@ -28,3 +28,11 @@ fn invalid_rust_code_is_located() {
         " --> g.peg:2:14"
     );
 }
+
+#[test]
+fn unknown_bindings_are_located() {
+    assert_eq!(
+        error_location("a: String = x:\"a\" {\n    format!(\"{}{}\", #x, @y.start)\n}\n"),
+        " --> g.peg:2:25"
+    );
+}

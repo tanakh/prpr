@@ -1,7 +1,6 @@
 //! Standalone Rust files generated from grammar files.
 
-use crate::ast::Span;
-use crate::{Diagnostic, Options, TextSource};
+use crate::{Diagnostic, Options, Source, TextSource};
 
 /// Where generated code finds the runtime.
 #[derive(Clone, Debug)]
@@ -36,14 +35,8 @@ pub fn generate(text: &str, runtime: &Runtime) -> Result<String, Vec<Diagnostic>
     // The compiler of a proc-macro would report invalid Rust code in the grammar; here, `syn`
     // does, at the token where it found the error.
     let file: syn::File = syn::parse2(tokens).map_err(|e| {
-        let d = match src.offset(e.span()) {
-            Some(offset) => Diagnostic::error(
-                Span {
-                    start: offset,
-                    end: offset + e.span().byte_range().len(),
-                },
-                format!("invalid Rust code: {e}"),
-            ),
+        let d = match src.locate(e.span()) {
+            Some(span) => Diagnostic::error(span, format!("invalid Rust code: {e}")),
             None => Diagnostic::error(
                 Default::default(),
                 format!("internal error: generated code does not parse: {e}"),

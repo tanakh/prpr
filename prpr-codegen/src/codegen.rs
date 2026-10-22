@@ -1093,7 +1093,7 @@ impl Gen<'_> {
                     let var = span_var("_");
                     stmts.push(q!(let #var = #rt::span(__start, __pos);));
                 }
-                let code = rewrite_action(code, &names);
+                let code = self.rewrite_action(code, &names);
                 // The value of a predicate is not the value of the sequence.
                 let ret = ret.filter(|_| !pred).map(|ty| q!(-> #ty));
                 q!(Ok(((|| #ret #code)(), __pos)))
@@ -1228,45 +1228,57 @@ fn scan_action(tokens: TokenStream, names: &[&str], in_quote: bool, usage: &mut 
     }
 }
 
-// Replaces `#x`, `@x`, `#_` and `@_` with the variables that hold them.
-fn rewrite_action(tokens: TokenStream, names: &[&str]) -> TokenStream {
-    let tts: Vec<TokenTree> = tokens.into_iter().collect();
-    let mut out = Vec::new();
-    let mut i = 0;
-    while i < tts.len() {
-        if let Some((sigil, id)) = sigil_at(&tts, i) {
-            let name = id.to_string();
-            let var = if name == "_" || names.contains(&name.as_str()) {
-                let var = if sigil == '#' {
-                    text_var(&name)
+impl Gen<'_> {
+    // Replaces `#x`, `@x`, `#_` and `@_` with the variables that hold them.
+    fn rewrite_action(&self, tokens: TokenStream, names: &[&str]) -> TokenStream {
+        let tts: Vec<TokenTree> = tokens.into_iter().collect();
+        let mut out = Vec::new();
+        let mut i = 0;
+        while i < tts.len() {
+            if let Some((sigil, id)) = sigil_at(&tts, i) {
+                let name = id.to_string();
+                if name == "_" || names.contains(&name.as_str()) {
+                    let var = if sigil == '#' {
+                        text_var(&name)
+                    } else {
+                        span_var(&name)
+                    };
+                    let span = TokenSpan::mixed_site().located_at(id.span());
+                    out.push(TokenTree::Ident(Ident::new(&var.to_string(), span)));
                 } else {
-                    span_var(&name)
-                };
-                let span = TokenSpan::mixed_site().located_at(id.span());
-                TokenStream::from(TokenTree::Ident(Ident::new(&var.to_string(), span)))
-            } else {
-                let message =
-                    format!("`{sigil}{name}` does not refer to a binding of this sequence");
-                quote_spanned!(id.span()=> ::core::compile_error!(#message))
-            };
-            out.extend(var);
-            i += 2;
-            continue;
-        }
-        match &tts[i] {
-            TokenTree::Group(g) => {
-                let stream = if is_quote_invocation(&tts[..i]) {
-                    g.stream()
-                } else {
-                    rewrite_action(g.stream(), names)
-                };
-                let mut group = Group::new(g.delimiter(), stream);
-                group.set_span(g.span());
-                out.push(TokenTree::Group(group));
+                    let message =
+                        format!("`{sigil}{name}` does not refer to a binding of this sequence");
+                    match (self.src.locate(tts[i].span()), self.src.locate(id.span())) {
+                        (Some(start), Some(end)) => self.error(Diagnostic::error(
+                            Span {
+                                start: start.start,
+                                end: end.end,
+                            },
+                            message,
+                        )),
+                        _ => {
+                            out.extend(quote_spanned!(id.span()=> ::core::compile_error!(#message)))
+                        }
+                    }
+                }
+                i += 2;
+                continue;
             }
-            tt => out.push(tt.clone()),
+            match &tts[i] {
+                TokenTree::Group(g) => {
+                    let stream = if is_quote_invocation(&tts[..i]) {
+                        g.stream()
+                    } else {
+                        self.rewrite_action(g.stream(), names)
+                    };
+                    let mut group = Group::new(g.delimiter(), stream);
+                    group.set_span(g.span());
+                    out.push(TokenTree::Group(group));
+                }
+                tt => out.push(tt.clone()),
+            }
+            i += 1;
         }
-        i += 1;
+        out.into_iter().collect()
     }
-    out.into_iter().collect()
 }
