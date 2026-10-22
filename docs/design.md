@@ -56,6 +56,9 @@ grammar!{}  : TokenStream --(rebuild text from token positions)--> SourceText --
   When positions are unusable (e.g. tokens produced by `macro_rules!`), tokens are separated by single spaces, using `Punct` spacing to keep joint punctuation together.
   The grammar language never depends on whitespace between tokens, so the meaning does not change.
 * Diagnostics are byte ranges of the text. The macro maps them back to token spans and emits `compile_error!` with the start and end tokens spanned separately (the technique `syn` uses), which works without the unstable `Span::join`.
+* For a file, Rust fragments are lexed at their line and column in the grammar (the text before them is replaced by padding), so `Source::locate` maps their tokens back to byte ranges.
+  Syntax errors that `syn` finds in them and unknown `#x`/`@x` are then reported as diagnostics at the grammar; inside a macro, the compiler reports them at the original tokens.
+  Type errors in files are reported by the compiler in the generated module, since Rust has no `#line` directive.
 * `SourceText` is public (`prpr-runtime`, feature `proc-macro2`), so that users can parse the input of their own proc-macros with a prpr parser and report errors at precise spans.
 
 ### Grammar language
