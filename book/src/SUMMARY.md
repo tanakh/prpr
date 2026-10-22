@@ -21,20 +21,20 @@
 
 # Generating code
 
-- [The generated API]()
-- [Grammar files and the prpr command]()
-- [Build scripts]()
-- [Parsing proc-macro input]()
+- [The generated API](codegen/api.md)
+- [Grammar files and the prpr command](codegen/cli.md)
+- [Build scripts](codegen/build-scripts.md)
+- [Parsing proc-macro input](codegen/proc-macros.md)
 
 # Cookbook
 
-- [Identifiers and keywords]()
-- [Operators and precedence]()
-- [Comments]()
-- [Syntax trees with spans]()
+- [Identifiers and keywords](cookbook/keywords.md)
+- [Operators and precedence](cookbook/precedence.md)
+- [Comments](cookbook/comments.md)
+- [Syntax trees with spans](cookbook/spans.md)
 
 # Reference
 
-- [Grammar syntax]()
-- [Diagnostics]()
-- [The grammar of grammars]()
+- [Grammar syntax](reference/syntax.md)
+- [Diagnostics](reference/diagnostics.md)
+- [The grammar of grammars](reference/prpr-peg.md)

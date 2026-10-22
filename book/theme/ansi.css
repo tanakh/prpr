@@ -11,6 +11,9 @@ html.light,
 html.rust {
     --ansi-red: #c62828;
     --ansi-bright-red: #e53935;
+    --ansi-bright-green: #2e7d32;
+    --ansi-bright-blue: #1565c0;
+    --ansi-bright-cyan: #00838f;
     --ansi-magenta: #8e24aa;
     --ansi-cyan: #00838f;
     --ansi-gray-240: #5f5f5f;
@@ -23,6 +26,9 @@ html.navy,
 html.ayu {
     --ansi-red: #ff6b6b;
     --ansi-bright-red: #ff5252;
+    --ansi-bright-green: #69f0ae;
+    --ansi-bright-blue: #64b5f6;
+    --ansi-bright-cyan: #4dd0e1;
     --ansi-magenta: #e07ff0;
     --ansi-cyan: #4dd0e1;
     --ansi-gray-240: #808080;
@@ -33,6 +39,10 @@ html.ayu {
 .ansi-31 { color: var(--ansi-red); }
 .ansi-35 { color: var(--ansi-magenta); }
 .ansi-36 { color: var(--ansi-cyan); }
+.ansi-91 { color: var(--ansi-bright-red); }
+.ansi-92 { color: var(--ansi-bright-green); }
+.ansi-94 { color: var(--ansi-bright-blue); }
+.ansi-96 { color: var(--ansi-bright-cyan); }
 .ansi-38-5-9 { color: var(--ansi-bright-red); }
 .ansi-38-5-240 { color: var(--ansi-gray-240); }
 .ansi-38-5-246 { color: var(--ansi-gray-246); }

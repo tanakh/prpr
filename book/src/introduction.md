@@ -29,7 +29,7 @@ The grammar above defines two rules.
 
 * **Grammars in Rust or in files.**
   A grammar can be written inline with `grammar!`, or in a file that the `prpr` command compiles into a Rust module.
-  Either way, mistakes in a grammar, and type errors in the Rust code inside it, are reported at the right place in the grammar.
+  Either way, mistakes in a grammar are reported at the right place in the grammar, and with `grammar!`, so are type errors in the Rust code inside it.
 * **No separate lexer.**
   Whitespace is skipped between tokens automatically, `atom` rules describe tokens, and tokens must be delimited, so `ifx` is not the keyword `if` followed by `x`.
 * **Useful error messages.**
@@ -50,4 +50,7 @@ The grammar above defines two rules.
 
 [Getting started](getting-started/installation.md) walks through two complete parsers: a calculator and a JSON parser.
 The [Guide](guide/rules.md) then explains each part of prpr in depth: rules, expressions, values, whitespace, errors, memoization, binary input and composition.
+[Generating code](codegen/api.md) describes the generated code and the ways to generate it: from grammar files, in build scripts, and in proc-macros.
+The [Cookbook](cookbook/keywords.md) shows how to handle common tasks, such as keywords, operator precedence, comments and syntax trees with spans.
+The [Reference](reference/syntax.md) summarizes the syntax of grammars and the errors prpr reports.
 The examples in this book are tested, so they work as they are written.
