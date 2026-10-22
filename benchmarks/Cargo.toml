@@ -1,0 +1,32 @@
+# Benchmarks of prpr against other parser generators and parser combinator libraries.
+# This is a separate workspace so that its dependencies stay out of the main one.
+[package]
+name = "prpr-benchmarks"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+prpr = { path = ".." }
+peg = "0.8.6"
+pest = "2.9.4"
+pest_derive = "2.9.4"
+nom = "8.0.0"
+winnow = "1.0.4"
+serde_json = "1.0.154"
+
+[dev-dependencies]
+criterion = "0.8.2"
+
+[[bench]]
+name = "json"
+harness = false
+
+# Symbols for profilers.
+[profile.bench]
+debug = true
+
+[profile.release]
+debug = true
