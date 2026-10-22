@@ -43,4 +43,4 @@ assert_eq!(expr("1 +").unwrap_err().to_string(), "expected one of `(` or number,
 
 ## License
 
-MIT
+[MIT](LICENSE)
