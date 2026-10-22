@@ -158,6 +158,11 @@ A single character (a class or `.`) is not a word and is not checked.
 
 With byte input there are no implicit whitespace and no word characters, so no delimiters, unless the grammar defines them.
 
+Rationale: implicit whitespace, and delimiters after literals, are plain PEG (`spaces "if" !word_char`), but the delimiter check after an atom is not: it depends on the last character the atom matched, and PEGs have no lookbehind.
+Making syntactic rules pure syntactic sugar would take a lookbehind primitive in the core, which is deliberately not added: the core stays the plain PEG operators.
+Delimiting tokens correctly is what makes lexer-less PEG parsers tedious in practice, so prpr does it implicitly in syntactic rules instead, while atoms remain plain PEG.
+If a way to express the check in plain PEG is found (for example with built-in rules), the implicit check is to be replaced by it; it may well not exist.
+
 ### Memoization
 
 * Nothing is memoized unless the rule has `#[memo]`.
@@ -251,7 +256,7 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 3. `#[memo]` and benchmarks (done); the memo lint and profiling.
 4. Byte input, public `SourceText`, cross-grammar references (done); more diagnostics tests.
 
-Next: warnings from the macro (stable proc-macros cannot emit them directly), `include_grammar!("file.peg")`, a `build.rs` builder.
+Next: `grammar!` inside function bodies (the generated module `rules` cannot refer to items defined in a function; `rules` could become a type with associated functions instead), warnings from the macro (stable proc-macros cannot emit them directly), `include_grammar!("file.peg")`, a `build.rs` builder.
 
 Later: cut operator (which would also sharpen errors such as `[z-a]`), left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
 
