@@ -7262,7 +7262,9 @@ fn __rule_class_char<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<char> {
-    '__l190: {
+    let __at = __pos;
+    let __saved = __cx.push_label(__at, "character");
+    let __r = '__l190: {
         if let Ok(__r) = '__l192: {
             let __pos = match __cx.lit(__pos, "b'") {
                 Ok(__p) => __p,
@@ -7333,7 +7335,9 @@ fn __rule_class_char<'i>(
                 }
             }
         }
-    }
+    };
+    __cx.pop_label(__saved);
+    __r
 }
 /// Parses the whole input with the rule `class_char`.
 #[allow(dead_code)]

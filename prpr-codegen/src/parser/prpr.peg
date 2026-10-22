@@ -348,6 +348,7 @@ atom class_item: (char, char) = lo:class_char hi:(spaces "-" spaces c:class_char
     }
 }
 
+#[label = "character"]
 atom class_char: char
     = "b'" c:byte_char_body { c as char }
     / "'" c:char_body { c }
