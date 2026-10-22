@@ -181,6 +181,10 @@ rule: Rule = attrs:outer_attr* vis:vis? is_atom:"atom"? name:ident_raw ty:(":" !
 // Whether a rule starts here: `name =` or `name: Type =`.
 rule_header = ident_raw (":" !":" ty)? <"=" ![=>]>
 
+// Whether the next item starts here, where a sequence ends. Other Rust items start with keywords,
+// which are not expressions.
+item_start = rule_header / "macro_rules" "!" / "union" ident_raw ("{" / "<")
+
 // Types: a subset of Rust types that is enough to find where a type ends.
 
 ty_span: Span = ty { @_ }
@@ -223,7 +227,7 @@ choice: Expr = first:sequence rest:(choice_sep s:sequence { s })* { make_choice(
 atom choice_sep = "/" !['/' '*']
 
 #[label = "expression"]
-sequence: Expr = elems:(!rule_header e:element { e })* action:action? &{
+sequence: Expr = elems:(!item_start e:element { e })* action:action? &{
     make_sequence(elems, @elems, action, @_)
 }
 

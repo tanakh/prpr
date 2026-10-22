@@ -58,6 +58,18 @@ mod tests {
     }
 
     #[test]
+    fn items_after_rules_without_actions() {
+        let s = "a = b\nmacro_rules! m { () => {} }\nb = c\nunion U { x: u8 }\nc = \"x\"";
+        let g = parse_ok(s);
+        assert_eq!(rules(&g).len(), 3);
+        assert!(
+            rules(&g)
+                .iter()
+                .all(|r| matches!(r.body.kind, ExprKind::Ref(_) | ExprKind::Lit(_)))
+        );
+    }
+
+    #[test]
     fn rust_items() {
         let s = "use foo::{a, b};\n#[derive(Debug)]\nstruct S { x: [u8; 4] }\nconst X: S = S { x: [0; 4] };\nfn f() -> u8 { 0 }\nr = \"a\"";
         let g = parse_ok(s);

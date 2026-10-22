@@ -3224,19 +3224,158 @@ fn rule_header<'i>(
 }
 #[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
+fn __rule_item_start<'i>(
+    __cx: &mut __prpr_runtime::Cx<'i, str>,
+    __m: &mut Memo<'i>,
+    __pos: usize,
+) -> __prpr_runtime::PResult<()> {
+    match '__l78: {
+        if let Ok(__r) = match __rule_rule_header(__cx, __m, __pos) {
+            Ok((_, __p)) => Ok(__p),
+            Err(__f) => Err(__f),
+        } {
+            break '__l78 Ok(__r);
+        }
+        if let Ok(__r) = '__l81: {
+            let __pos = match {
+                let __pos = __skip(__cx, __m, __pos);
+                match __cx.lit(__pos, "macro_rules") {
+                    Ok(__r) => {
+                        if __delimited(__cx, __m, __pos, __r) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => Err(__f),
+                }
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l81 Err(__f),
+            };
+            let __pos = match {
+                let __pos = __skip(__cx, __m, __pos);
+                match __cx.lit(__pos, "!") {
+                    Ok(__r) => {
+                        if __delimited(__cx, __m, __pos, __r) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => Err(__f),
+                }
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l81 Err(__f),
+            };
+            Ok(__pos)
+        } {
+            break '__l78 Ok(__r);
+        }
+        '__l79: {
+            let __pos = match {
+                let __pos = __skip(__cx, __m, __pos);
+                match __cx.lit(__pos, "union") {
+                    Ok(__r) => {
+                        if __delimited(__cx, __m, __pos, __r) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => Err(__f),
+                }
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l79 Err(__f),
+            };
+            let __pos = match {
+                let __pos = __skip(__cx, __m, __pos);
+                let __mark = __cx.mark();
+                match match __rule_ident_raw(__cx, __m, __pos) {
+                    Ok((_, __p)) => Ok(__p),
+                    Err(__f) => Err(__f),
+                } {
+                    Ok(__r) => {
+                        __cx.rollback(__mark);
+                        if __delimited(__cx, __m, __pos, __r) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => {
+                        __cx.commit(__mark);
+                        Err(__f)
+                    }
+                }
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l79 Err(__f),
+            };
+            let __pos = match '__l80: {
+                if let Ok(__r) = {
+                    let __pos = __skip(__cx, __m, __pos);
+                    match __cx.lit(__pos, "{") {
+                        Ok(__r) => {
+                            if __delimited(__cx, __m, __pos, __r) {
+                                Ok(__r)
+                            } else {
+                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            }
+                        }
+                        Err(__f) => Err(__f),
+                    }
+                } {
+                    break '__l80 Ok(__r);
+                }
+                {
+                    let __pos = __skip(__cx, __m, __pos);
+                    match __cx.lit(__pos, "<") {
+                        Ok(__r) => {
+                            if __delimited(__cx, __m, __pos, __r) {
+                                Ok(__r)
+                            } else {
+                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            }
+                        }
+                        Err(__f) => Err(__f),
+                    }
+                }
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l79 Err(__f),
+            };
+            Ok(__pos)
+        }
+    } {
+        Ok(__p) => Ok(((), __p)),
+        Err(__f) => Err(__f),
+    }
+}
+/// Parses the whole input with the rule `item_start`.
+#[allow(dead_code)]
+fn item_start<'i>(
+    input: &'i str,
+) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
+    __prpr_runtime::parse_full(input, __rule_item_start, __skip)
+}
+#[doc(hidden)]
+#[allow(unused, non_snake_case, clippy::all)]
 fn __rule_ty_span<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Span> {
-    '__l78: {
+    '__l82: {
         let __start = __skip(__cx, __m, __pos);
         let __pos = match match __rule_ty(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l78 Err(__f),
+            Err(__f) => break '__l82 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok(((|| -> Span { __span__ })(), __pos))
@@ -3258,8 +3397,8 @@ fn __rule_ty<'i>(
 ) -> __prpr_runtime::PResult<()> {
     let __at = __skip(__cx, __m, __pos);
     let __saved = __cx.push_label(__at, "type");
-    let __r = match '__l79: {
-        if let Ok(__r) = '__l80: {
+    let __r = match '__l83: {
+        if let Ok(__r) = '__l84: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "&") {
@@ -3274,7 +3413,7 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l80 Err(__f),
+                Err(__f) => break '__l84 Err(__f),
             };
             let __pos = match match match __rule_lifetime(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
@@ -3284,7 +3423,7 @@ fn __rule_ty<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l80 Err(__f),
+                Err(__f) => break '__l84 Err(__f),
             };
             let __pos = match match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3303,20 +3442,20 @@ fn __rule_ty<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l80 Err(__f),
+                Err(__f) => break '__l84 Err(__f),
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l80 Err(__f),
+                Err(__f) => break '__l84 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l79 Ok(__r);
+            break '__l83 Ok(__r);
         }
-        if let Ok(__r) = '__l81: {
+        if let Ok(__r) = '__l85: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "*") {
@@ -3331,9 +3470,9 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l81 Err(__f),
+                Err(__f) => break '__l85 Err(__f),
             };
-            let __pos = match '__l82: {
+            let __pos = match '__l86: {
                 if let Ok(__r) = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "const") {
@@ -3347,7 +3486,7 @@ fn __rule_ty<'i>(
                         Err(__f) => Err(__f),
                     }
                 } {
-                    break '__l82 Ok(__r);
+                    break '__l86 Ok(__r);
                 }
                 {
                     let __pos = __skip(__cx, __m, __pos);
@@ -3364,20 +3503,20 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l81 Err(__f),
+                Err(__f) => break '__l85 Err(__f),
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l81 Err(__f),
+                Err(__f) => break '__l85 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l79 Ok(__r);
+            break '__l83 Ok(__r);
         }
-        if let Ok(__r) = '__l83: {
+        if let Ok(__r) = '__l87: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
@@ -3392,14 +3531,14 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l83 Err(__f),
+                Err(__f) => break '__l87 Err(__f),
             };
             let __pos = match match __rule_ty_list(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l83 Err(__f),
+                Err(__f) => break '__l87 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3415,13 +3554,13 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l83 Err(__f),
+                Err(__f) => break '__l87 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l79 Ok(__r);
+            break '__l83 Ok(__r);
         }
-        if let Ok(__r) = '__l84: {
+        if let Ok(__r) = '__l88: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "[") {
@@ -3436,16 +3575,16 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l84 Err(__f),
+                Err(__f) => break '__l88 Err(__f),
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l84 Err(__f),
+                Err(__f) => break '__l88 Err(__f),
             };
-            let __pos = match match '__l85: {
+            let __pos = match match '__l89: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ";") {
@@ -3460,7 +3599,7 @@ fn __rule_ty<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l85 Err(__f),
+                    Err(__f) => break '__l89 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -3484,7 +3623,7 @@ fn __rule_ty<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l85 Err(__f),
+                    Err(__f) => break '__l89 Err(__f),
                 };
                 Ok(__pos)
             } {
@@ -3492,7 +3631,7 @@ fn __rule_ty<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l84 Err(__f),
+                Err(__f) => break '__l88 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3508,14 +3647,14 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l84 Err(__f),
+                Err(__f) => break '__l88 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l79 Ok(__r);
+            break '__l83 Ok(__r);
         }
-        if let Ok(__r) = '__l86: {
-            let __pos = match '__l87: {
+        if let Ok(__r) = '__l90: {
+            let __pos = match '__l91: {
                 if let Ok(__r) = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "dyn") {
@@ -3529,7 +3668,7 @@ fn __rule_ty<'i>(
                         Err(__f) => Err(__f),
                     }
                 } {
-                    break '__l87 Ok(__r);
+                    break '__l91 Ok(__r);
                 }
                 {
                     let __pos = __skip(__cx, __m, __pos);
@@ -3546,20 +3685,20 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l86 Err(__f),
+                Err(__f) => break '__l90 Err(__f),
             };
             let __pos = match match __rule_bounds(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l86 Err(__f),
+                Err(__f) => break '__l90 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l79 Ok(__r);
+            break '__l83 Ok(__r);
         }
-        if let Ok(__r) = '__l88: {
+        if let Ok(__r) = '__l92: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "fn") {
@@ -3574,7 +3713,7 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                Err(__f) => break '__l92 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3590,14 +3729,14 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                Err(__f) => break '__l92 Err(__f),
             };
             let __pos = match match __rule_ty_list(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                Err(__f) => break '__l92 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3613,9 +3752,9 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                Err(__f) => break '__l92 Err(__f),
             };
-            let __pos = match match '__l89: {
+            let __pos = match match '__l93: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "->") {
@@ -3630,14 +3769,14 @@ fn __rule_ty<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l89 Err(__f),
+                    Err(__f) => break '__l93 Err(__f),
                 };
                 let __pos = match match __rule_ty(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l89 Err(__f),
+                    Err(__f) => break '__l93 Err(__f),
                 };
                 Ok(__pos)
             } {
@@ -3645,11 +3784,11 @@ fn __rule_ty<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                Err(__f) => break '__l92 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l79 Ok(__r);
+            break '__l83 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -3664,7 +3803,7 @@ fn __rule_ty<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l79 Ok(__r);
+            break '__l83 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -3679,7 +3818,7 @@ fn __rule_ty<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l79 Ok(__r);
+            break '__l83 Ok(__r);
         }
         match __rule_type_path(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
@@ -3704,7 +3843,7 @@ fn __rule_ty_list<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l90: {
+    match '__l94: {
         let __pos = match {
             let mut __p = __pos;
             let mut __first = true;
@@ -3748,7 +3887,7 @@ fn __rule_ty_list<'i>(
             Ok(__p)
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l90 Err(__f),
+            Err(__f) => break '__l94 Err(__f),
         };
         let __pos = match match {
             let __pos = __skip(__cx, __m, __pos);
@@ -3767,7 +3906,7 @@ fn __rule_ty_list<'i>(
             Err(_) => Ok(__pos),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l90 Err(__f),
+            Err(__f) => break '__l94 Err(__f),
         };
         Ok(__pos)
     } {
@@ -3794,7 +3933,7 @@ fn __rule_array_len<'i>(
         let mut __first = true;
         loop {
             let __pos = __p;
-            match '__l91: {
+            match '__l95: {
                 let __pos = match {
                     __cx.push_quiet();
                     let __r = __cx.lit(__pos, "]");
@@ -3808,14 +3947,14 @@ fn __rule_array_len<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l91 Err(__f),
+                    Err(__f) => break '__l95 Err(__f),
                 };
                 let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l91 Err(__f),
+                    Err(__f) => break '__l95 Err(__f),
                 };
                 Ok(__pos)
             } {
@@ -3850,7 +3989,7 @@ fn __rule_type_path<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l92: {
+    match '__l96: {
         let __pos = match match {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "::") {
@@ -3868,21 +4007,21 @@ fn __rule_type_path<'i>(
             Err(_) => Ok(__pos),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l92 Err(__f),
+            Err(__f) => break '__l96 Err(__f),
         };
         let __pos = match match __rule_path_segment(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l92 Err(__f),
+            Err(__f) => break '__l96 Err(__f),
         };
         let __pos = match {
             let mut __p = __pos;
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l93: {
+                match '__l97: {
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "::") {
@@ -3897,14 +4036,14 @@ fn __rule_type_path<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l93 Err(__f),
+                        Err(__f) => break '__l97 Err(__f),
                     };
                     let __pos = match match __rule_path_segment(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l93 Err(__f),
+                        Err(__f) => break '__l97 Err(__f),
                     };
                     Ok(__pos)
                 } {
@@ -3922,7 +4061,7 @@ fn __rule_type_path<'i>(
             Ok(__p)
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l92 Err(__f),
+            Err(__f) => break '__l96 Err(__f),
         };
         Ok(__pos)
     } {
@@ -3944,7 +4083,7 @@ fn __rule_path_segment<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l94: {
+    match '__l98: {
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
@@ -3967,10 +4106,10 @@ fn __rule_path_segment<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l94 Err(__f),
+            Err(__f) => break '__l98 Err(__f),
         };
-        let __pos = match match '__l95: {
-            if let Ok(__r) = '__l98: {
+        let __pos = match match '__l99: {
+            if let Ok(__r) = '__l102: {
                 let __pos = match match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "::") {
@@ -3988,7 +4127,7 @@ fn __rule_path_segment<'i>(
                     Err(_) => Ok(__pos),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l98 Err(__f),
+                    Err(__f) => break '__l102 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4004,7 +4143,7 @@ fn __rule_path_segment<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l98 Err(__f),
+                    Err(__f) => break '__l102 Err(__f),
                 };
                 let __pos = match {
                     let mut __p = __pos;
@@ -4049,7 +4188,7 @@ fn __rule_path_segment<'i>(
                     Ok(__p)
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l98 Err(__f),
+                    Err(__f) => break '__l102 Err(__f),
                 };
                 let __pos = match match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4068,7 +4207,7 @@ fn __rule_path_segment<'i>(
                     Err(_) => Ok(__pos),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l98 Err(__f),
+                    Err(__f) => break '__l102 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4084,13 +4223,13 @@ fn __rule_path_segment<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l98 Err(__f),
+                    Err(__f) => break '__l102 Err(__f),
                 };
                 Ok(__pos)
             } {
-                break '__l95 Ok(__r);
+                break '__l99 Ok(__r);
             }
-            '__l96: {
+            '__l100: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "(") {
@@ -4105,14 +4244,14 @@ fn __rule_path_segment<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l96 Err(__f),
+                    Err(__f) => break '__l100 Err(__f),
                 };
                 let __pos = match match __rule_ty_list(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l96 Err(__f),
+                    Err(__f) => break '__l100 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4128,9 +4267,9 @@ fn __rule_path_segment<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l96 Err(__f),
+                    Err(__f) => break '__l100 Err(__f),
                 };
-                let __pos = match match '__l97: {
+                let __pos = match match '__l101: {
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "->") {
@@ -4145,14 +4284,14 @@ fn __rule_path_segment<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l97 Err(__f),
+                        Err(__f) => break '__l101 Err(__f),
                     };
                     let __pos = match match __rule_ty(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l97 Err(__f),
+                        Err(__f) => break '__l101 Err(__f),
                     };
                     Ok(__pos)
                 } {
@@ -4160,7 +4299,7 @@ fn __rule_path_segment<'i>(
                     Err(_) => Ok(__pos),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l96 Err(__f),
+                    Err(__f) => break '__l100 Err(__f),
                 };
                 Ok(__pos)
             }
@@ -4169,7 +4308,7 @@ fn __rule_path_segment<'i>(
             Err(_) => Ok(__pos),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l94 Err(__f),
+            Err(__f) => break '__l98 Err(__f),
         };
         Ok(__pos)
     } {
@@ -4191,14 +4330,14 @@ fn __rule_generic_arg<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l99: {
+    match '__l103: {
         if let Ok(__r) = match __rule_lifetime(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l99 Ok(__r);
+            break '__l103 Ok(__r);
         }
-        if let Ok(__r) = '__l100: {
+        if let Ok(__r) = '__l104: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
@@ -4221,7 +4360,7 @@ fn __rule_generic_arg<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l100 Err(__f),
+                Err(__f) => break '__l104 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -4237,7 +4376,7 @@ fn __rule_generic_arg<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l100 Err(__f),
+                Err(__f) => break '__l104 Err(__f),
             };
             let __pos = match {
                 __cx.push_quiet();
@@ -4264,24 +4403,24 @@ fn __rule_generic_arg<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l100 Err(__f),
+                Err(__f) => break '__l104 Err(__f),
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l100 Err(__f),
+                Err(__f) => break '__l104 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l99 Ok(__r);
+            break '__l103 Ok(__r);
         }
         if let Ok(__r) = match __rule_ty(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l99 Ok(__r);
+            break '__l103 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -4304,7 +4443,7 @@ fn __rule_generic_arg<'i>(
                 }
             }
         } {
-            break '__l99 Ok(__r);
+            break '__l103 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -4327,7 +4466,7 @@ fn __rule_generic_arg<'i>(
                 }
             }
         } {
-            break '__l99 Ok(__r);
+            break '__l103 Ok(__r);
         }
         {
             let __pos = __skip(__cx, __m, __pos);
@@ -4459,14 +4598,14 @@ fn __rule_bound<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l101: {
+    match '__l105: {
         if let Ok(__r) = match __rule_lifetime(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l101 Ok(__r);
+            break '__l105 Ok(__r);
         }
-        if let Ok(__r) = '__l104: {
+        if let Ok(__r) = '__l108: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
@@ -4481,14 +4620,14 @@ fn __rule_bound<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l104 Err(__f),
+                Err(__f) => break '__l108 Err(__f),
             };
             let __pos = match match __rule_bound(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l104 Err(__f),
+                Err(__f) => break '__l108 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -4504,13 +4643,13 @@ fn __rule_bound<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l104 Err(__f),
+                Err(__f) => break '__l108 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l101 Ok(__r);
+            break '__l105 Ok(__r);
         }
-        '__l102: {
+        '__l106: {
             let __pos = match match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "?") {
@@ -4528,9 +4667,9 @@ fn __rule_bound<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l102 Err(__f),
+                Err(__f) => break '__l106 Err(__f),
             };
-            let __pos = match match '__l103: {
+            let __pos = match match '__l107: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "for") {
@@ -4545,7 +4684,7 @@ fn __rule_bound<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l103 Err(__f),
+                    Err(__f) => break '__l107 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4561,7 +4700,7 @@ fn __rule_bound<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l103 Err(__f),
+                    Err(__f) => break '__l107 Err(__f),
                 };
                 let __pos = match {
                     let mut __p = __pos;
@@ -4606,7 +4745,7 @@ fn __rule_bound<'i>(
                     Ok(__p)
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l103 Err(__f),
+                    Err(__f) => break '__l107 Err(__f),
                 };
                 let __pos = match match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4625,7 +4764,7 @@ fn __rule_bound<'i>(
                     Err(_) => Ok(__pos),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l103 Err(__f),
+                    Err(__f) => break '__l107 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4641,7 +4780,7 @@ fn __rule_bound<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l103 Err(__f),
+                    Err(__f) => break '__l107 Err(__f),
                 };
                 Ok(__pos)
             } {
@@ -4649,14 +4788,14 @@ fn __rule_bound<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l102 Err(__f),
+                Err(__f) => break '__l106 Err(__f),
             };
             let __pos = match match __rule_type_path(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l102 Err(__f),
+                Err(__f) => break '__l106 Err(__f),
             };
             Ok(__pos)
         }
@@ -4680,10 +4819,10 @@ fn __rule_lifetime<'i>(
     match {
         let __pos = __skip(__cx, __m, __pos);
         let __mark = __cx.mark();
-        match '__l105: {
+        match '__l109: {
             let __pos = match __cx.lit(__pos, "'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l105 Err(__f),
+                Err(__f) => break '__l109 Err(__f),
             };
             let __pos = match {
                 let mut __p = __pos;
@@ -4708,7 +4847,7 @@ fn __rule_lifetime<'i>(
                 if __first { Err(__prpr_runtime::Fail) } else { Ok(__p) }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l105 Err(__f),
+                Err(__f) => break '__l109 Err(__f),
             };
             Ok(__pos)
         } {
@@ -4758,11 +4897,11 @@ fn __rule_choice<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Expr> {
-    '__l106: {
+    '__l110: {
         let __start = __skip(__cx, __m, __pos);
         let (first, __pos) = match __rule_sequence(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l106 Err(__f),
+            Err(__f) => break '__l110 Err(__f),
         };
         let (rest, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -4770,7 +4909,7 @@ fn __rule_choice<'i>(
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l107: {
+                match '__l111: {
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         let __mark = __cx.mark();
@@ -4793,11 +4932,11 @@ fn __rule_choice<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l107 Err(__f),
+                        Err(__f) => break '__l111 Err(__f),
                     };
                     let (s, __pos) = match __rule_sequence(__cx, __m, __pos) {
                         Ok(__r) => __r,
-                        Err(__f) => break '__l107 Err(__f),
+                        Err(__f) => break '__l111 Err(__f),
                     };
                     Ok(((|| { s })(), __pos))
                 } {
@@ -4816,7 +4955,7 @@ fn __rule_choice<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l106 Err(__f),
+            Err(__f) => break '__l110 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok(((|| -> Expr { make_choice(first, rest, __span__) })(), __pos))
@@ -4836,10 +4975,10 @@ fn __rule_choice_sep<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l108: {
+    match '__l112: {
         let __pos = match __cx.lit(__pos, "/") {
             Ok(__p) => __p,
-            Err(__f) => break '__l108 Err(__f),
+            Err(__f) => break '__l112 Err(__f),
         };
         let __pos = match {
             __cx.push_quiet();
@@ -4859,7 +4998,7 @@ fn __rule_choice_sep<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l108 Err(__f),
+            Err(__f) => break '__l112 Err(__f),
         };
         Ok(__pos)
     } {
@@ -4886,7 +5025,7 @@ fn __rule_sequence<'i>(
     let __r = {
         let __start = __skip(__cx, __m, __pos);
         let __mark = __cx.mark();
-        match '__l109: {
+        match '__l113: {
             let __start_elems = __skip(__cx, __m, __pos);
             let (elems, __pos) = match {
                 let mut __vs = __prpr_runtime::Vec::new();
@@ -4894,10 +5033,10 @@ fn __rule_sequence<'i>(
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l110: {
+                    match '__l114: {
                         let __pos = match {
                             __cx.push_quiet();
-                            let __r = match __rule_rule_header(__cx, __m, __pos) {
+                            let __r = match __rule_item_start(__cx, __m, __pos) {
                                 Ok((_, __p)) => Ok(__p),
                                 Err(__f) => Err(__f),
                             };
@@ -4911,11 +5050,11 @@ fn __rule_sequence<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l110 Err(__f),
+                            Err(__f) => break '__l114 Err(__f),
                         };
                         let (e, __pos) = match __rule_element(__cx, __m, __pos) {
                             Ok(__r) => __r,
-                            Err(__f) => break '__l110 Err(__f),
+                            Err(__f) => break '__l114 Err(__f),
                         };
                         Ok(((|| { e })(), __pos))
                     } {
@@ -4934,7 +5073,7 @@ fn __rule_sequence<'i>(
                 Ok((__vs, __p))
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l109 Err(__f),
+                Err(__f) => break '__l113 Err(__f),
             };
             let __span_elems = __prpr_runtime::span(__start_elems, __pos);
             let (action, __pos) = match match __rule_action(__cx, __m, __pos) {
@@ -4942,7 +5081,7 @@ fn __rule_sequence<'i>(
                 Err(_) => Ok((::core::option::Option::None, __pos)),
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l109 Err(__f),
+                Err(__f) => break '__l113 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok(((|| { make_sequence(elems, __span_elems, action, __span__) })(), __pos))
@@ -4981,7 +5120,7 @@ fn __rule_action<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<(Span, bool)> {
-    '__l111: {
+    '__l115: {
         let (pred, __pos) = match match {
             let __pos = __skip(__cx, __m, __pos);
             match match __cx.lit(__pos, "&") {
@@ -5002,7 +5141,7 @@ fn __rule_action<'i>(
             Err(_) => Ok((::core::option::Option::None, __pos)),
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l111 Err(__f),
+            Err(__f) => break '__l115 Err(__f),
         };
         let (code, __pos) = match {
             let __pos = __skip(__cx, __m, __pos);
@@ -5023,7 +5162,7 @@ fn __rule_action<'i>(
             }
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l111 Err(__f),
+            Err(__f) => break '__l115 Err(__f),
         };
         Ok(((|| -> (Span, bool) { (code, pred.is_some()) })(), __pos))
     }
@@ -5042,21 +5181,21 @@ fn __rule_rust_brace<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Span> {
-    '__l112: {
+    '__l116: {
         let __start = __pos;
         let __pos = match match __cx.lit(__pos, "{") {
             Ok(_) => Ok(__pos),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l112 Err(__f),
+            Err(__f) => break '__l116 Err(__f),
         };
         let __pos = match match __rule_rust_group(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l112 Err(__f),
+            Err(__f) => break '__l116 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok(((|| -> Span { __span__ })(), __pos))
@@ -5078,9 +5217,9 @@ fn __rule_element<'i>(
 ) -> __prpr_runtime::PResult<Expr> {
     let __at = __skip(__cx, __m, __pos);
     let __saved = __cx.push_label(__at, "expression");
-    let __r = '__l113: {
+    let __r = '__l117: {
         if let Ok(__r) = __rule_bind(__cx, __m, __pos) {
-            break '__l113 Ok(__r);
+            break '__l117 Ok(__r);
         }
         __rule_prefix(__cx, __m, __pos)
     };
@@ -5101,7 +5240,7 @@ fn __rule_bind<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Expr> {
-    '__l114: {
+    '__l118: {
         let __start = __skip(__cx, __m, __pos);
         let (name, __pos) = match {
             let __pos = __skip(__cx, __m, __pos);
@@ -5122,7 +5261,7 @@ fn __rule_bind<'i>(
             }
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l114 Err(__f),
+            Err(__f) => break '__l118 Err(__f),
         };
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
@@ -5138,7 +5277,7 @@ fn __rule_bind<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l114 Err(__f),
+            Err(__f) => break '__l118 Err(__f),
         };
         let __pos = match {
             __cx.push_quiet();
@@ -5165,11 +5304,11 @@ fn __rule_bind<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l114 Err(__f),
+            Err(__f) => break '__l118 Err(__f),
         };
         let (e, __pos) = match __rule_prefix(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l114 Err(__f),
+            Err(__f) => break '__l118 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok((
@@ -5198,8 +5337,8 @@ fn __rule_prefix<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Expr> {
-    '__l115: {
-        if let Ok(__r) = '__l116: {
+    '__l119: {
+        if let Ok(__r) = '__l120: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5215,7 +5354,7 @@ fn __rule_prefix<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l116 Err(__f),
+                Err(__f) => break '__l120 Err(__f),
             };
             let __pos = match {
                 __cx.push_quiet();
@@ -5242,11 +5381,11 @@ fn __rule_prefix<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l116 Err(__f),
+                Err(__f) => break '__l120 Err(__f),
             };
             let (e, __pos) = match __rule_prefix(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l116 Err(__f),
+                Err(__f) => break '__l120 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5254,9 +5393,9 @@ fn __rule_prefix<'i>(
                 __pos,
             ))
         } {
-            break '__l115 Ok(__r);
+            break '__l119 Ok(__r);
         }
-        if let Ok(__r) = '__l117: {
+        if let Ok(__r) = '__l121: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5272,11 +5411,11 @@ fn __rule_prefix<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l117 Err(__f),
+                Err(__f) => break '__l121 Err(__f),
             };
             let (e, __pos) = match __rule_prefix(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l117 Err(__f),
+                Err(__f) => break '__l121 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5284,7 +5423,7 @@ fn __rule_prefix<'i>(
                 __pos,
             ))
         } {
-            break '__l115 Ok(__r);
+            break '__l119 Ok(__r);
         }
         __rule_postfix(__cx, __m, __pos)
     }
@@ -5306,10 +5445,10 @@ fn __rule_postfix<'i>(
     {
         let __start = __skip(__cx, __m, __pos);
         let __mark = __cx.mark();
-        match '__l118: {
+        match '__l122: {
             let (p, __pos) = match __rule_primary(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l118 Err(__f),
+                Err(__f) => break '__l122 Err(__f),
             };
             let (op, __pos) = match match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5333,7 +5472,7 @@ fn __rule_postfix<'i>(
                 Err(_) => Ok((::core::option::Option::None, __pos)),
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l118 Err(__f),
+                Err(__f) => break '__l122 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok(((|| { make_postfix(p, op, __span__) })(), __pos))
@@ -5391,8 +5530,8 @@ fn __rule_primary<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Primary> {
-    '__l119: {
-        if let Ok(__r) = '__l121: {
+    '__l123: {
+        if let Ok(__r) = '__l125: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
@@ -5407,13 +5546,13 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l121 Err(__f),
+                Err(__f) => break '__l125 Err(__f),
             };
             let (e, __pos) = match __rule_expr(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l121 Err(__f),
+                Err(__f) => break '__l125 Err(__f),
             };
-            let (sep, __pos) = match match '__l122: {
+            let (sep, __pos) = match match '__l126: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ",") {
@@ -5428,11 +5567,11 @@ fn __rule_primary<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l122 Err(__f),
+                    Err(__f) => break '__l126 Err(__f),
                 };
                 let (s, __pos) = match __rule_expr(__cx, __m, __pos) {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l122 Err(__f),
+                    Err(__f) => break '__l126 Err(__f),
                 };
                 Ok(((|| { s })(), __pos))
             } {
@@ -5440,7 +5579,7 @@ fn __rule_primary<'i>(
                 Err(_) => Ok((::core::option::Option::None, __pos)),
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l121 Err(__f),
+                Err(__f) => break '__l125 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5456,7 +5595,7 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l121 Err(__f),
+                Err(__f) => break '__l125 Err(__f),
             };
             Ok((
                 (|| -> Primary {
@@ -5468,9 +5607,9 @@ fn __rule_primary<'i>(
                 __pos,
             ))
         } {
-            break '__l119 Ok(__r);
+            break '__l123 Ok(__r);
         }
-        if let Ok(__r) = '__l123: {
+        if let Ok(__r) = '__l127: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5486,11 +5625,11 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l123 Err(__f),
+                Err(__f) => break '__l127 Err(__f),
             };
             let (e, __pos) = match __rule_expr(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l123 Err(__f),
+                Err(__f) => break '__l127 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5506,7 +5645,7 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l123 Err(__f),
+                Err(__f) => break '__l127 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5516,9 +5655,9 @@ fn __rule_primary<'i>(
                 __pos,
             ))
         } {
-            break '__l119 Ok(__r);
+            break '__l123 Ok(__r);
         }
-        if let Ok(__r) = '__l124: {
+        if let Ok(__r) = '__l128: {
             let __start = __skip(__cx, __m, __pos);
             let (l, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5539,7 +5678,7 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l124 Err(__f),
+                Err(__f) => break '__l128 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5549,9 +5688,9 @@ fn __rule_primary<'i>(
                 __pos,
             ))
         } {
-            break '__l119 Ok(__r);
+            break '__l123 Ok(__r);
         }
-        if let Ok(__r) = '__l125: {
+        if let Ok(__r) = '__l129: {
             let __start = __skip(__cx, __m, __pos);
             let (c, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5572,7 +5711,7 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l125 Err(__f),
+                Err(__f) => break '__l129 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5582,17 +5721,17 @@ fn __rule_primary<'i>(
                 __pos,
             ))
         } {
-            break '__l119 Ok(__r);
+            break '__l123 Ok(__r);
         }
-        if let Ok(__r) = '__l126: {
+        if let Ok(__r) = '__l130: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
-                match '__l127: {
+                match '__l131: {
                     let __pos = match __cx.lit(__pos, ".") {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l127 Err(__f),
+                        Err(__f) => break '__l131 Err(__f),
                     };
                     let __pos = match {
                         __cx.push_quiet();
@@ -5607,7 +5746,7 @@ fn __rule_primary<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l127 Err(__f),
+                        Err(__f) => break '__l131 Err(__f),
                     };
                     Ok(__pos)
                 } {
@@ -5626,7 +5765,7 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l126 Err(__f),
+                Err(__f) => break '__l130 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5634,13 +5773,13 @@ fn __rule_primary<'i>(
                 __pos,
             ))
         } {
-            break '__l119 Ok(__r);
+            break '__l123 Ok(__r);
         }
-        '__l120: {
+        '__l124: {
             let __start = __skip(__cx, __m, __pos);
             let (p, __pos) = match __rule_path(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l120 Err(__f),
+                Err(__f) => break '__l124 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5666,7 +5805,7 @@ fn __rule_path<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Path> {
-    '__l128: {
+    '__l132: {
         let __start = __skip(__cx, __m, __pos);
         let (lc, __pos) = match match {
             let __pos = __skip(__cx, __m, __pos);
@@ -5688,11 +5827,11 @@ fn __rule_path<'i>(
             Err(_) => Ok((::core::option::Option::None, __pos)),
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l128 Err(__f),
+            Err(__f) => break '__l132 Err(__f),
         };
         let (first, __pos) = match __rule_path_start(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l128 Err(__f),
+            Err(__f) => break '__l132 Err(__f),
         };
         let (rest, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -5700,7 +5839,7 @@ fn __rule_path<'i>(
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l129: {
+                match '__l133: {
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "::") {
@@ -5715,11 +5854,11 @@ fn __rule_path<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l129 Err(__f),
+                        Err(__f) => break '__l133 Err(__f),
                     };
                     let (s, __pos) = match __rule_path_start(__cx, __m, __pos) {
                         Ok(__r) => __r,
-                        Err(__f) => break '__l129 Err(__f),
+                        Err(__f) => break '__l133 Err(__f),
                     };
                     Ok(((|| { s })(), __pos))
                 } {
@@ -5738,7 +5877,7 @@ fn __rule_path<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l128 Err(__f),
+            Err(__f) => break '__l132 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok((
@@ -5767,7 +5906,7 @@ fn __rule_path_start<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Ident> {
-    '__l130: {
+    '__l134: {
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
@@ -5786,12 +5925,12 @@ fn __rule_path_start<'i>(
                 }
             }
         } {
-            break '__l130 Ok(__r);
+            break '__l134 Ok(__r);
         }
         {
             let __start = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
-            match '__l131: {
+            match '__l135: {
                 let (id, __pos) = match {
                     let __pos = __skip(__cx, __m, __pos);
                     let __mark = __cx.mark();
@@ -5811,7 +5950,7 @@ fn __rule_path_start<'i>(
                     }
                 } {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l131 Err(__f),
+                    Err(__f) => break '__l135 Err(__f),
                 };
                 Ok((
                     (|| {
@@ -5854,27 +5993,27 @@ fn __rule_literal<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l132: {
-        let (l, __pos) = match '__l133: {
+    '__l136: {
+        let (l, __pos) = match '__l137: {
             if let Ok(__r) = __rule_byte_string(__cx, __m, __pos) {
-                break '__l133 Ok(__r);
+                break '__l137 Ok(__r);
             }
             if let Ok(__r) = __rule_raw_byte_string(__cx, __m, __pos) {
-                break '__l133 Ok(__r);
+                break '__l137 Ok(__r);
             }
             if let Ok(__r) = __rule_string(__cx, __m, __pos) {
-                break '__l133 Ok(__r);
+                break '__l137 Ok(__r);
             }
             if let Ok(__r) = __rule_raw_string(__cx, __m, __pos) {
-                break '__l133 Ok(__r);
+                break '__l137 Ok(__r);
             }
             if let Ok(__r) = __rule_byte_char(__cx, __m, __pos) {
-                break '__l133 Ok(__r);
+                break '__l137 Ok(__r);
             }
             __rule_char_lit(__cx, __m, __pos)
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l132 Err(__f),
+            Err(__f) => break '__l136 Err(__f),
         };
         let __pos = match {
             __cx.push_quiet();
@@ -5892,7 +6031,7 @@ fn __rule_literal<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l132 Err(__f),
+            Err(__f) => break '__l136 Err(__f),
         };
         Ok(((|| -> Lit { l })(), __pos))
     }
@@ -5911,10 +6050,10 @@ fn __rule_string<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l134: {
+    '__l138: {
         let __pos = match __cx.lit(__pos, "\"") {
             Ok(__p) => __p,
-            Err(__f) => break '__l134 Err(__f),
+            Err(__f) => break '__l138 Err(__f),
         };
         let (cs, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -5938,11 +6077,11 @@ fn __rule_string<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l134 Err(__f),
+            Err(__f) => break '__l138 Err(__f),
         };
         let __pos = match __cx.lit(__pos, "\"") {
             Ok(__p) => __p,
-            Err(__f) => break '__l134 Err(__f),
+            Err(__f) => break '__l138 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Str(cs.into_iter().flatten().collect()) })(), __pos))
     }
@@ -5961,33 +6100,33 @@ fn __rule_string_char<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Option<char>> {
-    '__l135: {
-        if let Ok(__r) = '__l137: {
+    '__l139: {
+        if let Ok(__r) = '__l141: {
             let __pos = match match __rule_line_continuation(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l137 Err(__f),
+                Err(__f) => break '__l141 Err(__f),
             };
             Ok(((|| -> Option<char> { None })(), __pos))
         } {
-            break '__l135 Ok(__r);
+            break '__l139 Ok(__r);
         }
-        if let Ok(__r) = '__l138: {
+        if let Ok(__r) = '__l142: {
             let __pos = match __cx.lit(__pos, "\\") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l138 Err(__f),
+                Err(__f) => break '__l142 Err(__f),
             };
             let (c, __pos) = match __rule_escape(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l138 Err(__f),
+                Err(__f) => break '__l142 Err(__f),
             };
             Ok(((|| -> Option<char> { Some(c) })(), __pos))
         } {
-            break '__l135 Ok(__r);
+            break '__l139 Ok(__r);
         }
-        '__l136: {
+        '__l140: {
             let (c, __pos) = match match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
@@ -6003,7 +6142,7 @@ fn __rule_string_char<'i>(
                 }
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l136 Err(__f),
+                Err(__f) => break '__l140 Err(__f),
             };
             Ok(((|| -> Option<char> { Some(c) })(), __pos))
         }
@@ -6023,10 +6162,10 @@ fn __rule_line_continuation<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l139: {
+    match '__l143: {
         let __pos = match __cx.lit(__pos, "\\\n") {
             Ok(__p) => __p,
-            Err(__f) => break '__l139 Err(__f),
+            Err(__f) => break '__l143 Err(__f),
         };
         let __pos = match {
             let mut __p = __pos;
@@ -6036,7 +6175,7 @@ fn __rule_line_continuation<'i>(
                 match {
                     let __start = __pos;
                     let __mark = __cx.mark();
-                    match '__l140: {
+                    match '__l144: {
                         let (c, __pos) = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok((__c, __p)),
                             ::core::option::Option::None => {
@@ -6044,7 +6183,7 @@ fn __rule_line_continuation<'i>(
                             }
                         } {
                             Ok(__r) => __r,
-                            Err(__f) => break '__l140 Err(__f),
+                            Err(__f) => break '__l144 Err(__f),
                         };
                         Ok(((|| { c.is_whitespace() })(), __pos))
                     } {
@@ -6079,7 +6218,7 @@ fn __rule_line_continuation<'i>(
             Ok(__p)
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l139 Err(__f),
+            Err(__f) => break '__l143 Err(__f),
         };
         Ok(__pos)
     } {
@@ -6101,10 +6240,10 @@ fn __rule_byte_string<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l141: {
+    '__l145: {
         let __pos = match __cx.lit(__pos, "b\"") {
             Ok(__p) => __p,
-            Err(__f) => break '__l141 Err(__f),
+            Err(__f) => break '__l145 Err(__f),
         };
         let (cs, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -6128,11 +6267,11 @@ fn __rule_byte_string<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l141 Err(__f),
+            Err(__f) => break '__l145 Err(__f),
         };
         let __pos = match __cx.lit(__pos, "\"") {
             Ok(__p) => __p,
-            Err(__f) => break '__l141 Err(__f),
+            Err(__f) => break '__l145 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Bytes(cs.into_iter().flatten().collect()) })(), __pos))
     }
@@ -6151,36 +6290,36 @@ fn __rule_byte_string_char<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Option<u8>> {
-    '__l142: {
-        if let Ok(__r) = '__l144: {
+    '__l146: {
+        if let Ok(__r) = '__l148: {
             let __pos = match match __rule_line_continuation(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l144 Err(__f),
+                Err(__f) => break '__l148 Err(__f),
             };
             Ok(((|| -> Option<u8> { None })(), __pos))
         } {
-            break '__l142 Ok(__r);
+            break '__l146 Ok(__r);
         }
-        if let Ok(__r) = '__l145: {
+        if let Ok(__r) = '__l149: {
             let __pos = match __cx.lit(__pos, "\\") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l145 Err(__f),
+                Err(__f) => break '__l149 Err(__f),
             };
             let (c, __pos) = match __rule_byte_escape(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l145 Err(__f),
+                Err(__f) => break '__l149 Err(__f),
             };
             Ok(((|| -> Option<u8> { Some(c) })(), __pos))
         } {
-            break '__l142 Ok(__r);
+            break '__l146 Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
-            match '__l143: {
+            match '__l147: {
                 let (c, __pos) = match match __cx.peek_char(__pos) {
                     ::core::option::Option::Some(
                         (__c, __p),
@@ -6196,7 +6335,7 @@ fn __rule_byte_string_char<'i>(
                     }
                 } {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l143 Err(__f),
+                    Err(__f) => break '__l147 Err(__f),
                 };
                 Ok((
                     (|| {
@@ -6242,14 +6381,14 @@ fn __rule_raw_string<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l146: {
+    '__l150: {
         let __pos = match __cx.lit(__pos, "r") {
             Ok(__p) => __p,
-            Err(__f) => break '__l146 Err(__f),
+            Err(__f) => break '__l150 Err(__f),
         };
         let (s, __pos) = match __rule_raw_body(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l146 Err(__f),
+            Err(__f) => break '__l150 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Str(s.to_string()) })(), __pos))
     }
@@ -6268,14 +6407,14 @@ fn __rule_raw_byte_string<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l147: {
+    '__l151: {
         let __pos = match __cx.lit(__pos, "br") {
             Ok(__p) => __p,
-            Err(__f) => break '__l147 Err(__f),
+            Err(__f) => break '__l151 Err(__f),
         };
         let (s, __pos) = match __rule_raw_body(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l147 Err(__f),
+            Err(__f) => break '__l151 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Bytes(s.as_bytes().to_vec()) })(), __pos))
     }
@@ -6294,11 +6433,11 @@ fn __rule_raw_body<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<&'i str> {
-    '__l148: {
-        if let Ok(__r) = '__l151: {
+    '__l152: {
+        if let Ok(__r) = '__l155: {
             let __pos = match __cx.lit(__pos, "\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l151 Err(__f),
+                Err(__f) => break '__l155 Err(__f),
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6306,7 +6445,7 @@ fn __rule_raw_body<'i>(
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l152: {
+                    match '__l156: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"");
@@ -6320,7 +6459,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l152 Err(__f),
+                            Err(__f) => break '__l156 Err(__f),
                         };
                         let __pos = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -6329,7 +6468,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l152 Err(__f),
+                            Err(__f) => break '__l156 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -6347,21 +6486,21 @@ fn __rule_raw_body<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l151 Err(__f),
+                Err(__f) => break '__l155 Err(__f),
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l151 Err(__f),
+                Err(__f) => break '__l155 Err(__f),
             };
             Ok(((|| -> &'i str { __text_s })(), __pos))
         } {
-            break '__l148 Ok(__r);
+            break '__l152 Ok(__r);
         }
-        if let Ok(__r) = '__l153: {
+        if let Ok(__r) = '__l157: {
             let __pos = match __cx.lit(__pos, "#\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l153 Err(__f),
+                Err(__f) => break '__l157 Err(__f),
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6369,7 +6508,7 @@ fn __rule_raw_body<'i>(
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l154: {
+                    match '__l158: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"#");
@@ -6383,7 +6522,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l154 Err(__f),
+                            Err(__f) => break '__l158 Err(__f),
                         };
                         let __pos = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -6392,7 +6531,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l154 Err(__f),
+                            Err(__f) => break '__l158 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -6410,21 +6549,21 @@ fn __rule_raw_body<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l153 Err(__f),
+                Err(__f) => break '__l157 Err(__f),
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"#") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l153 Err(__f),
+                Err(__f) => break '__l157 Err(__f),
             };
             Ok(((|| -> &'i str { __text_s })(), __pos))
         } {
-            break '__l148 Ok(__r);
+            break '__l152 Ok(__r);
         }
-        if let Ok(__r) = '__l155: {
+        if let Ok(__r) = '__l159: {
             let __pos = match __cx.lit(__pos, "##\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l155 Err(__f),
+                Err(__f) => break '__l159 Err(__f),
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6432,7 +6571,7 @@ fn __rule_raw_body<'i>(
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l156: {
+                    match '__l160: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"##");
@@ -6446,7 +6585,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l156 Err(__f),
+                            Err(__f) => break '__l160 Err(__f),
                         };
                         let __pos = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -6455,7 +6594,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l156 Err(__f),
+                            Err(__f) => break '__l160 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -6473,21 +6612,21 @@ fn __rule_raw_body<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l155 Err(__f),
+                Err(__f) => break '__l159 Err(__f),
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"##") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l155 Err(__f),
+                Err(__f) => break '__l159 Err(__f),
             };
             Ok(((|| -> &'i str { __text_s })(), __pos))
         } {
-            break '__l148 Ok(__r);
+            break '__l152 Ok(__r);
         }
-        '__l149: {
+        '__l153: {
             let __pos = match __cx.lit(__pos, "###\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l149 Err(__f),
+                Err(__f) => break '__l153 Err(__f),
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6495,7 +6634,7 @@ fn __rule_raw_body<'i>(
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l150: {
+                    match '__l154: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"###");
@@ -6509,7 +6648,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l150 Err(__f),
+                            Err(__f) => break '__l154 Err(__f),
                         };
                         let __pos = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -6518,7 +6657,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l150 Err(__f),
+                            Err(__f) => break '__l154 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -6536,12 +6675,12 @@ fn __rule_raw_body<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l149 Err(__f),
+                Err(__f) => break '__l153 Err(__f),
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"###") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l149 Err(__f),
+                Err(__f) => break '__l153 Err(__f),
             };
             Ok(((|| -> &'i str { __text_s })(), __pos))
         }
@@ -6561,14 +6700,14 @@ fn __rule_char_lit<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l157: {
+    '__l161: {
         let __pos = match __cx.lit(__pos, "'") {
             Ok(__p) => __p,
-            Err(__f) => break '__l157 Err(__f),
+            Err(__f) => break '__l161 Err(__f),
         };
         let (c, __pos) = match __rule_char_body(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l157 Err(__f),
+            Err(__f) => break '__l161 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Str(c.to_string()) })(), __pos))
     }
@@ -6587,25 +6726,25 @@ fn __rule_char_body<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<char> {
-    '__l158: {
-        if let Ok(__r) = '__l160: {
+    '__l162: {
+        if let Ok(__r) = '__l164: {
             let __pos = match __cx.lit(__pos, "\\") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l160 Err(__f),
+                Err(__f) => break '__l164 Err(__f),
             };
             let (c, __pos) = match __rule_escape(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l160 Err(__f),
+                Err(__f) => break '__l164 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l160 Err(__f),
+                Err(__f) => break '__l164 Err(__f),
             };
             Ok(((|| -> char { c })(), __pos))
         } {
-            break '__l158 Ok(__r);
+            break '__l162 Ok(__r);
         }
-        '__l159: {
+        '__l163: {
             let (c, __pos) = match match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
@@ -6621,11 +6760,11 @@ fn __rule_char_body<'i>(
                 }
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l159 Err(__f),
+                Err(__f) => break '__l163 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l159 Err(__f),
+                Err(__f) => break '__l163 Err(__f),
             };
             Ok(((|| -> char { c })(), __pos))
         }
@@ -6645,14 +6784,14 @@ fn __rule_byte_char<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l161: {
+    '__l165: {
         let __pos = match __cx.lit(__pos, "b'") {
             Ok(__p) => __p,
-            Err(__f) => break '__l161 Err(__f),
+            Err(__f) => break '__l165 Err(__f),
         };
         let (c, __pos) = match __rule_byte_char_body(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l161 Err(__f),
+            Err(__f) => break '__l165 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Bytes(vec![c]) })(), __pos))
     }
@@ -6671,28 +6810,28 @@ fn __rule_byte_char_body<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<u8> {
-    '__l162: {
-        if let Ok(__r) = '__l164: {
+    '__l166: {
+        if let Ok(__r) = '__l168: {
             let __pos = match __cx.lit(__pos, "\\") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l164 Err(__f),
+                Err(__f) => break '__l168 Err(__f),
             };
             let (c, __pos) = match __rule_byte_escape(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l164 Err(__f),
+                Err(__f) => break '__l168 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l164 Err(__f),
+                Err(__f) => break '__l168 Err(__f),
             };
             Ok(((|| -> u8 { c })(), __pos))
         } {
-            break '__l162 Ok(__r);
+            break '__l166 Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
-            match '__l163: {
+            match '__l167: {
                 let (c, __pos) = match match __cx.peek_char(__pos) {
                     ::core::option::Option::Some(
                         (__c, __p),
@@ -6708,11 +6847,11 @@ fn __rule_byte_char_body<'i>(
                     }
                 } {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l163 Err(__f),
+                    Err(__f) => break '__l167 Err(__f),
                 };
                 let __pos = match __cx.lit(__pos, "'") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l163 Err(__f),
+                    Err(__f) => break '__l167 Err(__f),
                 };
                 Ok(((|| { c.is_ascii().then_some(c as u8) })(), __pos))
             } {
@@ -6749,98 +6888,98 @@ fn __rule_escape<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<char> {
-    '__l165: {
-        if let Ok(__r) = '__l167: {
-            let __pos = match __cx.lit(__pos, "n") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l167 Err(__f),
-            };
-            Ok(((|| -> char { '\n' })(), __pos))
-        } {
-            break '__l165 Ok(__r);
-        }
-        if let Ok(__r) = '__l168: {
-            let __pos = match __cx.lit(__pos, "r") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l168 Err(__f),
-            };
-            Ok(((|| -> char { '\r' })(), __pos))
-        } {
-            break '__l165 Ok(__r);
-        }
-        if let Ok(__r) = '__l169: {
-            let __pos = match __cx.lit(__pos, "t") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l169 Err(__f),
-            };
-            Ok(((|| -> char { '\t' })(), __pos))
-        } {
-            break '__l165 Ok(__r);
-        }
-        if let Ok(__r) = '__l170: {
-            let __pos = match __cx.lit(__pos, "\\") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l170 Err(__f),
-            };
-            Ok(((|| -> char { '\\' })(), __pos))
-        } {
-            break '__l165 Ok(__r);
-        }
+    '__l169: {
         if let Ok(__r) = '__l171: {
-            let __pos = match __cx.lit(__pos, "0") {
+            let __pos = match __cx.lit(__pos, "n") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l171 Err(__f),
             };
-            Ok(((|| -> char { '\0' })(), __pos))
+            Ok(((|| -> char { '\n' })(), __pos))
         } {
-            break '__l165 Ok(__r);
+            break '__l169 Ok(__r);
         }
         if let Ok(__r) = '__l172: {
-            let __pos = match __cx.lit(__pos, "'") {
+            let __pos = match __cx.lit(__pos, "r") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l172 Err(__f),
             };
-            Ok(((|| -> char { '\'' })(), __pos))
+            Ok(((|| -> char { '\r' })(), __pos))
         } {
-            break '__l165 Ok(__r);
+            break '__l169 Ok(__r);
         }
         if let Ok(__r) = '__l173: {
-            let __pos = match __cx.lit(__pos, "\"") {
+            let __pos = match __cx.lit(__pos, "t") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l173 Err(__f),
             };
+            Ok(((|| -> char { '\t' })(), __pos))
+        } {
+            break '__l169 Ok(__r);
+        }
+        if let Ok(__r) = '__l174: {
+            let __pos = match __cx.lit(__pos, "\\") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l174 Err(__f),
+            };
+            Ok(((|| -> char { '\\' })(), __pos))
+        } {
+            break '__l169 Ok(__r);
+        }
+        if let Ok(__r) = '__l175: {
+            let __pos = match __cx.lit(__pos, "0") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l175 Err(__f),
+            };
+            Ok(((|| -> char { '\0' })(), __pos))
+        } {
+            break '__l169 Ok(__r);
+        }
+        if let Ok(__r) = '__l176: {
+            let __pos = match __cx.lit(__pos, "'") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l176 Err(__f),
+            };
+            Ok(((|| -> char { '\'' })(), __pos))
+        } {
+            break '__l169 Ok(__r);
+        }
+        if let Ok(__r) = '__l177: {
+            let __pos = match __cx.lit(__pos, "\"") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l177 Err(__f),
+            };
             Ok(((|| -> char { '"' })(), __pos))
         } {
-            break '__l165 Ok(__r);
+            break '__l169 Ok(__r);
         }
         if let Ok(__r) = {
             let __start = __pos;
             let __mark = __cx.mark();
-            match '__l174: {
+            match '__l178: {
                 let __pos = match __cx.lit(__pos, "x") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l174 Err(__f),
+                    Err(__f) => break '__l178 Err(__f),
                 };
                 let __start_h = __pos;
-                let __pos = match '__l175: {
+                let __pos = match '__l179: {
                     let __pos = match match __rule_hex(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l175 Err(__f),
+                        Err(__f) => break '__l179 Err(__f),
                     };
                     let __pos = match match __rule_hex(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l175 Err(__f),
+                        Err(__f) => break '__l179 Err(__f),
                     };
                     Ok(__pos)
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l174 Err(__f),
+                    Err(__f) => break '__l178 Err(__f),
                 };
                 let __text_h = __cx.slice(__start_h, __pos);
                 Ok((
@@ -6872,15 +7011,15 @@ fn __rule_escape<'i>(
                 }
             }
         } {
-            break '__l165 Ok(__r);
+            break '__l169 Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
-            match '__l166: {
+            match '__l170: {
                 let __pos = match __cx.lit(__pos, "u{") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l166 Err(__f),
+                    Err(__f) => break '__l170 Err(__f),
                 };
                 let __start_h = __pos;
                 let __pos = match {
@@ -6906,12 +7045,12 @@ fn __rule_escape<'i>(
                     if __first { Err(__prpr_runtime::Fail) } else { Ok(__p) }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l166 Err(__f),
+                    Err(__f) => break '__l170 Err(__f),
                 };
                 let __text_h = __cx.slice(__start_h, __pos);
                 let __pos = match __cx.lit(__pos, "}") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l166 Err(__f),
+                    Err(__f) => break '__l170 Err(__f),
                 };
                 Ok((
                     (|| {
@@ -6956,95 +7095,95 @@ fn __rule_byte_escape<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<u8> {
-    '__l176: {
-        if let Ok(__r) = '__l179: {
-            let __pos = match __cx.lit(__pos, "n") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l179 Err(__f),
-            };
-            Ok(((|| -> u8 { b'\n' })(), __pos))
-        } {
-            break '__l176 Ok(__r);
-        }
-        if let Ok(__r) = '__l180: {
-            let __pos = match __cx.lit(__pos, "r") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l180 Err(__f),
-            };
-            Ok(((|| -> u8 { b'\r' })(), __pos))
-        } {
-            break '__l176 Ok(__r);
-        }
-        if let Ok(__r) = '__l181: {
-            let __pos = match __cx.lit(__pos, "t") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l181 Err(__f),
-            };
-            Ok(((|| -> u8 { b'\t' })(), __pos))
-        } {
-            break '__l176 Ok(__r);
-        }
-        if let Ok(__r) = '__l182: {
-            let __pos = match __cx.lit(__pos, "\\") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l182 Err(__f),
-            };
-            Ok(((|| -> u8 { b'\\' })(), __pos))
-        } {
-            break '__l176 Ok(__r);
-        }
+    '__l180: {
         if let Ok(__r) = '__l183: {
-            let __pos = match __cx.lit(__pos, "0") {
+            let __pos = match __cx.lit(__pos, "n") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l183 Err(__f),
             };
-            Ok(((|| -> u8 { b'\0' })(), __pos))
+            Ok(((|| -> u8 { b'\n' })(), __pos))
         } {
-            break '__l176 Ok(__r);
+            break '__l180 Ok(__r);
         }
         if let Ok(__r) = '__l184: {
-            let __pos = match __cx.lit(__pos, "'") {
+            let __pos = match __cx.lit(__pos, "r") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l184 Err(__f),
             };
-            Ok(((|| -> u8 { b'\'' })(), __pos))
+            Ok(((|| -> u8 { b'\r' })(), __pos))
         } {
-            break '__l176 Ok(__r);
+            break '__l180 Ok(__r);
         }
         if let Ok(__r) = '__l185: {
-            let __pos = match __cx.lit(__pos, "\"") {
+            let __pos = match __cx.lit(__pos, "t") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l185 Err(__f),
             };
+            Ok(((|| -> u8 { b'\t' })(), __pos))
+        } {
+            break '__l180 Ok(__r);
+        }
+        if let Ok(__r) = '__l186: {
+            let __pos = match __cx.lit(__pos, "\\") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l186 Err(__f),
+            };
+            Ok(((|| -> u8 { b'\\' })(), __pos))
+        } {
+            break '__l180 Ok(__r);
+        }
+        if let Ok(__r) = '__l187: {
+            let __pos = match __cx.lit(__pos, "0") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l187 Err(__f),
+            };
+            Ok(((|| -> u8 { b'\0' })(), __pos))
+        } {
+            break '__l180 Ok(__r);
+        }
+        if let Ok(__r) = '__l188: {
+            let __pos = match __cx.lit(__pos, "'") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l188 Err(__f),
+            };
+            Ok(((|| -> u8 { b'\'' })(), __pos))
+        } {
+            break '__l180 Ok(__r);
+        }
+        if let Ok(__r) = '__l189: {
+            let __pos = match __cx.lit(__pos, "\"") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l189 Err(__f),
+            };
             Ok(((|| -> u8 { b'"' })(), __pos))
         } {
-            break '__l176 Ok(__r);
+            break '__l180 Ok(__r);
         }
-        '__l177: {
+        '__l181: {
             let __pos = match __cx.lit(__pos, "x") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l177 Err(__f),
+                Err(__f) => break '__l181 Err(__f),
             };
             let __start_h = __pos;
-            let __pos = match '__l178: {
+            let __pos = match '__l182: {
                 let __pos = match match __rule_hex(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l178 Err(__f),
+                    Err(__f) => break '__l182 Err(__f),
                 };
                 let __pos = match match __rule_hex(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l178 Err(__f),
+                    Err(__f) => break '__l182 Err(__f),
                 };
                 Ok(__pos)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l177 Err(__f),
+                Err(__f) => break '__l181 Err(__f),
             };
             let __text_h = __cx.slice(__start_h, __pos);
             Ok(((|| -> u8 { u8::from_str_radix(__text_h, 16).unwrap() })(), __pos))
@@ -7087,11 +7226,11 @@ fn __rule_class<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Class> {
-    '__l186: {
+    '__l190: {
         let __start = __pos;
         let __pos = match __cx.lit(__pos, "[") {
             Ok(__p) => __p,
-            Err(__f) => break '__l186 Err(__f),
+            Err(__f) => break '__l190 Err(__f),
         };
         let (neg, __pos) = match match match __cx.lit(__pos, "^") {
             Ok(__p) => Ok(("^", __p)),
@@ -7101,7 +7240,7 @@ fn __rule_class<'i>(
             Err(_) => Ok((::core::option::Option::None, __pos)),
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l186 Err(__f),
+            Err(__f) => break '__l190 Err(__f),
         };
         let (ranges, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -7109,17 +7248,17 @@ fn __rule_class<'i>(
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l187: {
+                match '__l191: {
                     let __pos = match match __rule_spaces(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l187 Err(__f),
+                        Err(__f) => break '__l191 Err(__f),
                     };
                     let (r, __pos) = match __rule_class_item(__cx, __m, __pos) {
                         Ok(__r) => __r,
-                        Err(__f) => break '__l187 Err(__f),
+                        Err(__f) => break '__l191 Err(__f),
                     };
                     Ok(((|| { r })(), __pos))
                 } {
@@ -7138,18 +7277,18 @@ fn __rule_class<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l186 Err(__f),
+            Err(__f) => break '__l190 Err(__f),
         };
         let __pos = match match __rule_spaces(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l186 Err(__f),
+            Err(__f) => break '__l190 Err(__f),
         };
         let __pos = match __cx.lit(__pos, "]") {
             Ok(__p) => __p,
-            Err(__f) => break '__l186 Err(__f),
+            Err(__f) => break '__l190 Err(__f),
         };
         let __text__ = __cx.slice(__start, __pos);
         Ok((
@@ -7181,33 +7320,33 @@ fn __rule_class_item<'i>(
     {
         let __start = __pos;
         let __mark = __cx.mark();
-        match '__l188: {
+        match '__l192: {
             let (lo, __pos) = match __rule_class_char(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l188 Err(__f),
+                Err(__f) => break '__l192 Err(__f),
             };
-            let (hi, __pos) = match match '__l189: {
+            let (hi, __pos) = match match '__l193: {
                 let __pos = match match __rule_spaces(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l189 Err(__f),
+                    Err(__f) => break '__l193 Err(__f),
                 };
                 let __pos = match __cx.lit(__pos, "-") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l189 Err(__f),
+                    Err(__f) => break '__l193 Err(__f),
                 };
                 let __pos = match match __rule_spaces(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l189 Err(__f),
+                    Err(__f) => break '__l193 Err(__f),
                 };
                 let (c, __pos) = match __rule_class_char(__cx, __m, __pos) {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l189 Err(__f),
+                    Err(__f) => break '__l193 Err(__f),
                 };
                 Ok(((|| { c })(), __pos))
             } {
@@ -7215,7 +7354,7 @@ fn __rule_class_item<'i>(
                 Err(_) => Ok((::core::option::Option::None, __pos)),
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l188 Err(__f),
+                Err(__f) => break '__l192 Err(__f),
             };
             Ok((
                 (|| {
@@ -7262,37 +7401,37 @@ fn __rule_class_char<'i>(
 ) -> __prpr_runtime::PResult<char> {
     let __at = __pos;
     let __saved = __cx.push_label(__at, "character");
-    let __r = '__l190: {
-        if let Ok(__r) = '__l192: {
+    let __r = '__l194: {
+        if let Ok(__r) = '__l196: {
             let __pos = match __cx.lit(__pos, "b'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l192 Err(__f),
+                Err(__f) => break '__l196 Err(__f),
             };
             let (c, __pos) = match __rule_byte_char_body(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l192 Err(__f),
+                Err(__f) => break '__l196 Err(__f),
             };
             Ok(((|| -> char { c as char })(), __pos))
         } {
-            break '__l190 Ok(__r);
+            break '__l194 Ok(__r);
         }
-        if let Ok(__r) = '__l193: {
+        if let Ok(__r) = '__l197: {
             let __pos = match __cx.lit(__pos, "'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l193 Err(__f),
+                Err(__f) => break '__l197 Err(__f),
             };
             let (c, __pos) = match __rule_char_body(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l193 Err(__f),
+                Err(__f) => break '__l197 Err(__f),
             };
             Ok(((|| -> char { c })(), __pos))
         } {
-            break '__l190 Ok(__r);
+            break '__l194 Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
-            match '__l191: {
+            match '__l195: {
                 let (c, __pos) = match match __cx.peek_char(__pos) {
                     ::core::option::Option::Some(
                         (__c, __p),
@@ -7312,7 +7451,7 @@ fn __rule_class_char<'i>(
                     }
                 } {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l191 Err(__f),
+                    Err(__f) => break '__l195 Err(__f),
                 };
                 Ok(((|| { (!c.is_whitespace()).then_some(c) })(), __pos))
             } {
@@ -7358,12 +7497,12 @@ fn __rule_spaces<'i>(
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l194: {
+                match '__l198: {
                     if let Ok(__r) = match __rule_whitespace(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
-                        break '__l194 Ok(__r);
+                        break '__l198 Ok(__r);
                     }
                     match __rule_comment(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
@@ -7711,6 +7850,16 @@ fn __delimited_rule<'i>(
 #[doc(hidden)]
 #[allow(unused, non_snake_case)]
 fn __delimited_rule_header<'i>(
+    __cx: &mut __prpr_runtime::Cx<'i, str>,
+    __m: &mut Memo<'i>,
+    __start: usize,
+    __end: usize,
+) -> bool {
+    true
+}
+#[doc(hidden)]
+#[allow(unused, non_snake_case)]
+fn __delimited_item_start<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
     __m: &mut Memo<'i>,
     __start: usize,
@@ -8341,6 +8490,12 @@ pub mod rules {
     pub(super) const __atom_rule_header: bool = false;
     #[doc(hidden)]
     pub(super) use super::__delimited_rule_header;
+    pub(super) use super::__rule_item_start as item_start;
+    #[doc(hidden)]
+    #[allow(non_upper_case_globals)]
+    pub(super) const __atom_item_start: bool = false;
+    #[doc(hidden)]
+    pub(super) use super::__delimited_item_start;
     pub(super) use super::__rule_ty_span as ty_span;
     #[doc(hidden)]
     #[allow(non_upper_case_globals)]
