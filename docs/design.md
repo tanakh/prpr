@@ -272,6 +272,9 @@ Next: `grammar!` inside function bodies (the generated module `rules` cannot ref
 
 Later: cut operator (which would also sharpen errors such as `[z-a]`), left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
 
+When a need arises: tokens written in Rust, for what grammars cannot express (closing delimiters that repeat the opening one, as in raw strings and heredocs; indentation) or for speed (e.g. `memchr`).
+They would be atoms, which need neither memoization nor implicit whitespace, written with the documented part of `Cx`; how grammars refer to them depends on the form of `rules`.
+
 ## Syntax definition
 
 * [Self-describing parser](../prpr-codegen/src/parser/prpr.peg)
