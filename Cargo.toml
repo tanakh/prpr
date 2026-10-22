@@ -27,6 +27,10 @@ authors.workspace = true
 license.workspace = true
 repository.workspace = true
 
+[features]
+# `runtime::SourceText`, for parsing the input of proc-macros.
+proc-macro2 = ["prpr-runtime/proc-macro2"]
+
 [dependencies]
 prpr-runtime.workspace = true
 prpr-macros.workspace = true
