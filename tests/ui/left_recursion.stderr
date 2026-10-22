@@ -1,0 +1,16 @@
+error: left recursion: `expr` -> `expr`
+       = note: a rule must consume input before it is invoked again; left recursion is not supported
+ --> tests/ui/left_recursion.rs:2:5
+  |
+2 |     expr: i64 = l:expr "+" r:term { l + r } / term
+  |     ^^^^
+
+error: left recursion: `a` -> `b` -> `a`
+       = note: a rule must consume input before it is invoked again; left recursion is not supported
+ --> tests/ui/left_recursion.rs:9:9
+  |
+9 |         a = b "x"
+  |         ^
+
+error: aborting due to 2 previous errors
+

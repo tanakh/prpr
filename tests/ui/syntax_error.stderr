@@ -1,0 +1,14 @@
+error: syntax error: expected expression, found `/`
+ --> tests/ui/syntax_error.rs:2:15
+  |
+2 |     a = "x" / / "y"
+  |               ^
+
+error: syntax error: expected one of `]`, `^`, or range in ascending order, found `z`
+ --> tests/ui/syntax_error.rs:7:10
+  |
+7 |     b = [z-a]
+  |          ^
+
+error: aborting due to 2 previous errors
+

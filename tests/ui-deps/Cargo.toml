@@ -1,0 +1,11 @@
+# The dependencies available to the UI tests in `tests/ui`.
+[package]
+name = "ui-deps"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+prpr = { path = "../.." }

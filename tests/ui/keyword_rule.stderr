@@ -1,0 +1,8 @@
+error: `match` is a keyword and cannot be a rule name
+ --> tests/ui/keyword_rule.rs:3:5
+  |
+3 |     match = "y"
+  |     ^^^^^
+
+error: aborting due to 1 previous error
+

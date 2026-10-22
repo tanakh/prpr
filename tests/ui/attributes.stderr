@@ -1,0 +1,21 @@
+error: unknown attribute `memoize`
+ --> tests/ui/attributes.rs:2:7
+  |
+2 |     #[memoize]
+  |       ^^^^^^^
+
+error: `#[boundary]` and `#[no_boundary]` only apply to `atom` rules
+ --> tests/ui/attributes.rs:6:5
+  |
+6 |     #[boundary(!"y")]
+  |     ^^^^^^^^^^^^^^^^^
+
+error: `comment` must be an `atom` rule
+       = note: it is used for implicit whitespace and delimiters
+  --> tests/ui/attributes.rs:10:5
+   |
+10 |     comment = "//" (!"\n" .)*
+   |     ^^^^^^^
+
+error: aborting due to 3 previous errors
+

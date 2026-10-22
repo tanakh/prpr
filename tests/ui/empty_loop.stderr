@@ -1,0 +1,9 @@
+error: repetition of an expression that can match empty input
+       = note: the repetition would never end
+ --> tests/ui/empty_loop.rs:2:9
+  |
+2 |     a = ("x"?)*
+  |         ^^^^^^^
+
+error: aborting due to 1 previous error
+

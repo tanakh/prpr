@@ -1,0 +1,15 @@
+error[E0277]: the trait bound `Tree: Clone` is not satisfied
+ --> tests/ui/memo_not_clone.rs:5:11
+  |
+5 |     tree: Tree = "x" { Tree }
+  |           ^^^^ the trait `Clone` is not implemented for `Tree`
+  |
+help: consider annotating `Tree` with `#[derive(Clone)]`
+  |
+1 + #[derive(Clone)]
+2 | struct Tree;
+  |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0277`.

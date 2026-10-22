@@ -1,0 +1,9 @@
+error: rule `a` is defined more than once
+       = note: the first definition is here, at line 2
+ --> tests/ui/duplicate_rule.rs:3:5
+  |
+3 |     a = "y"
+  |     ^
+
+error: aborting due to 1 previous error
+

@@ -1,0 +1,8 @@
+error: `#c` does not refer to a binding of this sequence
+ --> tests/ui/unknown_binding.rs:2:68
+  |
+2 |     pair: (String, String) = a:word "," b:word { (#a.to_string(), #c.to_string()) }
+  |                                                                    ^
+
+error: aborting due to 1 previous error
+

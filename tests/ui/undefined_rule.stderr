@@ -1,0 +1,9 @@
+error: cannot find rule `factor`
+       = note: a rule with a similar name exists: `fact`
+ --> tests/ui/undefined_rule.rs:3:12
+  |
+3 |     term = factor
+  |            ^^^^^^
+
+error: aborting due to 1 previous error
+
