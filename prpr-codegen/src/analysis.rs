@@ -230,7 +230,6 @@ fn grammar_attrs(g: &Grammar, diags: &mut Vec<Diagnostic>) -> InputKind {
 
 fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>) -> RuleInfo {
     let mut memo = false;
-    let mut no_memo = false;
     let mut label = None;
     let mut boundary = Boundary::Default;
     let mut docs = Vec::new();
@@ -238,7 +237,6 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
         match (attr.name.name.as_str(), &attr.arg) {
             ("doc", AttrArg::Lit(Lit::Str(s), _)) => docs.push(s.clone()),
             ("memo", AttrArg::None) => memo = true,
-            ("no_memo", AttrArg::None) => no_memo = true,
             ("no_boundary", AttrArg::None) => boundary = Boundary::None,
             ("label", AttrArg::Lit(Lit::Str(s), _)) => label = Some(s.clone()),
             ("boundary", AttrArg::Expr(e)) => boundary = Boundary::Custom(e.clone()),
@@ -246,7 +244,7 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
                 attr.span,
                 format!("expected `#[{name} = \"...\"]`"),
             )),
-            (name @ ("memo" | "no_memo" | "no_boundary"), _) => diags.push(Diagnostic::error(
+            (name @ ("memo" | "no_boundary"), _) => diags.push(Diagnostic::error(
                 attr.span,
                 format!("expected `#[{name}]` without arguments"),
             )),
@@ -259,12 +257,6 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
                 format!("unknown attribute `{name}`"),
             )),
         }
-    }
-    if memo && no_memo {
-        diags.push(Diagnostic::error(
-            rule.name.span,
-            "`#[memo]` and `#[no_memo]` contradict each other",
-        ));
     }
     // A rule of type `()` is the same as a rule without a type.
     let typed = rule.ty.is_some_and(|ty| {

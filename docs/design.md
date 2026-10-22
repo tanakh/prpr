@@ -87,7 +87,7 @@ Rules:
 * A rule without a type has the type `()`.
 * Types may mention the input lifetime `'i`, e.g. `ident: &'i str = ...`, which allows zero-copy syntax trees.
 * A rule ends where the next item starts; no terminator is needed.
-* Rule attributes: `#[memo]`, `#[no_memo]`, `#[label = "..."]`, `#[boundary(expr)]`, `#[no_boundary]`, doc comments.
+* Rule attributes: `#[memo]`, `#[label = "..."]`, `#[boundary(expr)]`, `#[no_boundary]`, doc comments.
   Grammar-level settings use inner attributes, e.g. `#![input = bytes]`.
 
 Expressions, from the lowest precedence:
@@ -170,7 +170,8 @@ If a way to express the check in plain PEG is found (for example with built-in r
   There is no global or thread-local state and nothing to clear: the struct is dropped when the parse ends.
 * Only memoized rules require `T: Clone`. A missing implementation is reported once, at the rule's type in the grammar.
 * To make *not* caching an informed choice (planned):
-  * A lint warns when alternatives of one choice may invoke the same syntactic rule at the same position and the rule has neither `#[memo]` nor `#[no_memo]`.
+  * A lint warns when alternatives of one choice may invoke the same syntactic rule at the same position and the rule does not have `#[memo]`.
+    An attribute such as `#[no_memo]` would state that a rule is deliberately not memoized and silence the lint; it is to be added together with the lint, since it means nothing without it.
   * A profiling feature counts calls, re-invocations at the same position and cache hits per rule.
 
 ### Generated code and composability
