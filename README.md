@@ -23,7 +23,7 @@ assert_eq!(expr("1 +").unwrap_err().to_string(), "expected one of `(` or number,
 * Whitespace is skipped between the tokens of rules, but not inside `atom` rules, and tokens must be delimited (`123x` is not a number followed by `x`).
 * Rules are only memoized with `#[memo]`.
 * Errors report what was expected at the farthest position reached, and render like rustc's.
-* Grammars can be written inline with `grammar!`, or in files compiled with `prpr gen` (from `prpr-cli`) into standalone Rust modules.
+* Grammars can be written inline with `grammar!`, or in files, which `include_grammar!` includes or `prpr gen` (from `prpr-cli`) compiles into standalone Rust modules.
 * Text (`&str`) and binary (`&[u8]`) input are supported.
 
 ## Documentation

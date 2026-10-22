@@ -27,10 +27,10 @@ Diagnostics are tested `rustc`-style with [`ui_test`](https://crates.io/crates/u
 
 | crate | role |
 |---|---|
-| `prpr` | Facade. Re-exports `prpr-runtime` as `prpr::runtime` and the `grammar!` macro. Users of the macro depend on this crate only. |
+| `prpr` | Facade. Re-exports `prpr-runtime` as `prpr::runtime` and the `grammar!` and `include_grammar!` macros. Users of the macro depend on this crate only. |
 | `prpr-runtime` | Everything generated code needs at run time. `no_std` + `alloc`, no dependencies. Kept as a single self-contained module so that it can be inlined into generated files. The optional `proc-macro2` feature adds `SourceText` (see below). |
 | `prpr-codegen` | Grammar front end, static analysis and the Rust back end. Used by the macro, the CLI and `build.rs` scripts. Depends on `proc-macro2`, `quote` and `prpr-runtime` (for `SourceText`), plus `prettyplease`/`syn` behind the `pretty` feature, which provides standalone files (`prpr_codegen::file`). |
-| `prpr-macros` | `grammar! { ... }` proc-macro. A thin wrapper around `prpr-codegen`. |
+| `prpr-macros` | The `grammar! { ... }` and `include_grammar!("file.peg")` proc-macros. Thin wrappers around `prpr-codegen`. |
 | `prpr-cli` | The `prpr` command: `prpr gen` writes standalone `.rs` files, `prpr check` reports diagnostics, `prpr runtime` writes the runtime as a module. |
 
 Benchmarks live in `benchmarks/`, a separate workspace so that the libraries compared with stay out of the main one.
@@ -60,6 +60,9 @@ grammar!{}  : TokenStream --(rebuild text from token positions)--> SourceText --
   Syntax errors that `syn` finds in them and unknown `#x`/`@x` are then reported as diagnostics at the grammar; inside a macro, the compiler reports them at the original tokens.
   Type errors in files are reported by the compiler in the generated module, since Rust has no `#line` directive.
 * `SourceText` is public (`prpr-runtime`, feature `proc-macro2`), so that users can parse the input of their own proc-macros with a prpr parser and report errors at precise spans.
+* `include_grammar!("file.peg")` reads a file as a `TextSource`, relative to the invoking file (`Span::local_file`), and emits `include_str!` of it so that the compiler tracks it.
+  Diagnostics are rendered with the file's lines into the message of a `compile_error!` at the path.
+  A macro cannot make spans in another file, so errors that only the compiler finds in the Rust code of the file are reported at the invocation.
 
 ### Grammar language
 
@@ -272,7 +275,7 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 3. `#[memo]` and benchmarks (done); the memo lint and profiling.
 4. Byte input, public `SourceText`, cross-grammar references (done); more diagnostics tests.
 
-Next: warnings from the macro (stable proc-macros cannot emit them directly), `include_grammar!("file.peg")`, a `build.rs` builder.
+Next: warnings from the macro (stable proc-macros cannot emit them directly), a `build.rs` builder.
 
 Later: cut operator (which would also sharpen errors such as `[z-a]`), left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data, and for closing delimiters that repeat the opening one, as in raw strings and heredocs, if a parameter can be matched as a literal), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
 

@@ -2,7 +2,7 @@
 
 The code generator of [prpr](https://crates.io/crates/prpr), a Packrat parser generator for Parsing Expression Grammars.
 
-It is behind the `grammar!` macro and the `prpr` command, and can be used directly to generate parsers from grammar files in build scripts, with the feature `pretty`:
+It is behind the macros of prpr and the `prpr` command, and can be used directly to generate parsers from grammar files in build scripts, with the feature `pretty`:
 
 ```rust,ignore
 let code = prpr_codegen::file::generate(&grammar, &prpr_codegen::file::Runtime::Path("::prpr_runtime".into()));

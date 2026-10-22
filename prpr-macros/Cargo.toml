@@ -1,6 +1,6 @@
 [package]
 name = "prpr-macros"
-description = "The grammar! macro of prpr, a Packrat parser generator"
+description = "The grammar! and include_grammar! macros of prpr, a Packrat parser generator"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

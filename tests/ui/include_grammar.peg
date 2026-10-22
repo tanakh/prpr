@@ -1,0 +1,3 @@
+pub list: Vec<i64> = "[" xs:(numbr, ",")* "]" { xs }
+
+atom number: i64 = s:([0-9]+) { #s.parse().unwrap() }

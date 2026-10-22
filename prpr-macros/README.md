@@ -1,6 +1,6 @@
 # prpr-macros
 
-The `grammar!` macro of [prpr](https://crates.io/crates/prpr), a Packrat parser generator for Parsing Expression Grammars.
+The `grammar!` and `include_grammar!` macros of [prpr](https://crates.io/crates/prpr), a Packrat parser generator for Parsing Expression Grammars.
 
 Use it through the `prpr` crate, which provides the runtime that the generated code needs.
 See [the prpr Book](https://tanakh.github.io/prpr/).

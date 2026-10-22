@@ -2,7 +2,7 @@
 //!
 //! [The prpr Book](https://tanakh.github.io/prpr/) explains how to write grammars.
 
-pub use prpr_macros::grammar;
+pub use prpr_macros::{grammar, include_grammar};
 pub use prpr_runtime as runtime;
 pub use prpr_runtime::{Expected, Found, LineCol, ParseError};
 

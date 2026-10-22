@@ -1,6 +1,7 @@
 # Grammar files and the prpr command
 
-A grammar can also be written in a file of its own, from which the `prpr` command generates a Rust module.
+A grammar can also be written in a file of its own.
+The macro `include_grammar!` generates a parser from the file when the crate is compiled, as `grammar!` does from a grammar in Rust code, and the `prpr` command generates a Rust module from it ahead of time.
 A generated module is ordinary Rust code: it can be read, it builds without running a proc-macro, and the crate that uses it needs only the runtime, or nothing at all.
 The price is a step to keep it up to date with the grammar, which a [build script](build-scripts.md) can take.
 
@@ -18,6 +19,40 @@ pub list: Vec<i64> = "[" xs:(number, ",")* "]" { xs }
 #[label = "number"]
 atom number: i64 = s:([0-9]+) { #s.parse().unwrap() }
 ```
+
+## Including a grammar file
+
+`prpr::include_grammar!` generates the items of a grammar file where it is invoked, as `grammar!` does:
+
+```rust,ignore
+mod list {
+    prpr::include_grammar!("list.peg");
+}
+
+fn main() {
+    println!("{:?}", list::list("[1, 2, 3]")); // Ok([1, 2, 3])
+}
+```
+
+* The path is relative to the file that invokes the macro, as for `include_str!`: here, `src/list.peg` next to `src/main.rs`.
+* The crate is compiled again when the grammar file changes.
+* Mistakes in the grammar are reported at the path, with their place in the file:
+
+  ```text
+  error: cannot find rule `numbr`
+          --> src/list.peg:2:30
+           |
+         2 | pub list: Vec<i64> = "[" xs:(numbr, ",")* "]" { xs }
+           |                              ^^^^^
+           = note: a rule with a similar name exists: `number`
+   --> src/main.rs:2:28
+    |
+  2 |     prpr::include_grammar!("list.peg");
+    |                            ^^^^^^^^^^
+  ```
+
+* Errors that only the Rust compiler finds in the Rust code of the grammar, such as type errors in actions, are reported at the invocation of the macro, without their place in the file, since a macro cannot point into another file.
+  To find them, generate the module with `prpr gen`, where the compiler reports them in the module.
 
 ## Generating a module
 

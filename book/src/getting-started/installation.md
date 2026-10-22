@@ -13,10 +13,10 @@ prpr = "0.1"
 > Until it is, use a git dependency instead:
 > `prpr = { git = "https://github.com/tanakh/prpr" }`.
 
-The `prpr` crate provides the `grammar!` macro, which generates a parser from a grammar written in Rust code, and the runtime that generated parsers use.
+The `prpr` crate provides the `grammar!` macro, which generates a parser from a grammar written in Rust code, `include_grammar!`, which does the same from a grammar file, and the runtime that generated parsers use.
 That is all you need to follow the rest of Getting started.
 
-To generate parsers from grammar files instead, install the `prpr` command from the `prpr-cli` crate:
+To generate Rust modules from grammar files ahead of time instead, install the `prpr` command from the `prpr-cli` crate:
 
 ```sh
 cargo install prpr-cli

@@ -1,17 +1,24 @@
-//! The `grammar!` macro of prpr. Use it through the `prpr` crate.
+//! The `grammar!` and `include_grammar!` macros of prpr. Use them through the `prpr` crate.
 
 use proc_macro::TokenStream;
+use proc_macro2::{Delimiter, Literal, Span, TokenTree};
+use prpr_codegen::{Diagnostic, Options, TextSource};
 use prpr_runtime::SourceText;
+use quote::{quote, quote_spanned};
+use std::path::{Path, PathBuf};
+
+fn options() -> Options {
+    Options {
+        runtime: quote!(::prpr::runtime),
+        check_version: false,
+    }
+}
 
 /// Generates a parser from a grammar.
 #[proc_macro]
 pub fn grammar(input: TokenStream) -> TokenStream {
     let src = SourceText::new(input.into());
-    let opts = prpr_codegen::Options {
-        runtime: quote::quote!(::prpr::runtime),
-        check_version: false,
-    };
-    match prpr_codegen::compile(&src, &opts) {
+    match prpr_codegen::compile(&src, &options()) {
         Ok(tokens) => tokens.into(),
         Err(diags) => diags
             .iter()
@@ -23,4 +30,114 @@ pub fn grammar(input: TokenStream) -> TokenStream {
             .collect::<proc_macro2::TokenStream>()
             .into(),
     }
+}
+
+/// Generates a parser from a grammar file, as `grammar!` does from a grammar in Rust code.
+/// The path is relative to the file that invokes the macro, as for `include_str!`.
+#[proc_macro]
+pub fn include_grammar(input: TokenStream) -> TokenStream {
+    let Some((lit, path)) = path_literal(input.into()) else {
+        return error(
+            Span::call_site(),
+            "expected the path of a grammar file, as a string literal",
+        );
+    };
+    let (path, shown) = resolve(&path);
+    let text = match std::fs::read_to_string(&path) {
+        Ok(text) => text,
+        Err(e) => return error(lit.span(), &format!("cannot read {}: {e}", shown.display())),
+    };
+    match prpr_codegen::compile(&TextSource(&text), &options()) {
+        Ok(tokens) => {
+            // Makes the compiler build the crate again when the file changes.
+            let path = path.canonicalize().unwrap_or(path);
+            let path = path.to_string_lossy();
+            quote! {
+                #tokens
+                const _: &str = ::core::include_str!(#path);
+            }
+            .into()
+        }
+        Err(diags) => diags
+            .iter()
+            .filter(|d| d.is_error())
+            .map(|d| {
+                let message = rendered(d, &text, &shown);
+                quote_spanned!(lit.span()=> ::core::compile_error!(#message);)
+            })
+            .collect::<proc_macro2::TokenStream>()
+            .into(),
+    }
+}
+
+// The string literal that is the only token of `input`, and its value.
+fn path_literal(input: proc_macro2::TokenStream) -> Option<(Literal, String)> {
+    let mut tokens = input.into_iter();
+    let lit = match (tokens.next()?, tokens.next()) {
+        (TokenTree::Literal(lit), None) => lit,
+        // A literal passed through a `macro_rules!` macro.
+        (TokenTree::Group(g), None) if g.delimiter() == Delimiter::None => {
+            return path_literal(g.stream());
+        }
+        _ => return None,
+    };
+    let value = string_value(&lit.to_string())?;
+    Some((lit, value))
+}
+
+// The value of a string literal written as `text`, if it is one.
+fn string_value(text: &str) -> Option<String> {
+    if let Some(raw) = text.strip_prefix('r') {
+        let hashes = raw.len() - raw.trim_start_matches('#').len();
+        let body = raw.get(hashes..raw.len() - hashes)?;
+        return Some(body.strip_prefix('"')?.strip_suffix('"')?.to_string());
+    }
+    let body = text.strip_prefix('"')?.strip_suffix('"')?;
+    let mut value = String::new();
+    let mut chars = body.chars();
+    while let Some(c) = chars.next() {
+        if c != '\\' {
+            value.push(c);
+            continue;
+        }
+        value.push(match chars.next()? {
+            'n' => '\n',
+            'r' => '\r',
+            't' => '\t',
+            '0' => '\0',
+            c @ ('\\' | '\'' | '"') => c,
+            _ => return None,
+        });
+    }
+    Some(value)
+}
+
+// The file at `path` relative to the file that invokes the macro, and how to show it in messages.
+fn resolve(path: &str) -> (PathBuf, PathBuf) {
+    let base = proc_macro::Span::call_site()
+        .local_file()
+        .and_then(|file| file.parent().map(Path::to_path_buf))
+        .or_else(|| std::env::var_os("CARGO_MANIFEST_DIR").map(PathBuf::from))
+        .unwrap_or_default();
+    // Paths relative to the directory where the compiler runs, as in its own messages.
+    let shown = base.join(path);
+    let path = match std::env::current_dir() {
+        Ok(dir) if shown.is_relative() => dir.join(&shown),
+        _ => shown.clone(),
+    };
+    (path, shown)
+}
+
+// A diagnostic about the grammar file `shown`, with the line it is about, without the leading
+// "error: " that the compiler adds itself.
+fn rendered(d: &Diagnostic, text: &str, shown: &Path) -> String {
+    let rendered = d.render(text, &shown.display().to_string());
+    match rendered.strip_prefix("error: ") {
+        Some(rest) => rest.to_string(),
+        None => rendered,
+    }
+}
+
+fn error(span: Span, message: &str) -> TokenStream {
+    quote_spanned!(span=> ::core::compile_error!(#message);).into()
 }

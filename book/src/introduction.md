@@ -28,7 +28,7 @@ The grammar above defines two rules.
 ## What prpr offers
 
 * **Grammars in Rust or in files.**
-  A grammar can be written inline with `grammar!`, or in a file that the `prpr` command compiles into a Rust module.
+  A grammar can be written inline with `grammar!`, or in a file, which `include_grammar!` includes or the `prpr` command compiles into a Rust module.
   Either way, mistakes in a grammar are reported at the right place in the grammar, and with `grammar!`, so are type errors in the Rust code inside it.
 * **No separate lexer.**
   Whitespace is skipped between tokens automatically, `atom` rules describe tokens, and tokens must be delimited, so `ifx` is not the keyword `if` followed by `x`.
