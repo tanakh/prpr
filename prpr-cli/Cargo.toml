@@ -1,0 +1,16 @@
+[package]
+name = "prpr-cli"
+description = "Command line interface of prpr, a Packrat parser generator"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "prpr"
+path = "src/main.rs"
+
+[dependencies]
+prpr-codegen = { workspace = true, features = ["pretty"] }

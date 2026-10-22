@@ -1,5 +1,5 @@
 [workspace]
-members = ["prpr-runtime", "prpr-codegen", "prpr-macros"]
+members = ["prpr-runtime", "prpr-codegen", "prpr-macros", "prpr-cli"]
 resolver = "3"
 
 [workspace.package]

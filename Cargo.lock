@@ -371,6 +371,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "prpr-cli"
+version = "0.1.0"
+dependencies = [
+ "prpr-codegen",
+]
+
+[[package]]
 name = "prpr-codegen"
 version = "0.1.0"
 dependencies = [
