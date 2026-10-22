@@ -80,11 +80,28 @@ The function skips whitespace at the start and at the end (unless the rule is an
 Doc comments on the rule become the documentation of the function.
 Rules without `pub` get private functions, which are still useful in tests.
 
-Each rule also gets a function in the module `rules` that other grammars and Rust code can call; see [Composing grammars](composing.md).
+Each rule also gets an associated function of the type `Rules`, which other grammars and Rust code can call; see [Composing grammars](composing.md).
 
-The generated items are put in the scope where `grammar!` is invoked: a function for each rule, the module `rules`, the struct `Memo` and a few helpers whose names start with `__`.
+The generated items are put in the scope where `grammar!` is invoked: a function for each rule, the type `Rules`, the struct `Memo` and a few helpers whose names start with `__`.
 To keep them apart from other code, put each grammar in a module of its own.
-`grammar!` must be invoked where items can be defined at the module level, not inside a function.
+`grammar!` can be invoked wherever items can be defined, also in the body of a function, where the grammar can use the types defined in the function:
+
+```rust
+fn main() {
+    #[derive(Debug, PartialEq)]
+    struct Point(i64, i64);
+
+    prpr::grammar! {
+        pub point: Point = "(" x:int "," y:int ")" { Point(x, y) }
+
+        atom int: i64 = s:("-"? [0-9]+) { #s.parse().unwrap() }
+    }
+
+    assert_eq!(point("(1, -2)"), Ok(Point(1, -2)));
+}
+```
+
+Rules are functions of their own, though, so actions cannot use the local variables of the function.
 
 ## Atoms
 

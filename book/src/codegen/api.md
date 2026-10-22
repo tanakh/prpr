@@ -18,9 +18,11 @@ In outline, it generates:
 pub fn list<'i>(input: &'i str) -> Result<Vec<i64>, prpr::ParseError>;
 fn number<'i>(input: &'i str) -> Result<i64, prpr::ParseError>;
 
-pub mod rules {
+pub enum Rules {}
+
+impl Rules {
     pub fn list<'i>(cx: &mut Cx<'i, str>, memo: &mut Memo<'i>, pos: usize) -> PResult<Vec<i64>>;
-    pub(super) fn number<'i>(cx: &mut Cx<'i, str>, memo: &mut Memo<'i>, pos: usize) -> PResult<i64>;
+    fn number<'i>(cx: &mut Cx<'i, str>, memo: &mut Memo<'i>, pos: usize) -> PResult<i64>;
 }
 
 #[derive(Default)]
@@ -30,7 +32,7 @@ pub struct Memo<'i> { /* private fields */ }
 | item | what it is for |
 |---|---|
 | a function for each rule | Parsing a whole input. |
-| the module `rules` | Matching a rule at a position, from other grammars or from Rust code. |
+| the type `Rules` | Matching a rule at a position, from other grammars or from Rust code. |
 | the struct `Memo` | The state of a parse besides the input. |
 | items whose names start with `__` | Helpers of the generated code; they are hidden from the documentation. |
 
@@ -55,8 +57,9 @@ The functions of private rules are private; they are allowed to be unused, so th
 
 ## Rule functions
 
-The module `rules` has a function for each rule, with the visibility of the rule.
-It matches the rule at a byte offset of the input and returns its value and the offset after it, or fails:
+`Rules` is a type without values, whose associated functions are the rules, with the visibility of the rules.
+Being associated functions, they are called by their paths, such as `Rules::list`, and cannot be imported with `use`.
+Each matches its rule at a byte offset of the input and returns its value and the offset after it, or fails:
 
 ```rust,ignore
 pub type PResult<T> = Result<(T, usize), Fail>;
@@ -88,7 +91,7 @@ fn main() {
     let mut memo = stmts::Memo::default();
     let mut pos = 0;
     let mut values = Vec::new();
-    while let Ok((value, next)) = stmts::rules::stmt(&mut cx, &mut memo, pos) {
+    while let Ok((value, next)) = stmts::Rules::stmt(&mut cx, &mut memo, pos) {
         values.push(value);
         pos = next;
     }
@@ -117,6 +120,6 @@ The generated code calls the runtime, the `prpr-runtime` crate, which is also `p
 
 ## Names
 
-Every rule adds its function to the scope of the grammar, besides `rules`, `Memo` and the helpers, so the Rust items of the grammar must not use these names.
+Every rule adds its function to the scope of the grammar, besides `Rules`, `Memo` and the helpers, so the Rust items of the grammar must not use these names.
 Names that start with `__` are reserved for the generated code.
 Put each grammar in a module of its own, as the examples of this book do, to keep its items apart from other code.

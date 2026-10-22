@@ -60,10 +60,10 @@ Since its type is not known when the code is generated, its value is never [sile
 ## Calling rules from Rust
 
 The functions generated for rules, such as `config::config`, parse a whole input.
-For more control, each grammar also has a module `rules` with a function for each rule:
+For more control, each grammar also has a type `Rules` with an associated function for each rule:
 
 ```rust,ignore
-pub mod rules {
+impl Rules {
     pub fn config<'i>(
         cx: &mut prpr::runtime::Cx<'i, str>,
         memo: &mut Memo<'i>,
@@ -85,7 +85,7 @@ mod number {
 
 fn main() {
     let input = "42 and the rest";
-    let (n, end) = prpr::runtime::parse_prefix(input, number::rules::number).unwrap();
+    let (n, end) = prpr::runtime::parse_prefix(input, number::Rules::number).unwrap();
     assert_eq!((n, &input[end..]), (42, " and the rest"));
 }
 ```

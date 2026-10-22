@@ -127,7 +127,6 @@ fn __delimited<'i>(
     __word_char(__cx, __m, __last) != ::core::option::Option::Some(__end)
         || __word_char(__cx, __m, __end).is_none()
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_whitespace<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -169,7 +168,6 @@ fn whitespace<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_whitespace, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_comment<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -291,7 +289,6 @@ fn comment<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_comment, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_block_comment<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -376,7 +373,6 @@ fn block_comment<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_block_comment, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_word_char<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -398,7 +394,6 @@ fn word_char<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_word_char, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_ident_start<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -458,7 +453,6 @@ fn ident_start<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_ident_start, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_ident_continue<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -520,7 +514,6 @@ fn ident_continue<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_ident_continue, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_ident_raw<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -608,7 +601,6 @@ fn ident_raw<'i>(
 ) -> ::core::result::Result<Ident, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_ident_raw, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_ident<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -650,9 +642,8 @@ fn ident<'i>(
 ) -> ::core::result::Result<Ident, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_ident, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
-pub fn __rule_grammar<'i>(
+fn __rule_grammar<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
     __m: &mut Memo<'i>,
     __pos: usize,
@@ -716,7 +707,6 @@ pub fn grammar<'i>(
 ) -> ::core::result::Result<Grammar, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_grammar, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_inner_attr<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -804,7 +794,6 @@ fn inner_attr<'i>(
 ) -> ::core::result::Result<Attr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_inner_attr, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_outer_attr<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -898,7 +887,6 @@ fn outer_attr<'i>(
 ) -> ::core::result::Result<Attr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_outer_attr, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_doc_comment<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -1000,7 +988,6 @@ fn doc_comment<'i>(
 ) -> ::core::result::Result<Attr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_doc_comment, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_attr_body<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -1149,7 +1136,6 @@ fn attr_body<'i>(
 ) -> ::core::result::Result<(Ident, AttrArg), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_attr_body, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_attr_value<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -1216,7 +1202,6 @@ fn attr_value<'i>(
 ) -> ::core::result::Result<AttrArg, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_attr_value, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_item<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -1251,7 +1236,6 @@ fn __rule_item<'i>(
 fn item<'i>(input: &'i str) -> ::core::result::Result<Item, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_item, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_item<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -1429,7 +1413,6 @@ fn rust_item<'i>(
 ) -> ::core::result::Result<Span, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rust_item, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_attr<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -1489,7 +1472,6 @@ fn rust_attr<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rust_attr, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_doc_comment<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -1562,7 +1544,6 @@ fn rust_doc_comment<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rust_doc_comment, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_semi_item<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -1757,7 +1738,6 @@ fn semi_item<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_semi_item, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_brace_item<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -2007,7 +1987,6 @@ fn brace_item<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_brace_item, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_to_semi<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -2078,7 +2057,6 @@ fn rust_to_semi<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rust_to_semi, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_to_brace<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -2172,7 +2150,6 @@ fn rust_to_brace<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rust_to_brace, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_vis<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -2233,7 +2210,6 @@ fn __rule_vis<'i>(
 fn vis<'i>(input: &'i str) -> ::core::result::Result<Span, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_vis, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_paren<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -2268,7 +2244,6 @@ fn rust_paren<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rust_paren, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_tt<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -2385,7 +2360,6 @@ fn rust_tt<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rust_tt, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_group<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -2580,7 +2554,6 @@ fn rust_group<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rust_group, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_string<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -2706,7 +2679,6 @@ fn rust_string<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rust_string, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_char_or_lifetime<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -2850,7 +2822,6 @@ fn rust_char_or_lifetime<'i>(
         __prpr_runtime::no_skip,
     )
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rule<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -3063,7 +3034,6 @@ fn __rule_rule<'i>(
 fn rule<'i>(input: &'i str) -> ::core::result::Result<Rule, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rule, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rule_header<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -3218,7 +3188,6 @@ fn rule_header<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rule_header, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_item_start<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -3357,7 +3326,6 @@ fn item_start<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_item_start, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_ty_span<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -3384,7 +3352,6 @@ fn ty_span<'i>(
 ) -> ::core::result::Result<Span, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_ty_span, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_ty<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -3832,7 +3799,6 @@ fn __rule_ty<'i>(
 fn ty<'i>(input: &'i str) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_ty, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_ty_list<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -3917,7 +3883,6 @@ fn ty_list<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_ty_list, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_array_len<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -3978,7 +3943,6 @@ fn array_len<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_array_len, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_type_path<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -4072,7 +4036,6 @@ fn type_path<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_type_path, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_path_segment<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -4319,7 +4282,6 @@ fn path_segment<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_path_segment, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_generic_arg<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -4497,7 +4459,6 @@ fn generic_arg<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_generic_arg, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_number<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -4529,7 +4490,6 @@ fn __rule_number<'i>(
 fn number<'i>(input: &'i str) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_number, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_bounds<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -4587,7 +4547,6 @@ fn __rule_bounds<'i>(
 fn bounds<'i>(input: &'i str) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_bounds, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_bound<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -4805,7 +4764,6 @@ fn __rule_bound<'i>(
 fn bound<'i>(input: &'i str) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_bound, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_lifetime<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -4872,7 +4830,6 @@ fn lifetime<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_lifetime, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_expr<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -4886,7 +4843,6 @@ fn __rule_expr<'i>(
 fn expr<'i>(input: &'i str) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_expr, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_choice<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -4964,7 +4920,6 @@ fn choice<'i>(
 ) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_choice, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_choice_sep<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5009,7 +4964,6 @@ fn choice_sep<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_choice_sep, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_sequence<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5109,7 +5063,6 @@ fn sequence<'i>(
 ) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_sequence, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_action<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5170,7 +5123,6 @@ fn action<'i>(
 ) -> ::core::result::Result<(Span, bool), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_action, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_rust_brace<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5204,7 +5156,6 @@ fn rust_brace<'i>(
 ) -> ::core::result::Result<Span, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rust_brace, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_element<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5229,7 +5180,6 @@ fn element<'i>(
 ) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_element, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_bind<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5326,7 +5276,6 @@ fn __rule_bind<'i>(
 fn bind<'i>(input: &'i str) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_bind, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_prefix<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5431,7 +5380,6 @@ fn prefix<'i>(
 ) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_prefix, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_postfix<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5498,7 +5446,6 @@ fn postfix<'i>(
 ) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_postfix, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_postfix_op<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5519,7 +5466,6 @@ fn postfix_op<'i>(
 ) -> ::core::result::Result<char, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_postfix_op, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_primary<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5794,7 +5740,6 @@ fn primary<'i>(
 ) -> ::core::result::Result<Primary, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_primary, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_path<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5895,7 +5840,6 @@ fn __rule_path<'i>(
 fn path<'i>(input: &'i str) -> ::core::result::Result<Path, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_path, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_path_start<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -5982,7 +5926,6 @@ fn path_start<'i>(
 ) -> ::core::result::Result<Ident, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_path_start, __skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_literal<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6039,7 +5982,6 @@ fn literal<'i>(
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_literal, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_string<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6089,7 +6031,6 @@ fn string<'i>(
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_string, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_string_char<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6151,7 +6092,6 @@ fn string_char<'i>(
 ) -> ::core::result::Result<Option<char>, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_string_char, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_line_continuation<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6229,7 +6169,6 @@ fn line_continuation<'i>(
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_line_continuation, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_byte_string<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6279,7 +6218,6 @@ fn byte_string<'i>(
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_byte_string, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_byte_string_char<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6370,7 +6308,6 @@ fn byte_string_char<'i>(
 ) -> ::core::result::Result<Option<u8>, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_byte_string_char, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_raw_string<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6396,7 +6333,6 @@ fn raw_string<'i>(
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_raw_string, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_raw_byte_string<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6422,7 +6358,6 @@ fn raw_byte_string<'i>(
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_raw_byte_string, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_raw_body<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6689,7 +6624,6 @@ fn raw_body<'i>(
 ) -> ::core::result::Result<&'i str, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_raw_body, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_char_lit<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6715,7 +6649,6 @@ fn char_lit<'i>(
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_char_lit, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_char_body<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6773,7 +6706,6 @@ fn char_body<'i>(
 ) -> ::core::result::Result<char, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_char_body, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_byte_char<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6799,7 +6731,6 @@ fn byte_char<'i>(
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_byte_char, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_byte_char_body<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -6877,7 +6808,6 @@ fn byte_char_body<'i>(
 ) -> ::core::result::Result<u8, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_byte_char_body, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_escape<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -7084,7 +7014,6 @@ fn escape<'i>(
 ) -> ::core::result::Result<char, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_escape, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_byte_escape<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -7193,7 +7122,6 @@ fn byte_escape<'i>(
 ) -> ::core::result::Result<u8, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_byte_escape, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_hex<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -7215,7 +7143,6 @@ fn __rule_hex<'i>(
 fn hex<'i>(input: &'i str) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_hex, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_class<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -7306,7 +7233,6 @@ fn class<'i>(
 ) -> ::core::result::Result<Class, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_class, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_class_item<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -7388,7 +7314,6 @@ fn class_item<'i>(
 ) -> ::core::result::Result<(char, char), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_class_item, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_class_char<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -7479,7 +7404,6 @@ fn class_char<'i>(
 ) -> ::core::result::Result<char, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_class_char, __prpr_runtime::no_skip)
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_spaces<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -7525,7 +7449,6 @@ fn __rule_spaces<'i>(
     __cx.pop_quiet();
     __r
 }
-#[doc(hidden)]
 #[allow(unused, non_snake_case, clippy::all)]
 fn __rule_eof<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
@@ -7553,1209 +7476,1734 @@ fn __rule_eof<'i>(
         Err(__f) => Err(__f),
     }
 }
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_whitespace<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_comment<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_block_comment<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_word_char<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_ident_start<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_ident_continue<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_ident_raw<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_ident<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-pub fn __delimited_grammar<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_inner_attr<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_outer_attr<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_doc_comment<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_attr_body<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_attr_value<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_item<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_item<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_attr<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_doc_comment<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_semi_item<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_brace_item<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_to_semi<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_to_brace<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_vis<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_paren<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_tt<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_group<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_string<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_char_or_lifetime<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rule<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rule_header<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_item_start<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_ty_span<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_ty<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_ty_list<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_array_len<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_type_path<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_path_segment<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_generic_arg<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_number<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_bounds<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_bound<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_lifetime<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_expr<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_choice<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_choice_sep<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_sequence<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_action<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_rust_brace<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_element<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_bind<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_prefix<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_postfix<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_postfix_op<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_primary<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_path<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_path_start<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    true
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_literal<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_string<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_string_char<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_line_continuation<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_byte_string<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_byte_string_char<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_raw_string<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_raw_byte_string<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_raw_body<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_char_lit<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_char_body<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_byte_char<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_byte_char_body<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_escape<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_byte_escape<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_hex<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_class<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_class_item<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-#[doc(hidden)]
-#[allow(unused, non_snake_case)]
-fn __delimited_class_char<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __start: usize,
-    __end: usize,
-) -> bool {
-    __delimited(__cx, __m, __start, __end)
-}
-/// The rules of the grammar as functions that can be called from other parsers.
-#[allow(unused_imports)]
-pub mod rules {
-    pub(super) use super::__rule_whitespace as whitespace;
+/// The rules of the grammar, as functions that other grammars and Rust code can call.
+pub enum Rules {}
+impl Rules {
+    /// Matches the rule `whitespace` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn whitespace<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_whitespace(cx, memo, pos)
+    }
     #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_whitespace: bool = true;
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_whitespace: bool = true;
     #[doc(hidden)]
-    pub(super) use super::__delimited_whitespace;
-    pub(super) use super::__rule_comment as comment;
+    #[allow(unused, non_snake_case)]
+    fn __delimited_whitespace<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `comment` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn comment<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_comment(cx, memo, pos)
+    }
     #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_comment: bool = true;
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_comment: bool = true;
     #[doc(hidden)]
-    pub(super) use super::__delimited_comment;
-    pub(super) use super::__rule_block_comment as block_comment;
+    #[allow(unused, non_snake_case)]
+    fn __delimited_comment<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `block_comment` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn block_comment<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_block_comment(cx, memo, pos)
+    }
     #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_block_comment: bool = true;
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_block_comment: bool = true;
     #[doc(hidden)]
-    pub(super) use super::__delimited_block_comment;
-    pub(super) use super::__rule_word_char as word_char;
+    #[allow(unused, non_snake_case)]
+    fn __delimited_block_comment<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `word_char` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn word_char<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_word_char(cx, memo, pos)
+    }
     #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_word_char: bool = true;
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_word_char: bool = true;
     #[doc(hidden)]
-    pub(super) use super::__delimited_word_char;
-    pub(super) use super::__rule_ident_start as ident_start;
+    #[allow(unused, non_snake_case)]
+    fn __delimited_word_char<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `ident_start` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn ident_start<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_ident_start(cx, memo, pos)
+    }
     #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_ident_start: bool = true;
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_ident_start: bool = true;
     #[doc(hidden)]
-    pub(super) use super::__delimited_ident_start;
-    pub(super) use super::__rule_ident_continue as ident_continue;
+    #[allow(unused, non_snake_case)]
+    fn __delimited_ident_start<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `ident_continue` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn ident_continue<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_ident_continue(cx, memo, pos)
+    }
     #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_ident_continue: bool = true;
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_ident_continue: bool = true;
     #[doc(hidden)]
-    pub(super) use super::__delimited_ident_continue;
-    pub(super) use super::__rule_ident_raw as ident_raw;
+    #[allow(unused, non_snake_case)]
+    fn __delimited_ident_continue<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `ident_raw` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn ident_raw<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Ident> {
+        __rule_ident_raw(cx, memo, pos)
+    }
     #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_ident_raw: bool = true;
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_ident_raw: bool = true;
     #[doc(hidden)]
-    pub(super) use super::__delimited_ident_raw;
-    pub(super) use super::__rule_ident as ident;
+    #[allow(unused, non_snake_case)]
+    fn __delimited_ident_raw<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `ident` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn ident<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Ident> {
+        __rule_ident(cx, memo, pos)
+    }
     #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_ident: bool = true;
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_ident: bool = true;
     #[doc(hidden)]
-    pub(super) use super::__delimited_ident;
-    pub use super::__rule_grammar as grammar;
+    #[allow(unused, non_snake_case)]
+    fn __delimited_ident<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `grammar` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    pub fn grammar<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Grammar> {
+        __rule_grammar(cx, memo, pos)
+    }
     #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
+    #[allow(dead_code, non_upper_case_globals)]
     pub const __atom_grammar: bool = false;
     #[doc(hidden)]
-    pub use super::__delimited_grammar;
-    pub(super) use super::__rule_inner_attr as inner_attr;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_inner_attr: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_inner_attr;
-    pub(super) use super::__rule_outer_attr as outer_attr;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_outer_attr: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_outer_attr;
-    pub(super) use super::__rule_doc_comment as doc_comment;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_doc_comment: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_doc_comment;
-    pub(super) use super::__rule_attr_body as attr_body;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_attr_body: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_attr_body;
-    pub(super) use super::__rule_attr_value as attr_value;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_attr_value: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_attr_value;
-    pub(super) use super::__rule_item as item;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_item: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_item;
-    pub(super) use super::__rule_rust_item as rust_item;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_item: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_item;
-    pub(super) use super::__rule_rust_attr as rust_attr;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_attr: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_attr;
-    pub(super) use super::__rule_rust_doc_comment as rust_doc_comment;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_doc_comment: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_doc_comment;
-    pub(super) use super::__rule_semi_item as semi_item;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_semi_item: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_semi_item;
-    pub(super) use super::__rule_brace_item as brace_item;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_brace_item: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_brace_item;
-    pub(super) use super::__rule_rust_to_semi as rust_to_semi;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_to_semi: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_to_semi;
-    pub(super) use super::__rule_rust_to_brace as rust_to_brace;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_to_brace: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_to_brace;
-    pub(super) use super::__rule_vis as vis;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_vis: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_vis;
-    pub(super) use super::__rule_rust_paren as rust_paren;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_paren: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_paren;
-    pub(super) use super::__rule_rust_tt as rust_tt;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_tt: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_tt;
-    pub(super) use super::__rule_rust_group as rust_group;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_group: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_group;
-    pub(super) use super::__rule_rust_string as rust_string;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_string: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_string;
-    pub(super) use super::__rule_rust_char_or_lifetime as rust_char_or_lifetime;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_char_or_lifetime: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_char_or_lifetime;
-    pub(super) use super::__rule_rule as rule;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rule: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rule;
-    pub(super) use super::__rule_rule_header as rule_header;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rule_header: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rule_header;
-    pub(super) use super::__rule_item_start as item_start;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_item_start: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_item_start;
-    pub(super) use super::__rule_ty_span as ty_span;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_ty_span: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_ty_span;
-    pub(super) use super::__rule_ty as ty;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_ty: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_ty;
-    pub(super) use super::__rule_ty_list as ty_list;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_ty_list: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_ty_list;
-    pub(super) use super::__rule_array_len as array_len;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_array_len: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_array_len;
-    pub(super) use super::__rule_type_path as type_path;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_type_path: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_type_path;
-    pub(super) use super::__rule_path_segment as path_segment;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_path_segment: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_path_segment;
-    pub(super) use super::__rule_generic_arg as generic_arg;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_generic_arg: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_generic_arg;
-    pub(super) use super::__rule_number as number;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_number: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_number;
-    pub(super) use super::__rule_bounds as bounds;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_bounds: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_bounds;
-    pub(super) use super::__rule_bound as bound;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_bound: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_bound;
-    pub(super) use super::__rule_lifetime as lifetime;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_lifetime: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_lifetime;
-    pub(super) use super::__rule_expr as expr;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_expr: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_expr;
-    pub(super) use super::__rule_choice as choice;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_choice: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_choice;
-    pub(super) use super::__rule_choice_sep as choice_sep;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_choice_sep: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_choice_sep;
-    pub(super) use super::__rule_sequence as sequence;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_sequence: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_sequence;
-    pub(super) use super::__rule_action as action;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_action: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_action;
-    pub(super) use super::__rule_rust_brace as rust_brace;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_rust_brace: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_rust_brace;
-    pub(super) use super::__rule_element as element;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_element: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_element;
-    pub(super) use super::__rule_bind as bind;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_bind: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_bind;
-    pub(super) use super::__rule_prefix as prefix;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_prefix: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_prefix;
-    pub(super) use super::__rule_postfix as postfix;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_postfix: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_postfix;
-    pub(super) use super::__rule_postfix_op as postfix_op;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_postfix_op: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_postfix_op;
-    pub(super) use super::__rule_primary as primary;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_primary: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_primary;
-    pub(super) use super::__rule_path as path;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_path: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_path;
-    pub(super) use super::__rule_path_start as path_start;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_path_start: bool = false;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_path_start;
-    pub(super) use super::__rule_literal as literal;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_literal: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_literal;
-    pub(super) use super::__rule_string as string;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_string: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_string;
-    pub(super) use super::__rule_string_char as string_char;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_string_char: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_string_char;
-    pub(super) use super::__rule_line_continuation as line_continuation;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_line_continuation: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_line_continuation;
-    pub(super) use super::__rule_byte_string as byte_string;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_byte_string: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_byte_string;
-    pub(super) use super::__rule_byte_string_char as byte_string_char;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_byte_string_char: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_byte_string_char;
-    pub(super) use super::__rule_raw_string as raw_string;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_raw_string: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_raw_string;
-    pub(super) use super::__rule_raw_byte_string as raw_byte_string;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_raw_byte_string: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_raw_byte_string;
-    pub(super) use super::__rule_raw_body as raw_body;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_raw_body: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_raw_body;
-    pub(super) use super::__rule_char_lit as char_lit;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_char_lit: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_char_lit;
-    pub(super) use super::__rule_char_body as char_body;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_char_body: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_char_body;
-    pub(super) use super::__rule_byte_char as byte_char;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_byte_char: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_byte_char;
-    pub(super) use super::__rule_byte_char_body as byte_char_body;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_byte_char_body: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_byte_char_body;
-    pub(super) use super::__rule_escape as escape;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_escape: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_escape;
-    pub(super) use super::__rule_byte_escape as byte_escape;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_byte_escape: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_byte_escape;
-    pub(super) use super::__rule_hex as hex;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_hex: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_hex;
-    pub(super) use super::__rule_class as class;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_class: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_class;
-    pub(super) use super::__rule_class_item as class_item;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_class_item: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_class_item;
-    pub(super) use super::__rule_class_char as class_char;
-    #[doc(hidden)]
-    #[allow(non_upper_case_globals)]
-    pub(super) const __atom_class_char: bool = true;
-    #[doc(hidden)]
-    pub(super) use super::__delimited_class_char;
+    #[allow(unused, non_snake_case)]
+    pub fn __delimited_grammar<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `inner_attr` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn inner_attr<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Attr> {
+        __rule_inner_attr(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_inner_attr: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_inner_attr<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `outer_attr` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn outer_attr<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Attr> {
+        __rule_outer_attr(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_outer_attr: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_outer_attr<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `doc_comment` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn doc_comment<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Attr> {
+        __rule_doc_comment(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_doc_comment: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_doc_comment<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `attr_body` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn attr_body<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<(Ident, AttrArg)> {
+        __rule_attr_body(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_attr_body: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_attr_body<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `attr_value` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn attr_value<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<AttrArg> {
+        __rule_attr_value(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_attr_value: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_attr_value<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `item` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn item<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Item> {
+        __rule_item(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_item: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_item<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `rust_item` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_item<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Span> {
+        __rule_rust_item(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_item: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_item<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `rust_attr` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_attr<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_rust_attr(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_attr: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_attr<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `rust_doc_comment` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_doc_comment<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_rust_doc_comment(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_doc_comment: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_doc_comment<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `semi_item` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn semi_item<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_semi_item(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_semi_item: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_semi_item<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `brace_item` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn brace_item<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_brace_item(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_brace_item: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_brace_item<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `rust_to_semi` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_to_semi<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_rust_to_semi(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_to_semi: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_to_semi<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `rust_to_brace` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_to_brace<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_rust_to_brace(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_to_brace: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_to_brace<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `vis` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn vis<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Span> {
+        __rule_vis(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_vis: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_vis<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `rust_paren` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_paren<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_rust_paren(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_paren: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_paren<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `rust_tt` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_tt<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_rust_tt(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_tt: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_tt<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `rust_group` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_group<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_rust_group(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_group: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_group<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `rust_string` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_string<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_rust_string(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_string: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_string<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `rust_char_or_lifetime` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_char_or_lifetime<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_rust_char_or_lifetime(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_char_or_lifetime: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_char_or_lifetime<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `rule` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rule<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Rule> {
+        __rule_rule(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rule: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rule<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `rule_header` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rule_header<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_rule_header(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rule_header: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rule_header<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `item_start` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn item_start<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_item_start(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_item_start: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_item_start<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `ty_span` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn ty_span<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Span> {
+        __rule_ty_span(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_ty_span: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_ty_span<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `ty` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn ty<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_ty(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_ty: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_ty<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `ty_list` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn ty_list<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_ty_list(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_ty_list: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_ty_list<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `array_len` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn array_len<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_array_len(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_array_len: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_array_len<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `type_path` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn type_path<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_type_path(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_type_path: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_type_path<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `path_segment` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn path_segment<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_path_segment(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_path_segment: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_path_segment<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `generic_arg` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn generic_arg<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_generic_arg(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_generic_arg: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_generic_arg<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `number` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn number<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_number(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_number: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_number<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `bounds` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn bounds<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_bounds(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_bounds: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_bounds<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `bound` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn bound<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_bound(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_bound: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_bound<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `lifetime` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn lifetime<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_lifetime(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_lifetime: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_lifetime<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `expr` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn expr<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Expr> {
+        __rule_expr(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_expr: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_expr<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `choice` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn choice<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Expr> {
+        __rule_choice(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_choice: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_choice<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `choice_sep` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn choice_sep<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_choice_sep(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_choice_sep: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_choice_sep<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `sequence` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn sequence<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Expr> {
+        __rule_sequence(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_sequence: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_sequence<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `action` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn action<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<(Span, bool)> {
+        __rule_action(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_action: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_action<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `rust_brace` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn rust_brace<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Span> {
+        __rule_rust_brace(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_rust_brace: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_rust_brace<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `element` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn element<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Expr> {
+        __rule_element(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_element: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_element<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `bind` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn bind<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Expr> {
+        __rule_bind(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_bind: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_bind<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `prefix` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn prefix<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Expr> {
+        __rule_prefix(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_prefix: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_prefix<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `postfix` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn postfix<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Expr> {
+        __rule_postfix(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_postfix: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_postfix<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `postfix_op` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn postfix_op<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<char> {
+        __rule_postfix_op(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_postfix_op: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_postfix_op<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `primary` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn primary<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Primary> {
+        __rule_primary(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_primary: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_primary<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `path` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn path<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Path> {
+        __rule_path(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_path: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_path<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `path_start` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn path_start<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Ident> {
+        __rule_path_start(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_path_start: bool = false;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_path_start<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        true
+    }
+    /// Matches the rule `literal` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn literal<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Lit> {
+        __rule_literal(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_literal: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_literal<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `string` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn string<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Lit> {
+        __rule_string(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_string: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_string<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `string_char` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn string_char<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Option<char>> {
+        __rule_string_char(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_string_char: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_string_char<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `line_continuation` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn line_continuation<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_line_continuation(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_line_continuation: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_line_continuation<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `byte_string` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn byte_string<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Lit> {
+        __rule_byte_string(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_byte_string: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_byte_string<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `byte_string_char` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn byte_string_char<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Option<u8>> {
+        __rule_byte_string_char(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_byte_string_char: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_byte_string_char<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `raw_string` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn raw_string<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Lit> {
+        __rule_raw_string(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_raw_string: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_raw_string<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `raw_byte_string` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn raw_byte_string<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Lit> {
+        __rule_raw_byte_string(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_raw_byte_string: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_raw_byte_string<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `raw_body` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn raw_body<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<&'i str> {
+        __rule_raw_body(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_raw_body: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_raw_body<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `char_lit` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn char_lit<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Lit> {
+        __rule_char_lit(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_char_lit: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_char_lit<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `char_body` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn char_body<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<char> {
+        __rule_char_body(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_char_body: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_char_body<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `byte_char` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn byte_char<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Lit> {
+        __rule_byte_char(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_byte_char: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_byte_char<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `byte_char_body` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn byte_char_body<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<u8> {
+        __rule_byte_char_body(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_byte_char_body: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_byte_char_body<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `escape` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn escape<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<char> {
+        __rule_escape(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_escape: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_escape<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `byte_escape` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn byte_escape<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<u8> {
+        __rule_byte_escape(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_byte_escape: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_byte_escape<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `hex` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn hex<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_hex(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_hex: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_hex<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `class` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn class<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<Class> {
+        __rule_class(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_class: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_class<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `class_item` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn class_item<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<(char, char)> {
+        __rule_class_item(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_class_item: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_class_item<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
+    /// Matches the rule `class_char` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn class_char<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<char> {
+        __rule_class_char(cx, memo, pos)
+    }
+    #[doc(hidden)]
+    #[allow(dead_code, non_upper_case_globals)]
+    const __atom_class_char: bool = true;
+    #[doc(hidden)]
+    #[allow(unused, non_snake_case)]
+    fn __delimited_class_char<'i>(
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __start: usize,
+        __end: usize,
+    ) -> bool {
+        __delimited(__cx, __m, __start, __end)
+    }
 }
 
 #[doc(hidden)]

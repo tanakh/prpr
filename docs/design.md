@@ -184,7 +184,8 @@ For each grammar the back end generates, in the scope where it is invoked:
 ```rust
 pub fn value<'i>(input: &'i str) -> Result<Value, ParseError>;   // per rule, full match
 pub struct Memo<'i> { /* tables of #[memo] rules, whitespace cache, `Memo`s of other grammars */ }
-pub mod rules {                                                    // raw, composable rules
+pub enum Rules {}                                                  // raw, composable rules
+impl Rules {
     pub fn value<'i>(cx: &mut Cx<'i, str>, m: &mut Memo<'i>, pos: usize) -> Result<(Value, usize), Fail>;
 }
 ```
@@ -193,9 +194,12 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 `runtime::parse_full` and `runtime::parse_prefix` run raw rules, e.g. to parse a prefix of the input.
 
 * Rules are plain functions. `Cx` (input and error tracking) is defined by the runtime and shared by all grammars; `Memo` is per grammar.
+* `Rules` is a type rather than a module, so that grammars work in function bodies, where a module could not refer to the items of the function, and so that its items have the visibilities written on the rules.
+  It is an enum without variants: it has no values, and it does not take the name `Rules` in the value namespace.
+  Associated functions cannot be imported with `use`; they are called by their paths.
 * A rule of another grammar is referenced by path, e.g. `json::value`.
   The caller's `Memo` embeds the callee grammar's `Memo` automatically, and errors are tracked in the shared `Cx`.
-  Whether the callee is an atom is read from a constant emitted by the callee grammar (`rules::__atom_value`), so whitespace is handled at compile time, and the boundary check of the callee's grammar is used (`rules::__delimited_value`).
+  Whether the callee is an atom is read from a constant emitted by the callee grammar (`Rules::__atom_value`), so whitespace is handled at compile time, and the boundary check of the callee's grammar is used (`Rules::__delimited_value`).
   Both grammars must use the same runtime and input kind; the compiler checks this.
 * Rule bodies are compiled to straight-line code with labeled blocks and `let`-`else`; no closure chains.
   Actions are wrapped in immediately invoked closures so that `return` and `?` stay local to the action.
@@ -268,12 +272,12 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 3. `#[memo]` and benchmarks (done); the memo lint and profiling.
 4. Byte input, public `SourceText`, cross-grammar references (done); more diagnostics tests.
 
-Next: `grammar!` inside function bodies (the generated module `rules` cannot refer to items defined in a function; `rules` could become a type with associated functions instead), warnings from the macro (stable proc-macros cannot emit them directly), `include_grammar!("file.peg")`, a `build.rs` builder.
+Next: warnings from the macro (stable proc-macros cannot emit them directly), `include_grammar!("file.peg")`, a `build.rs` builder.
 
 Later: cut operator (which would also sharpen errors such as `[z-a]`), left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data, and for closing delimiters that repeat the opening one, as in raw strings and heredocs, if a parameter can be matched as a literal), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
 
 When a need arises: tokens written in Rust, for what grammars cannot express (closing delimiters that repeat the opening one, as in raw strings and heredocs; indentation) or for speed (e.g. `memchr`).
-They would be atoms, which need neither memoization nor implicit whitespace, written with the documented part of `Cx`; how grammars refer to them depends on the form of `rules`.
+They would be atoms, which need neither memoization nor implicit whitespace, written with the documented part of `Cx`; grammars could refer to them as they refer to the rules of other grammars, through a type like `Rules`.
 
 ## Syntax definition
 

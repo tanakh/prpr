@@ -151,6 +151,6 @@ With `grammar!`, it reports errors at the grammar; for grammar files, it reports
     |           ^^^^ the trait `Clone` is not implemented for `Tree`
   ```
 
-* **Rules of other grammars** that do not exist or are not visible are reported at their names, as `cannot find function` or `function import is private` errors.
+* **Rules of other grammars** that do not exist or are not visible are reported at their names, as errors that their grammar's `Rules` has no associated function of that name, or that it is private.
   The compiler may report several errors for one mistake, about helpers whose names start with `__`.
   A rule of a grammar of a different kind of input, text or binary, is reported as mismatched types between `Cx<'_, str>` and `Cx<'_, [u8]>`.

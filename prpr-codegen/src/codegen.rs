@@ -208,7 +208,7 @@ impl Gen<'_> {
         for info in &self.an.rules {
             out.extend(self.rule(info));
         }
-        out.extend(self.rules_module());
+        out.extend(self.rules_type());
         out
     }
 
@@ -438,9 +438,8 @@ impl Gen<'_> {
         };
         let vis = rule.vis.map(|v| self.tokens(v)).unwrap_or_default();
         let raw_fn = q! {
-            #[doc(hidden)]
             #[allow(unused, non_snake_case, clippy::all)]
-            #vis fn #raw<'i>(
+            fn #raw<'i>(
                 __cx: &mut #rt::Cx<'i, #input>,
                 __m: &mut Memo<'i>,
                 __pos: usize,
@@ -477,15 +476,25 @@ impl Gen<'_> {
         }
     }
 
-    fn rules_module(&self) -> TokenStream {
+    // `Rules`, a type whose associated functions are the rules. A type rather than a module, so
+    // that it can refer to the rest of the grammar even inside a function body.
+    fn rules_type(&self) -> TokenStream {
         let rt = &self.rt;
         let input = &self.input;
-        let mut delimited_fns = TokenStream::new();
-        let uses = self.an.rules.iter().filter(|r| !r.builtin).map(|info| {
+        let items = self.an.rules.iter().filter(|r| !r.builtin).map(|info| {
             let rule = &info.rule;
             let raw = raw_name(&rule.name.name);
             let name = Ident::new(&rule.name.name, TokenSpan::call_site());
-            let vis = self.child_vis(rule.vis);
+            let vis = rule.vis.map(|v| self.tokens(v)).unwrap_or_default();
+            let ty = self.rule_type(info);
+            let docs = if info.docs.is_empty() {
+                vec![format!(
+                    " Matches the rule `{}` at `pos`, and returns its value and the position after it.",
+                    rule.name.name
+                )]
+            } else {
+                info.docs.clone()
+            };
             let atom = rule.atom;
             let atom_const = atom_const(&rule.name.name);
             let delimited = delimited_fn(&rule.name.name);
@@ -497,11 +506,25 @@ impl Gen<'_> {
                     q!(#f(__cx, __m, __end))
                 }
             };
-            let fn_vis = rule.vis.map(|v| self.tokens(v)).unwrap_or_default();
-            delimited_fns.extend(q! {
+            q! {
+                #(#[doc = #docs])*
+                #[inline]
+                #[allow(dead_code)]
+                #vis fn #name<'i>(
+                    cx: &mut #rt::Cx<'i, #input>,
+                    memo: &mut Memo<'i>,
+                    pos: usize,
+                ) -> #rt::PResult<#ty> {
+                    #raw(cx, memo, pos)
+                }
+
+                #[doc(hidden)]
+                #[allow(dead_code, non_upper_case_globals)]
+                #vis const #atom_const: bool = #atom;
+
                 #[doc(hidden)]
                 #[allow(unused, non_snake_case)]
-                #fn_vis fn #delimited<'i>(
+                #vis fn #delimited<'i>(
                     __cx: &mut #rt::Cx<'i, #input>,
                     __m: &mut Memo<'i>,
                     __start: usize,
@@ -509,56 +532,15 @@ impl Gen<'_> {
                 ) -> bool {
                     #check
                 }
-            });
-            q! {
-                #vis use super::#raw as #name;
-                #[doc(hidden)]
-                #[allow(non_upper_case_globals)]
-                #vis const #atom_const: bool = #atom;
-                #[doc(hidden)]
-                #vis use super::#delimited;
             }
         });
-        let uses: Vec<TokenStream> = uses.collect();
         q! {
-            #delimited_fns
+            /// The rules of the grammar, as functions that other grammars and Rust code can call.
+            pub enum Rules {}
 
-            /// The rules of the grammar as functions that can be called from other parsers.
-            #[allow(unused_imports)]
-            pub mod rules {
-                #(#uses)*
+            impl Rules {
+                #(#items)*
             }
-        }
-    }
-
-    // The visibility in the child module `rules` that is equivalent to `vis` in the grammar's
-    // module.
-    fn child_vis(&self, vis: Option<Span>) -> TokenStream {
-        let Some(span) = vis else {
-            return q!(pub(super));
-        };
-        let text: String = self.src.text()[span]
-            .chars()
-            .filter(|c| !c.is_whitespace())
-            .collect();
-        match text.as_str() {
-            "pub" => q!(pub),
-            "pub(crate)" => q!(pub(crate)),
-            "pub(self)" => q!(pub(super)),
-            "pub(super)" => q!(pub(in super::super)),
-            _ => match text
-                .strip_prefix("pub(in")
-                .and_then(|p| p.strip_suffix(')'))
-            {
-                Some(path) if path.starts_with("crate") || path.starts_with("::") => {
-                    self.tokens(span)
-                }
-                Some(path) => {
-                    let path: TokenStream = path.parse().unwrap_or_default();
-                    q!(pub(in super::#path))
-                }
-                None => self.tokens(span),
-            },
         }
     }
 
@@ -864,7 +846,7 @@ impl Gen<'_> {
         atom.set_span(rule.span());
         let mut delimited = delimited_fn(&name.name);
         delimited.set_span(rule.span());
-        let call = q!(#module::rules::#rule(__cx, &mut __m.#field, __pos));
+        let call = q!(#module::Rules::#rule(__cx, &mut __m.#field, __pos));
         let code = match mode {
             Mode::Value => call,
             Mode::Recognize => q!(match #call { Ok((_, __p)) => Ok(__p), Err(__f) => Err(__f) }),
@@ -877,7 +859,7 @@ impl Gen<'_> {
             Mode::Recognize => q!(__r),
         };
         q! {{
-            const __ATOM: bool = #module::rules::#atom;
+            const __ATOM: bool = #module::Rules::#atom;
             let __pos = if __ATOM { __skip(__cx, __m, __pos) } else { __pos };
             let __mark = if __ATOM { ::core::option::Option::Some(__cx.mark()) } else { ::core::option::Option::None };
             match #code {
@@ -885,7 +867,7 @@ impl Gen<'_> {
                     if let ::core::option::Option::Some(__mark) = __mark {
                         __cx.rollback(__mark);
                     }
-                    if !__ATOM || #module::rules::#delimited(__cx, &mut __m.#field, __pos, #end) {
+                    if !__ATOM || #module::Rules::#delimited(__cx, &mut __m.#field, __pos, #end) {
                         Ok(__r)
                     } else {
                         Err(__cx.fail(#end, #rt::Expected::Delimiter))
