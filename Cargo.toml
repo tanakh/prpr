@@ -1,11 +1,29 @@
 [workspace]
-members = ["prpr-rt"]
+members = ["prpr-runtime"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+authors = ["Hideyuki Tanaka <tanaka.hideyuki@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/tanakh/prpr"
+
+[workspace.dependencies]
+prpr-runtime = { path = "prpr-runtime", version = "=0.1.0" }
+proc-macro2 = { version = "1.0.107", features = ["span-locations"] }
 
 [package]
 name = "prpr"
-version = "0.1.0"
-edition = "2024"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "A Packrat parser generator"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
 
 [dependencies]
+prpr-runtime.workspace = true
+
