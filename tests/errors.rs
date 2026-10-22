@@ -15,6 +15,11 @@ prpr::grammar! {
     test_list = "[" (item, ",")* "]"
     #[label = "item"]
     item = "<" [a-z]+ ">"
+
+    test_keyword = "let" ident
+    #[label = "identifier"]
+    atom ident = !keyword [a-z]+
+    atom keyword = "let" ![a-z]
 }
 
 fn err(r: Result<(), prpr::ParseError>) -> (String, usize) {
@@ -87,6 +92,12 @@ fn labels() {
     assert_eq!(
         err(test_list("[<a>, <b]")),
         ("expected one of `>` or `[a-z]`, found `]`".into(), 8)
+    );
+
+    // A label also replaces a failure that expected nothing in particular.
+    assert_eq!(
+        err(test_keyword("let let")),
+        ("expected identifier, found `l`".into(), 4)
     );
 }
 

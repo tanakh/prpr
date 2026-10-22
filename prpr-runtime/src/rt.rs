@@ -270,8 +270,8 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
         Fail
     }
 
-    /// Records a failure at `pos` without saying what was expected,
-    /// so that the error is reported as "unexpected ...".
+    /// Records a failure at `pos` without saying what was expected, so that the error is
+    /// reported as "unexpected ...", unless a label is in effect at `pos`.
     #[inline]
     pub fn fail_unexpected(&mut self, pos: usize) -> Fail {
         if self.tracking && pos >= self.err_pos && self.quiet == 0 {
@@ -289,12 +289,10 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
                 self.expected.clear();
             }
         }
-        let Some(expected) = expected else {
-            return;
-        };
-        let expected = match self.label {
-            Some((label_pos, label)) if label_pos == pos => Expected::Label(label),
-            _ => expected,
+        let expected = match (self.label, expected) {
+            (Some((label_pos, label)), _) if label_pos == pos => Expected::Label(label),
+            (_, Some(expected)) => expected,
+            (_, None) => return,
         };
         let recorded = self.expected.iter().rev().take_while(|(p, _)| *p == pos);
         if !recorded.into_iter().any(|(_, e)| *e == expected) {
