@@ -5,9 +5,11 @@
 
 mod analysis;
 mod ast;
+#[cfg(feature = "build")]
+pub mod build;
 mod codegen;
 mod diag;
-#[cfg(feature = "pretty")]
+#[cfg(feature = "build")]
 pub mod file;
 mod parser;
 mod source;

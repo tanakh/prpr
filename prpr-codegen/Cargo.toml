@@ -12,8 +12,8 @@ keywords = ["peg", "parser", "packrat", "parser-generator", "codegen"]
 categories = ["parsing", "development-tools::build-utils"]
 
 [features]
-# Pretty-printed output for standalone files.
-pretty = ["dep:prettyplease", "dep:syn"]
+# Modules generated from grammar files, as text: `file` for tools, and `build` for build scripts.
+build = ["dep:prettyplease", "dep:syn"]
 
 [dependencies]
 prpr-runtime = { workspace = true, features = ["proc-macro2"] }
@@ -22,3 +22,6 @@ quote.workspace = true
 prettyplease = { version = "0.3.0", optional = true }
 syn = { version = "3.0.9", optional = true, default-features = false, features = ["full", "parsing"] }
 
+[[test]]
+name = "build"
+required-features = ["build"]

@@ -29,7 +29,7 @@ Diagnostics are tested `rustc`-style with [`ui_test`](https://crates.io/crates/u
 |---|---|
 | `prpr` | Facade. Re-exports `prpr-runtime` as `prpr::runtime` and the `grammar!` and `include_grammar!` macros. Users of the macro depend on this crate only. |
 | `prpr-runtime` | Everything generated code needs at run time. `no_std` + `alloc`, no dependencies. Kept as a single self-contained module so that it can be inlined into generated files. The optional `proc-macro2` feature adds `SourceText` (see below). |
-| `prpr-codegen` | Grammar front end, static analysis and the Rust back end. Used by the macro, the CLI and `build.rs` scripts. Depends on `proc-macro2`, `quote` and `prpr-runtime` (for `SourceText`), plus `prettyplease`/`syn` behind the `pretty` feature, which provides standalone files (`prpr_codegen::file`). |
+| `prpr-codegen` | Grammar front end, static analysis and the Rust back end. Used by the macro, the CLI and `build.rs` scripts. Depends on `proc-macro2`, `quote` and `prpr-runtime` (for `SourceText`), plus `prettyplease`/`syn` behind the `build` feature, which provides standalone files (`prpr_codegen::file`) and the builder for build scripts (`prpr_codegen::build`). |
 | `prpr-macros` | The `grammar! { ... }` and `include_grammar!("file.peg")` proc-macros. Thin wrappers around `prpr-codegen`. |
 | `prpr-cli` | The `prpr` command: `prpr gen` writes standalone `.rs` files, `prpr check` reports diagnostics, `prpr runtime` writes the runtime as a module. |
 
@@ -233,6 +233,8 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 * `--inline-runtime` embeds the runtime into the generated file, for zero-dependency single grammars and for bootstrapping.
 * `prpr runtime -o rt.rs` writes the runtime once, and generated files refer to it with `--runtime-path crate::rt`.
   (The `prpr_codegen::file` module provides the same for `build.rs` scripts.)
+* In build scripts, `prpr_codegen::build::compile("src/x.peg")` writes `$OUT_DIR/src/x.peg.rs` and emits `cargo::rerun-if-changed`, and `prpr_runtime::include_parser!("src/x.peg")` includes it (a `macro_rules!` macro, kept out of `rt.rs` so that it is not inlined into generated files).
+  Build scripts can show warnings (`cargo::warning=`), which stable proc-macros cannot.
   This gives zero external dependencies without duplicating the runtime across grammars.
 * Public API of the runtime:
   * What users need is documented: errors (`ParseError`, `Expected`, `Found`, `LineCol`, `Snippet`), running rules (`parse_full`, `parse_prefix`), and `Cx` as far as matching input and recording failures go, which is enough to write a matcher by hand.
@@ -275,7 +277,7 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 3. `#[memo]` and benchmarks (done); the memo lint and profiling.
 4. Byte input, public `SourceText`, cross-grammar references (done); more diagnostics tests.
 
-Next: warnings from the macro (stable proc-macros cannot emit them directly), a `build.rs` builder.
+Next: warnings from the macro (stable proc-macros cannot emit them directly).
 
 Later: cut operator (which would also sharpen errors such as `[z-a]`), left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data, and for closing delimiters that repeat the opening one, as in raw strings and heredocs, if a parameter can be matched as a literal), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
 

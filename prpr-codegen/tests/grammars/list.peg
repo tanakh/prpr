@@ -1,0 +1,4 @@
+// A comma-separated list of numbers, for tests/build.rs.
+pub list: Vec<i64> = "[" xs:(number, ",")* "]" { xs }
+
+atom number: i64 = s:([0-9]+) { #s.parse().unwrap() }
