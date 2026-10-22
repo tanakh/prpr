@@ -45,6 +45,9 @@ fn main() {
 The module has the same items as `grammar!` would generate (see [The generated API](api.md)), formatted for reading.
 It starts with a comment saying that it was generated: edit the grammar and generate the module again, rather than editing the module.
 
+Generated code, including the runtime that `--inline-runtime` and `prpr runtime` write, may be used under any terms, without the notices that the licenses of prpr require.
+The comment at its start says so, and the [license](https://github.com/tanakh/prpr#license) of prpr states the exception.
+
 ## Where the runtime comes from
 
 Generated code calls the runtime, which can be found in three ways:
