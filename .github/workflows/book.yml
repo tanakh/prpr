@@ -1,0 +1,52 @@
+name: Book
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deployment at a time, without cancelling one in progress.
+concurrency:
+  group: book-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  MDBOOK_VERSION: 0.5.4
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install mdBook
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -sSfL "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar -xz -C "$HOME/.local/bin"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      # The examples of the book are tested by the CI workflow.
+      - run: mdbook build book
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: book/book
+
+  # Requires GitHub Pages to be enabled with "GitHub Actions" as its source.
+  deploy:
+    name: Deploy
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

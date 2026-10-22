@@ -5,5 +5,7 @@ language = "en"
 src = "src"
 
 [output.html]
+# The book is published at https://tanakh.github.io/prpr/.
+site-url = "/prpr/"
 git-repository-url = "https://github.com/tanakh/prpr"
 additional-css = ["theme/ansi.css"]

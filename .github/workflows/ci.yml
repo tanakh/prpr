@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: Test (${{ matrix.toolchain }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 1.96 is the minimum supported version, `rust-version` in Cargo.toml.
+        toolchain: [stable, "1.96"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.toolchain }}
+      - uses: Swatinem/rust-cache@v2
+      # Includes the examples of the book (as doctests of the `prpr` crate), the compile-fail
+      # tests in tests/ui, and the check that the self-hosted parser is up to date.
+      - run: cargo test --workspace --locked
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo doc --workspace --no-deps --locked
+        env:
+          RUSTDOCFLAGS: -D warnings
+
+  benchmarks:
+    name: Benchmarks
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: benchmarks
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: benchmarks
+      # Without the downloaded documents, the parsers are compared on small documents only.
+      - run: cargo test --locked
+      - run: cargo check --benches --locked
