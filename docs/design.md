@@ -248,6 +248,8 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 
 * `ui_test` for compile-fail tests of `grammar!` in `tests/ui` (`cargo test --test ui -- --bless` updates expectations).
 * Ordinary `#[test]`s with `assert_eq!` for parsing behaviour.
+* The examples of the book (`book/`) are documentation tests of the `prpr` crate: `src/lib.rs` includes each chapter with `#[doc = include_str!(...)]` under `#[cfg(doctest)]`.
+  Examples that cannot run are marked `rust,ignore`.
 * Benchmarks: a JSON parser compared against other parser generators and combinator libraries ([results](../benchmarks/README.md)).
 
 ### Roadmap

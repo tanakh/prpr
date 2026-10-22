@@ -1,0 +1,42 @@
+/* Terminal output (with ANSI colors) shown in the book, for light and dark themes. */
+
+/* Fonts with box-drawing characters of the same width as the other characters, so that the
+   frames that diagnostic libraries draw line up. */
+pre.terminal > code {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, "DejaVu Sans Mono", "Liberation Mono", monospace;
+    line-height: 1.25;
+}
+
+html.light,
+html.rust {
+    --ansi-red: #c62828;
+    --ansi-bright-red: #e53935;
+    --ansi-magenta: #8e24aa;
+    --ansi-cyan: #00838f;
+    --ansi-gray-240: #5f5f5f;
+    --ansi-gray-246: #767676;
+    --ansi-gray-249: #8a8a8a;
+}
+
+html.coal,
+html.navy,
+html.ayu {
+    --ansi-red: #ff6b6b;
+    --ansi-bright-red: #ff5252;
+    --ansi-magenta: #e07ff0;
+    --ansi-cyan: #4dd0e1;
+    --ansi-gray-240: #808080;
+    --ansi-gray-246: #949494;
+    --ansi-gray-249: #b2b2b2;
+}
+
+.ansi-31 { color: var(--ansi-red); }
+.ansi-35 { color: var(--ansi-magenta); }
+.ansi-36 { color: var(--ansi-cyan); }
+.ansi-38-5-9 { color: var(--ansi-bright-red); }
+.ansi-38-5-240 { color: var(--ansi-gray-240); }
+.ansi-38-5-246 { color: var(--ansi-gray-246); }
+.ansi-38-5-249 { color: var(--ansi-gray-249); }
+.ansi-bold { font-weight: bold; }
+.ansi-dim { opacity: 0.7; }
+.ansi-underline { text-decoration: underline; }

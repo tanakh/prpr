@@ -26,7 +26,13 @@ assert_eq!(expr("1 +").unwrap_err().to_string(), "expected one of `(` or number,
 * Grammars can be written inline with `grammar!`, or in files compiled with `prpr gen` (from `prpr-cli`) into standalone Rust modules.
 * Text (`&str`) and binary (`&[u8]`) input are supported.
 
-See the [design note](docs/design.md) for the grammar language and the design, and [benchmarks](benchmarks/README.md) for how it compares with other libraries.
+## Documentation
+
+* [The prpr Book](book/src/SUMMARY.md) explains how to use prpr.
+  Build it with [mdBook](https://rust-lang.github.io/mdBook/): `mdbook build book`.
+  Its examples are tested by `cargo test`.
+* The [design note](docs/design.md) explains the design.
+* The [benchmarks](benchmarks/README.md) compare prpr with other libraries.
 
 ## Crates
 

@@ -1,0 +1,9 @@
+[book]
+title = "The prpr Book"
+authors = ["Hideyuki Tanaka"]
+language = "en"
+src = "src"
+
+[output.html]
+git-repository-url = "https://github.com/tanakh/prpr"
+additional-css = ["theme/ansi.css"]

@@ -1,0 +1,90 @@
+# Memoization and performance
+
+## Backtracking
+
+When an alternative of a choice fails, the next alternative starts again from the same position.
+Rules that the first alternative already ran may then run again at the same position.
+Usually this costs little, but when it happens at every level of a nested structure, the work doubles at each level:
+
+```rust,ignore
+prpr::grammar! {
+    // `term` is parsed twice when there is no `!`, at every level of nesting.
+    pub term: i64
+        = "(" t:term ")" "!" { t + 1 }
+        / "(" t:term ")" { t }
+        / "x" { 0 }
+}
+```
+
+With 30 nested parentheses and no `!`, this grammar runs `term` about a billion times.
+
+## `#[memo]`
+
+A Packrat parser avoids this by remembering the result of each rule at each position.
+In prpr, a rule remembers its results when it has the `#[memo]` attribute:
+
+```rust
+prpr::grammar! {
+    #[memo]
+    pub term: i64
+        = "(" t:term ")" "!" { t + 1 }
+        / "(" t:term ")" { t }
+        / "x" { 0 }
+}
+
+fn main() {
+    let input = format!("{}x{}", "(".repeat(1000), ")".repeat(1000));
+    assert_eq!(term(&input), Ok(0));
+}
+```
+
+The results are kept in a table for each memoized rule, in the `Memo` struct that each parse creates and drops; there is no global state.
+
+When a memoized rule is invoked again at the same position, it returns a clone of its value, so the type of a memoized rule must implement `Clone`.
+If cloning would be expensive, wrap the value in an `Rc`.
+A type that does not implement `Clone` is reported at the type of the rule.
+
+Memoization has a cost: every invocation of the rule looks up and stores a result.
+That is why prpr memoizes only the rules that ask for it.
+
+## When to memoize
+
+A rule is worth memoizing when several alternatives can invoke it at the same position, typically because they start the same way, and when it is not cheap: a syntactic rule rather than a token.
+
+Often, factoring out the common start is even better than memoizing:
+
+```rust
+prpr::grammar! {
+    pub term: i64
+        = "(" t:term ")" bang:"!"? { if bang.is_some() { t + 1 } else { t } }
+        / "x" { 0 }
+}
+
+fn main() {
+    assert_eq!(term("((x)!)"), Ok(1));
+}
+```
+
+## Writing fast grammars
+
+prpr generates straight-line Rust code, and a few habits help it generate fast code:
+
+* **Make tokens atoms.**
+  Inside atoms nothing is skipped, and repetitions of character classes that contain only ASCII characters, such as `[0-9]+` or `[^ '"' '\\']*`, compile to loops over bytes when their values are not needed.
+* **Take slices instead of building values.**
+  `s:([0-9]+) { #s.parse().unwrap() }` borrows the digits from the input, while `ds:[0-9]+` would build a `Vec<char>`.
+  Values that are not needed are not built: rules without a type and unbound elements only recognize the input.
+* **Borrow from the input.**
+  Types with the lifetime `'i`, such as `&'i str`, avoid copying, as in [the JSON tutorial](../getting-started/json.md#step-6-borrowing-from-the-input).
+* **Let alternatives fail early.**
+  Alternatives that start with different tokens fail at their first token, which is cheap.
+
+Error reporting does not slow down parsing of valid input, because failures are only recorded when a parse is repeated after it failed (see [Error messages](errors.md#how-errors-are-found)).
+
+On the JSON documents of the [benchmarks](https://github.com/tanakh/prpr/tree/master/benchmarks), prpr parses faster than rust-peg, pest, nom and winnow, and close to serde_json:
+
+| document | prpr | rust-peg | pest | nom | winnow | serde_json |
+|---|---:|---:|---:|---:|---:|---:|
+| canada.json (2.2 MB) | 8.0 ms | 8.9 ms | 35.7 ms | 12.8 ms | 14.7 ms | 4.6 ms |
+| citm_catalog.json (1.7 MB) | 2.4 ms | 3.0 ms | 28.6 ms | 4.7 ms | 6.1 ms | 2.7 ms |
+| twitter.json (0.6 MB) | 1.4 ms | 1.6 ms | 14.1 ms | 2.2 ms | 3.0 ms | 1.3 ms |
