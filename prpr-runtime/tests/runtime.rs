@@ -1,3 +1,4 @@
+use core::range::Range;
 use prpr_runtime::*;
 
 #[test]
@@ -68,8 +69,7 @@ error: expected `x`, found `s`
 
 #[test]
 fn spans() {
-    assert_eq!(Span::new(3, 1), Span::new(1, 1));
-    assert!(Span::new(1, 5).contains(Span::new(2, 5)));
-    assert!(!Span::new(1, 5).contains(Span::new(0, 2)));
-    assert_eq!(Span::from(2..4).len(), 2);
+    assert_eq!(span(1, 5), Range::from(1..5));
+    // A span that would end before it starts is empty at its end.
+    assert_eq!(span(3, 1), Range::from(1..1));
 }

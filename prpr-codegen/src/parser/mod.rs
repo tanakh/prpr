@@ -14,7 +14,10 @@ pub fn parse(text: &str) -> Result<Grammar, Diagnostic> {
     generated::grammar(text).map_err(|e| {
         let span = e.span();
         Diagnostic::error(
-            Span::new(span.start, span.end),
+            Span {
+                start: span.start,
+                end: span.end,
+            },
             format!("syntax error: {e}"),
         )
     })
@@ -62,7 +65,7 @@ mod tests {
             .items
             .iter()
             .filter_map(|it| match it {
-                Item::Rust(sp) => Some(&s[sp.range()]),
+                Item::Rust(sp) => Some(&s[*sp]),
                 _ => None,
             })
             .collect();
@@ -92,7 +95,7 @@ mod tests {
         ] {
             let s = format!("r: {ty} = \"a\"");
             let g = parse_ok(&s);
-            assert_eq!(&s[rules(&g)[0].ty.unwrap().range()], ty);
+            assert_eq!(&s[rules(&g)[0].ty.unwrap()], ty);
         }
     }
 
@@ -153,8 +156,8 @@ mod tests {
     #[test]
     fn errors() {
         let e = parse("r = (a b").unwrap_err();
-        assert_eq!(e.span, Span::new(8, 8));
+        assert_eq!(e.span, prpr_runtime::span(8, 8));
         let e = parse("r = a / ").unwrap_err();
-        assert_eq!(e.span, Span::new(8, 8));
+        assert_eq!(e.span, prpr_runtime::span(8, 8));
     }
 }

@@ -531,7 +531,7 @@ impl Gen<'_> {
         let Some(span) = vis else {
             return q!(pub(super));
         };
-        let text: String = self.src.text()[span.range()]
+        let text: String = self.src.text()[span]
             .chars()
             .filter(|c| !c.is_whitespace())
             .collect();
@@ -1072,7 +1072,7 @@ impl Gen<'_> {
                 }
                 if need_span {
                     let var = span_var(&name.name);
-                    stmts.push(q!(let #var = #rt::Span::new(#start, __pos);));
+                    stmts.push(q!(let #var = #rt::span(#start, __pos);));
                 }
             }
         }
@@ -1085,7 +1085,7 @@ impl Gen<'_> {
                 }
                 if usage.whole_span {
                     let var = span_var("_");
-                    stmts.push(q!(let #var = #rt::Span::new(__start, __pos);));
+                    stmts.push(q!(let #var = #rt::span(__start, __pos);));
                 }
                 let code = rewrite_action(code, &names);
                 // The value of a predicate is not the value of the sequence.

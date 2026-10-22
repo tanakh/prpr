@@ -35,7 +35,7 @@ Diagnostics are tested `rustc`-style with [`ui_test`](https://crates.io/crates/u
 
 Benchmarks live in `benchmarks/`, a separate workspace so that the libraries compared with stay out of the main one.
 
-The minimum supported Rust version is 1.88, which stabilized `proc_macro::Span::{start, end, line, column, file, local_file}`.
+The minimum supported Rust version is 1.96. Rust 1.88 stabilized `proc_macro::Span::{start, end, line, column, file, local_file}`, which the macro needs, and Rust 1.96 stabilized `core::range::Range`, a `Copy` range that prpr uses for spans.
 
 ### One grammar text, two carriers
 
@@ -107,7 +107,7 @@ Expressions, from the lowest precedence:
 | `.` | any character (any byte with byte input) |
 | `rule`, `path::to::rule` | rule reference; a path refers to a rule of another grammar |
 
-Inside action code, `#x` is the input slice matched by the binding `x` (`&'i str` or `&'i [u8]`) and `@x` is its `Span`; `#_` and `@_` refer to the whole sequence.
+Inside action code, `#x` is the input slice matched by the binding `x` (`&'i str` or `&'i [u8]`) and `@x` is its span, a `core::range::Range<usize>`; `#_` and `@_` refer to the whole sequence.
 These are recognized at the token level, only when the sigil is not preceded by an identifier, so Rust patterns such as `n @ 1..=9` are left alone.
 They are not recognized inside `quote!`-like macros (`quote`, `quote_spanned`, `parse_quote`, `parse_quote_spanned`), where `#x` means interpolation.
 

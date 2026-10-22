@@ -1,6 +1,7 @@
 //! The syntax tree of grammars. Spans are byte ranges of the grammar text.
 
-pub use prpr_runtime::Span;
+/// A range of byte offsets of the grammar text.
+pub type Span = core::range::Range<usize>;
 
 #[derive(Clone, Debug)]
 pub struct Grammar {

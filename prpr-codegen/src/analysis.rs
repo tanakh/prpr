@@ -268,10 +268,7 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
     }
     // A rule of type `()` is the same as a rule without a type.
     let typed = rule.ty.is_some_and(|ty| {
-        let ty: String = text[ty.range()]
-            .chars()
-            .filter(|c| !c.is_whitespace())
-            .collect();
+        let ty: String = text[ty].chars().filter(|c| !c.is_whitespace()).collect();
         ty != "()"
     });
     RuleInfo {

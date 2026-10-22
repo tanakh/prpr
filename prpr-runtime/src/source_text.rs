@@ -1,6 +1,7 @@
-use crate::{ParseError, Span};
+use crate::{ParseError, span};
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
+use core::range::Range;
 use proc_macro2::{
     Delimiter, Group, Ident, LineColumn, Literal, Punct, Spacing, Span as TokenSpan, TokenStream,
     TokenTree,
@@ -31,15 +32,15 @@ pub struct SourceText {
     text: String,
     nodes: Vec<Node>,
     // Every token and delimiter in text order.
-    marks: Vec<(Span, TokenSpan)>,
+    marks: Vec<(Range<usize>, TokenSpan)>,
 }
 
 enum Node {
-    Leaf(TokenTree, Span),
+    Leaf(TokenTree, Range<usize>),
     Group {
         group: Group,
-        open: Span,
-        close: Span,
+        open: Range<usize>,
+        close: Range<usize>,
         children: Vec<Node>,
     },
 }
@@ -64,32 +65,32 @@ impl SourceText {
         &self.text
     }
 
-    /// The original tokens that lie within `span` of the text.
-    pub fn tokens(&self, span: Span) -> TokenStream {
+    /// The original tokens that lie within `range` of the text.
+    pub fn tokens(&self, range: Range<usize>) -> TokenStream {
         let mut out = TokenStream::new();
-        collect(&self.nodes, span, &mut out);
+        collect(&self.nodes, range, &mut out);
         out
     }
 
     /// The span of the token at `offset` of the text, or of the next token if `offset` is
     /// between tokens.
     pub fn span(&self, offset: usize) -> TokenSpan {
-        let i = self.marks.partition_point(|(s, _)| s.end <= offset);
+        let i = self.marks.partition_point(|(r, _)| r.end <= offset);
         match self.marks.get(i).or(self.marks.last()) {
             Some((_, span)) => *span,
             None => TokenSpan::call_site(),
         }
     }
 
-    /// The spans of the first and the last token of `span` of the text.
-    pub fn span_range(&self, span: Span) -> (TokenSpan, TokenSpan) {
-        let last = span.end.saturating_sub(1).max(span.start);
-        (self.span(span.start), self.span(last))
+    /// The spans of the first and the last token of `range` of the text.
+    pub fn span_range(&self, range: Range<usize>) -> (TokenSpan, TokenSpan) {
+        let last = range.end.saturating_sub(1).max(range.start);
+        (self.span(range.start), self.span(last))
     }
 
-    /// A `compile_error!` invocation that reports `message` at `span` of the text.
-    pub fn compile_error(&self, span: Span, message: &str) -> TokenStream {
-        let (start, end) = self.span_range(span);
+    /// A `compile_error!` invocation that reports `message` at `range` of the text.
+    pub fn compile_error(&self, range: Range<usize>, message: &str) -> TokenStream {
+        let (start, end) = self.span_range(range);
         compile_error(start, end, message)
     }
 
@@ -99,11 +100,16 @@ impl SourceText {
     }
 }
 
-fn collect(nodes: &[Node], span: Span, out: &mut TokenStream) {
+// Whether `inner` lies within `outer`.
+fn covers(outer: Range<usize>, inner: Range<usize>) -> bool {
+    outer.start <= inner.start && inner.end <= outer.end
+}
+
+fn collect(nodes: &[Node], range: Range<usize>, out: &mut TokenStream) {
     for node in nodes {
         match node {
-            Node::Leaf(tt, s) => {
-                if span.contains(*s) {
+            Node::Leaf(tt, r) => {
+                if covers(range, *r) {
                     out.extend([tt.clone()]);
                 }
             }
@@ -113,11 +119,11 @@ fn collect(nodes: &[Node], span: Span, out: &mut TokenStream) {
                 close,
                 children,
             } => {
-                let full = Span::new(open.start, close.end);
-                if span.contains(full) {
+                let full = span(open.start, close.end);
+                if covers(range, full) {
                     out.extend([TokenTree::Group(group.clone())]);
-                } else if full.start < span.end && span.start < full.end {
-                    collect(children, span, out);
+                } else if full.start < range.end && range.start < full.end {
+                    collect(children, range, out);
                 }
             }
         }
@@ -156,7 +162,7 @@ struct Builder {
     last: Option<LineColumn>,
     // Whether the last token was a punctuation joined to the next one.
     joint: bool,
-    marks: Vec<(Span, TokenSpan)>,
+    marks: Vec<(Range<usize>, TokenSpan)>,
 }
 
 impl Builder {
@@ -199,12 +205,12 @@ impl Builder {
         }
     }
 
-    fn emit(&mut self, span: TokenSpan, s: &str, joint: bool) -> Span {
+    fn emit(&mut self, token: TokenSpan, s: &str, joint: bool) -> Range<usize> {
         if s.is_empty() {
             let at = self.text.len();
-            return Span::new(at, at);
+            return span(at, at);
         }
-        let (start, end) = (span.start(), span.end());
+        let (start, end) = (token.start(), token.end());
         // A token without extent has no usable position.
         let located = pos(end) > pos(start);
         if !self.text.is_empty() {
@@ -230,8 +236,8 @@ impl Builder {
             });
         }
         self.joint = joint;
-        let range = Span::new(begin, self.text.len());
-        self.marks.push((range, span));
+        let range = span(begin, self.text.len());
+        self.marks.push((range, token));
         range
     }
 

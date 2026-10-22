@@ -6,7 +6,7 @@
 use alloc::borrow::Cow;
 use alloc::string::ToString;
 use core::fmt;
-use core::ops::Range;
+use core::range::Range;
 
 pub use alloc::vec::Vec;
 
@@ -69,55 +69,13 @@ impl Input for [u8] {
     }
 }
 
-/// A byte range of the input.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Span {
-    pub start: usize,
-    pub end: usize,
-}
-
-impl Span {
-    /// Creates a span. If `start > end`, the span is empty at `end`.
-    #[inline]
-    pub const fn new(start: usize, end: usize) -> Self {
-        if start <= end {
-            Self { start, end }
-        } else {
-            Self { start: end, end }
-        }
-    }
-
-    #[inline]
-    pub const fn len(&self) -> usize {
-        self.end - self.start
-    }
-
-    #[inline]
-    pub const fn is_empty(&self) -> bool {
-        self.start == self.end
-    }
-
-    #[inline]
-    pub const fn range(&self) -> Range<usize> {
-        self.start..self.end
-    }
-
-    /// Whether `other` lies within this span.
-    #[inline]
-    pub const fn contains(&self, other: Span) -> bool {
-        self.start <= other.start && other.end <= self.end
-    }
-}
-
-impl From<Span> for Range<usize> {
-    fn from(span: Span) -> Self {
-        span.range()
-    }
-}
-
-impl From<Range<usize>> for Span {
-    fn from(range: Range<usize>) -> Self {
-        Span::new(range.start, range.end)
+/// The span from `start` to `end`, as a range of byte offsets of the input. If `start > end`,
+/// it is the empty span at `end`.
+#[inline]
+pub const fn span(start: usize, end: usize) -> Range<usize> {
+    Range {
+        start: if start <= end { start } else { end },
+        end,
     }
 }
 
@@ -716,8 +674,8 @@ impl ParseError {
     }
 
     /// The span of what was found at the error position (empty at the end of the input).
-    pub fn span(&self) -> Span {
-        Span::new(self.offset, self.offset + self.found.byte_len())
+    pub fn span(&self) -> Range<usize> {
+        span(self.offset, self.offset + self.found.byte_len())
     }
 
     /// What was expected, sorted and without duplicates.
@@ -807,7 +765,7 @@ pub struct Snippet<'a> {
     pub message: &'a dyn fmt::Display,
     pub src: &'a str,
     pub origin: &'a str,
-    pub span: Span,
+    pub span: Range<usize>,
 }
 
 impl fmt::Display for Snippet<'_> {

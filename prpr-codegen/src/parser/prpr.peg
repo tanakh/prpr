@@ -5,42 +5,34 @@
 
 use crate::ast::*;
 
-fn sp(span: __prpr_runtime::Span) -> Span {
-    Span::new(span.start, span.end)
+fn mk_attr(span: Span, (name, arg): (Ident, AttrArg)) -> Attr {
+    Attr { span, name, arg }
 }
 
-fn mk_expr(kind: ExprKind, span: __prpr_runtime::Span) -> Expr {
-    Expr::new(kind, sp(span))
-}
-
-fn mk_attr(span: __prpr_runtime::Span, (name, arg): (Ident, AttrArg)) -> Attr {
-    Attr { span: sp(span), name, arg }
-}
-
-fn make_choice(first: Expr, rest: Vec<Expr>, span: __prpr_runtime::Span) -> Expr {
+fn make_choice(first: Expr, rest: Vec<Expr>, span: Span) -> Expr {
     if rest.is_empty() {
         return first;
     }
     let mut alts = vec![first];
     alts.extend(rest);
-    mk_expr(ExprKind::Choice(alts), span)
+    Expr::new(ExprKind::Choice(alts), span)
 }
 
 fn make_sequence(
     mut elems: Vec<Expr>,
-    elems_span: __prpr_runtime::Span,
+    elems_span: Span,
     action: Option<(Span, bool)>,
-    span: __prpr_runtime::Span,
+    span: Span,
 ) -> Option<Expr> {
     let inner = match elems.len() {
         0 if action.is_none() => return None,
-        0 => Expr::new(ExprKind::Seq(vec![]), Span::new(span.start, span.start)),
+        0 => Expr::new(ExprKind::Seq(vec![]), Span { start: span.start, end: span.start }),
         1 => elems.pop().unwrap(),
-        _ => mk_expr(ExprKind::Seq(elems), elems_span),
+        _ => Expr::new(ExprKind::Seq(elems), elems_span),
     };
     Some(match action {
         None => inner,
-        Some((code, pred)) => mk_expr(
+        Some((code, pred)) => Expr::new(
             ExprKind::Action {
                 expr: Box::new(inner),
                 code,
@@ -60,7 +52,7 @@ enum Primary {
 fn make_postfix(
     p: Primary,
     op: Option<char>,
-    span: __prpr_runtime::Span,
+    span: Span,
 ) -> Result<Expr, &'static str> {
     let kind = match (p, op) {
         (Primary::Expr(e), None) => return Ok(e),
@@ -74,7 +66,7 @@ fn make_postfix(
         },
         (Primary::SepBy(..), _) => return Err("`*` or `+` after a separated list"),
     };
-    Ok(mk_expr(kind, span))
+    Ok(Expr::new(kind, span))
 }
 
 // Whitespace and comments
@@ -96,7 +88,7 @@ atom ident_continue = [a-zA-Z0-9_] / c:. &{ c.is_alphanumeric() }
 
 // An identifier, possibly a keyword.
 atom ident_raw: Ident = s:(ident_start ident_continue*) &{
-    (#s != "_").then(|| Ident { name: #s.to_string(), span: sp(@s) })
+    (#s != "_").then(|| Ident { name: #s.to_string(), span: @s })
 }
 
 atom ident: Ident = id:ident_raw &{ (!is_keyword(&id.name)).then_some(id) }
@@ -110,7 +102,7 @@ inner_attr: Attr = "#" "!" "[" body:attr_body "]" { mk_attr(@_, body) }
 outer_attr: Attr = doc_comment / "#" "[" body:attr_body "]" { mk_attr(@_, body) }
 
 atom doc_comment: Attr = "///" !"/" text:(!"\n" .)* {
-    let span = sp(@_);
+    let span = @_;
     Attr {
         span,
         name: Ident { name: "doc".to_string(), span },
@@ -123,7 +115,7 @@ attr_body: (Ident, AttrArg)
     / name:ident_raw "(" e:expr ")" { (name, AttrArg::Expr(e)) }
     / name:ident_raw { (name, AttrArg::None) }
 
-attr_value: AttrArg = l:literal { AttrArg::Lit(l, sp(@l)) } / id:ident_raw { AttrArg::Ident(id) }
+attr_value: AttrArg = l:literal { AttrArg::Lit(l, @l) } / id:ident_raw { AttrArg::Ident(id) }
 
 #[label = "rule"]
 item: Item = s:rust_item { Item::Rust(s) } / r:rule { Item::Rule(r) }
@@ -131,7 +123,7 @@ item: Item = s:rust_item { Item::Rust(s) } / r:rule { Item::Rule(r) }
 // Rust items
 
 rust_item: Span = (rust_attr / rust_doc_comment)* vis? (&semi_item rust_to_semi / &brace_item rust_to_brace) {
-    sp(@_)
+    @_
 }
 
 atom rust_attr = "#" spaces "!"? spaces &"[" rust_group
@@ -150,7 +142,7 @@ atom rust_to_semi = (!";" rust_tt)* ";"
 
 atom rust_to_brace = (!";" !"{" rust_tt)* (";" / rust_group)
 
-vis: Span = "pub" rust_paren? { sp(@_) }
+vis: Span = "pub" rust_paren? { @_ }
 
 atom rust_paren = &"(" rust_group
 
@@ -176,7 +168,7 @@ atom rust_char_or_lifetime = "'" ("\\" . (!"'" .)* "'" / . "'" / ident_continue*
 
 rule: Rule = attrs:outer_attr* vis:vis? is_atom:"atom"? name:ident_raw ty:(":" !":" t:ty_span { t })? <"=" ![=>]> body:expr {
     Rule {
-        span: sp(@_),
+        span: @_,
         attrs,
         vis,
         atom: is_atom.is_some(),
@@ -191,7 +183,7 @@ rule_header = ident_raw (":" !":" ty)? <"=" ![=>]>
 
 // Types: a subset of Rust types that is enough to find where a type ends.
 
-ty_span: Span = ty { sp(@_) }
+ty_span: Span = ty { @_ }
 
 #[label = "type"]
 ty = "&" lifetime? "mut"? ty
@@ -237,18 +229,18 @@ sequence: Expr = elems:(!rule_header e:element { e })* action:action? &{
 
 action: (Span, bool) = pred:"&"? code:rust_brace { (code, pred.is_some()) }
 
-atom rust_brace: Span = &"{" rust_group { sp(@_) }
+atom rust_brace: Span = &"{" rust_group { @_ }
 
 #[label = "expression"]
 element: Expr = bind / prefix
 
 bind: Expr = name:ident ":" !":" e:prefix {
-    mk_expr(ExprKind::Bind { name, expr: Box::new(e) }, @_)
+    Expr::new(ExprKind::Bind { name, expr: Box::new(e) }, @_)
 }
 
 prefix: Expr
-    = "&" !"{" e:prefix { mk_expr(ExprKind::And(Box::new(e)), @_) }
-    / "!" e:prefix { mk_expr(ExprKind::Not(Box::new(e)), @_) }
+    = "&" !"{" e:prefix { Expr::new(ExprKind::And(Box::new(e)), @_) }
+    / "!" e:prefix { Expr::new(ExprKind::Not(Box::new(e)), @_) }
     / postfix
 
 postfix: Expr = p:primary op:postfix_op? &{ make_postfix(p, op, @_) }
@@ -262,16 +254,16 @@ primary: Primary
             None => Primary::Expr(e),
         }
     }
-    / "<" e:expr ">" { Primary::Expr(mk_expr(ExprKind::Atomic(Box::new(e)), @_)) }
-    / l:literal { Primary::Expr(mk_expr(ExprKind::Lit(l), @_)) }
-    / c:class { Primary::Expr(mk_expr(ExprKind::Class(c), @_)) }
-    / <"." !"."> { Primary::Expr(mk_expr(ExprKind::Any, @_)) }
-    / p:path { Primary::Expr(mk_expr(ExprKind::Ref(p), @_)) }
+    / "<" e:expr ">" { Primary::Expr(Expr::new(ExprKind::Atomic(Box::new(e)), @_)) }
+    / l:literal { Primary::Expr(Expr::new(ExprKind::Lit(l), @_)) }
+    / c:class { Primary::Expr(Expr::new(ExprKind::Class(c), @_)) }
+    / <"." !"."> { Primary::Expr(Expr::new(ExprKind::Any, @_)) }
+    / p:path { Primary::Expr(Expr::new(ExprKind::Ref(p), @_)) }
 
 path: Path = lc:"::"? first:path_start rest:("::" s:path_start { s })* {
     let mut segments = vec![first];
     segments.extend(rest);
-    Path { leading_colon: lc.is_some(), segments, span: sp(@_) }
+    Path { leading_colon: lc.is_some(), segments, span: @_ }
 }
 
 path_start: Ident = ident / id:ident_raw &{

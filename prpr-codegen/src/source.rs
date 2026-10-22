@@ -40,7 +40,7 @@ impl Source for TextSource<'_> {
     }
 
     fn tokens(&self, span: Span) -> Result<TokenStream, Diagnostic> {
-        self.0[span.range()]
+        self.0[span]
             .parse()
             .map_err(|e| Diagnostic::error(span, format!("invalid Rust code: {e}")))
     }
