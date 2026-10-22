@@ -81,7 +81,7 @@ fn literals() {
         Ok(String("Hello, World!\n".into()))
     );
     assert_eq!(
-        json::value(r#""\"\\\/\b\f\n\r\t猫""#),
+        json::value(r#""\"\\\/\b\f\n\r\t\u732B""#),
         Ok(String("\"\\/\x08\x0c\n\r\t猫".into()))
     );
 }

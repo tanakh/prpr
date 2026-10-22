@@ -6,7 +6,7 @@ use prpr_benchmarks::*;
 fn agree() {
     let dir = std::env::var("PRPR_BENCH_DATA").unwrap_or_else(|_| "data".into());
     let mut docs = vec![
-        r#"{"a": [1, -2.5e3, true, false, null], "b\né😀": {"c": ""}}"#.to_string(),
+        r#"{"a": [1, -2.5e3, true, false, null], "b\n\u00e9\ud83d\ude00": {"c": ""}}"#.to_string(),
         "[]".to_string(),
         " {} ".to_string(),
     ];
