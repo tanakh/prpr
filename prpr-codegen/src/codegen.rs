@@ -242,6 +242,15 @@ impl Gen<'_> {
             let module = self.path_tokens(&module);
             q!(#field: #module::Memo<'i>,)
         });
+        let clones: Vec<TokenStream> = clones.collect();
+        let clones = (!clones.is_empty()).then(|| {
+            q! {
+                #[allow(dead_code, non_snake_case)]
+                impl<'i> Memo<'i> {
+                    #(#clones)*
+                }
+            }
+        });
         q! {
             /// The state of a parse with this grammar besides the input.
             #[allow(dead_code, non_snake_case)]
@@ -253,10 +262,7 @@ impl Gen<'_> {
                 __phantom: ::core::marker::PhantomData<&'i ()>,
             }
 
-            #[allow(dead_code, non_snake_case)]
-            impl<'i> Memo<'i> {
-                #(#clones)*
-            }
+            #clones
         }
     }
 

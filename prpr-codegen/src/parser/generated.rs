@@ -76,8 +76,6 @@ pub struct Memo<'i> {
     __skip: __prpr_runtime::SkipCache,
     __phantom: ::core::marker::PhantomData<&'i ()>,
 }
-#[allow(dead_code, non_snake_case)]
-impl<'i> Memo<'i> {}
 #[allow(dead_code)]
 #[inline]
 fn __skip<'i>(
