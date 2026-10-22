@@ -859,8 +859,11 @@ impl Gen<'_> {
         let field = grammar_field(&module);
         let module = self.path_tokens(&module);
         let rule = self.user_ident(name);
-        let atom = atom_const(&name.name);
-        let delimited = delimited_fn(&name.name);
+        // Located at the name, where the compiler reports them if the rule does not exist.
+        let mut atom = atom_const(&name.name);
+        atom.set_span(rule.span());
+        let mut delimited = delimited_fn(&name.name);
+        delimited.set_span(rule.span());
         let call = q!(#module::rules::#rule(__cx, &mut __m.#field, __pos));
         let code = match mode {
             Mode::Value => call,
