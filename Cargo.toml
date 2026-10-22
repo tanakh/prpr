@@ -1,5 +1,5 @@
 [workspace]
-members = ["prpr-runtime"]
+members = ["prpr-runtime", "prpr-codegen"]
 resolver = "3"
 
 [workspace.package]
@@ -12,7 +12,9 @@ repository = "https://github.com/tanakh/prpr"
 
 [workspace.dependencies]
 prpr-runtime = { path = "prpr-runtime", version = "=0.1.0" }
+prpr-codegen = { path = "prpr-codegen", version = "=0.1.0" }
 proc-macro2 = { version = "1.0.107", features = ["span-locations"] }
+quote = "1.0.47"
 
 [package]
 name = "prpr"

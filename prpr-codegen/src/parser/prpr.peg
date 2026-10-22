@@ -1,0 +1,362 @@
+// The grammar of prpr grammars, written in itself.
+//
+// `generated.rs` is generated from this file with `--inline-runtime`; run
+// `PRPR_BLESS=1 cargo test -p prpr-cli --test bootstrap` after changing it.
+
+use crate::ast::*;
+
+fn sp(span: __prpr_runtime::Span) -> Span {
+    Span::new(span.start, span.end)
+}
+
+fn mk_expr(kind: ExprKind, span: __prpr_runtime::Span) -> Expr {
+    Expr::new(kind, sp(span))
+}
+
+fn mk_attr(span: __prpr_runtime::Span, (name, arg): (Ident, AttrArg)) -> Attr {
+    Attr { span: sp(span), name, arg }
+}
+
+fn make_choice(first: Expr, rest: Vec<Expr>, span: __prpr_runtime::Span) -> Expr {
+    if rest.is_empty() {
+        return first;
+    }
+    let mut alts = vec![first];
+    alts.extend(rest);
+    mk_expr(ExprKind::Choice(alts), span)
+}
+
+fn make_sequence(
+    mut elems: Vec<Expr>,
+    elems_span: __prpr_runtime::Span,
+    action: Option<(Span, bool)>,
+    span: __prpr_runtime::Span,
+) -> Option<Expr> {
+    let inner = match elems.len() {
+        0 if action.is_none() => return None,
+        0 => Expr::new(ExprKind::Seq(vec![]), Span::new(span.start, span.start)),
+        1 => elems.pop().unwrap(),
+        _ => mk_expr(ExprKind::Seq(elems), elems_span),
+    };
+    Some(match action {
+        None => inner,
+        Some((code, pred)) => mk_expr(
+            ExprKind::Action {
+                expr: Box::new(inner),
+                code,
+                pred,
+            },
+            span,
+        ),
+    })
+}
+
+enum Primary {
+    Expr(Expr),
+    // `(e, sep)`, which must be followed by `*` or `+`.
+    SepBy(Expr, Expr),
+}
+
+fn make_postfix(
+    p: Primary,
+    op: Option<char>,
+    span: __prpr_runtime::Span,
+) -> Result<Expr, &'static str> {
+    let kind = match (p, op) {
+        (Primary::Expr(e), None) => return Ok(e),
+        (Primary::Expr(e), Some('*')) => ExprKind::Many(Box::new(e)),
+        (Primary::Expr(e), Some('+')) => ExprKind::Many1(Box::new(e)),
+        (Primary::Expr(e), Some(_)) => ExprKind::Opt(Box::new(e)),
+        (Primary::SepBy(e, sep), Some(op @ ('*' | '+'))) => ExprKind::SepBy {
+            expr: Box::new(e),
+            sep: Box::new(sep),
+            min1: op == '+',
+        },
+        (Primary::SepBy(..), _) => return Err("`*` or `+` after a separated list"),
+    };
+    Ok(mk_expr(kind, span))
+}
+
+// Whitespace and comments
+
+atom whitespace = [' ' '\t' '\r' '\n' '\u{b}' '\u{c}' '\u{85}' '\u{200e}' '\u{200f}' '\u{2028}' '\u{2029}']
+
+// Doc comments (`///`, but not `////`) are attributes, not comments.
+atom comment = "//" !("/" !"/") (!"\n" .)* / block_comment
+
+atom block_comment = "/*" (block_comment / !"*/" .)* "*/"
+
+atom word_char = ident_continue
+
+// Identifiers
+
+atom ident_start = [a-zA-Z_] / c:. &{ c.is_alphabetic() }
+
+atom ident_continue = [a-zA-Z0-9_] / c:. &{ c.is_alphanumeric() }
+
+// An identifier, possibly a keyword.
+atom ident_raw: Ident = s:(ident_start ident_continue*) &{
+    (#s != "_").then(|| Ident { name: #s.to_string(), span: sp(@s) })
+}
+
+atom ident: Ident = id:ident_raw &{ (!is_keyword(&id.name)).then_some(id) }
+
+// Grammars
+
+pub grammar: Grammar = attrs:inner_attr* items:item* { Grammar { attrs, items } }
+
+inner_attr: Attr = "#" "!" "[" body:attr_body "]" { mk_attr(@_, body) }
+
+outer_attr: Attr = doc_comment / "#" "[" body:attr_body "]" { mk_attr(@_, body) }
+
+atom doc_comment: Attr = "///" !"/" text:(!"\n" .)* {
+    let span = sp(@_);
+    Attr {
+        span,
+        name: Ident { name: "doc".to_string(), span },
+        arg: AttrArg::Lit(Lit::Str(#text.to_string()), span),
+    }
+}
+
+attr_body: (Ident, AttrArg)
+    = name:ident_raw "=" arg:attr_value { (name, arg) }
+    / name:ident_raw "(" e:expr ")" { (name, AttrArg::Expr(e)) }
+    / name:ident_raw { (name, AttrArg::None) }
+
+attr_value: AttrArg = l:literal { AttrArg::Lit(l, sp(@l)) } / id:ident_raw { AttrArg::Ident(id) }
+
+#[label = "rule"]
+item: Item = s:rust_item { Item::Rust(s) } / r:rule { Item::Rule(r) }
+
+// Rust items
+
+rust_item: Span = (rust_attr / rust_doc_comment)* vis? (&semi_item rust_to_semi / &brace_item rust_to_brace) {
+    sp(@_)
+}
+
+atom rust_attr = "#" spaces "!"? spaces &"[" rust_group
+
+atom rust_doc_comment = "///" (!"\n" .)*
+
+// Items that end at `;`.
+semi_item = "use" / "static" / "type" / "const" !("fn" / "unsafe" / "async" / "extern") / "extern" "crate"
+
+// Items that end at `;` or after a `{ ... }` group, whichever comes first.
+brace_item
+    = "const" / "extern" / "fn" / "struct" / "enum" / "impl" / "trait" / "mod" / "unsafe" / "async"
+    / "union" ident_raw / "macro_rules" "!"
+
+atom rust_to_semi = (!";" rust_tt)* ";"
+
+atom rust_to_brace = (!";" !"{" rust_tt)* (";" / rust_group)
+
+vis: Span = "pub" rust_paren? { sp(@_) }
+
+atom rust_paren = &"(" rust_group
+
+// One Rust token tree, roughly: enough to find where groups and items end.
+atom rust_tt
+    = "//" (!"\n" .)*
+    / block_comment
+    / rust_string
+    / rust_char_or_lifetime
+    / rust_group
+    / [^ '(' ')' '[' ']' '{' '}']
+
+atom rust_group
+    = "(" (!")" rust_tt)* ")"
+    / "[" (!"]" rust_tt)* "]"
+    / "{" (!"}" rust_tt)* "}"
+
+atom rust_string = [bc]? '"' ("\\" . / [^ '"' '\\'])* '"' / [bc]? "r" raw_body
+
+atom rust_char_or_lifetime = "'" ("\\" . (!"'" .)* "'" / . "'" / ident_continue*)
+
+// Rules
+
+rule: Rule = attrs:outer_attr* vis:vis? is_atom:"atom"? name:ident_raw ty:(":" !":" t:ty_span { t })? <"=" ![=>]> body:expr {
+    Rule {
+        span: sp(@_),
+        attrs,
+        vis,
+        atom: is_atom.is_some(),
+        name,
+        ty,
+        body,
+    }
+}
+
+// Whether a rule starts here: `name =` or `name: Type =`.
+rule_header = ident_raw (":" !":" ty)? <"=" ![=>]>
+
+// Types: a subset of Rust types that is enough to find where a type ends.
+
+ty_span: Span = ty { sp(@_) }
+
+#[label = "type"]
+ty = "&" lifetime? "mut"? ty
+    / "*" ("const" / "mut") ty
+    / "(" ty_list ")"
+    / "[" ty (";" array_len)? "]"
+    / ("dyn" / "impl") bounds
+    / "fn" "(" ty_list ")" ("->" ty)?
+    / "!"
+    / "_"
+    / type_path
+
+ty_list = (ty, ",")* ","?
+
+atom array_len = (!"]" rust_tt)*
+
+type_path = "::"? path_segment ("::" path_segment)*
+
+path_segment = ident_raw ("::"? "<" (generic_arg, ",")* ","? ">" / "(" ty_list ")" ("->" ty)?)?
+
+generic_arg = lifetime / ident_raw "=" !"=" ty / ty / rust_string / rust_brace / number
+
+atom number = [0-9]+
+
+bounds = (bound, "+")+
+
+bound = lifetime / "(" bound ")" / "?"? ("for" "<" (lifetime, ",")* ","? ">")? type_path
+
+lifetime = <"'" ident_continue+>
+
+// Expressions
+
+expr: Expr = choice
+
+choice: Expr = first:sequence rest:(choice_sep s:sequence { s })* { make_choice(first, rest, @_) }
+
+atom choice_sep = "/" !['/' '*']
+
+#[label = "expression"]
+sequence: Expr = elems:(!rule_header e:element { e })* action:action? &{
+    make_sequence(elems, @elems, action, @_)
+}
+
+action: (Span, bool) = pred:"&"? code:rust_brace { (code, pred.is_some()) }
+
+atom rust_brace: Span = &"{" rust_group { sp(@_) }
+
+#[label = "expression"]
+element: Expr = bind / prefix
+
+bind: Expr = name:ident ":" !":" e:prefix {
+    mk_expr(ExprKind::Bind { name, expr: Box::new(e) }, @_)
+}
+
+prefix: Expr
+    = "&" !"{" e:prefix { mk_expr(ExprKind::And(Box::new(e)), @_) }
+    / "!" e:prefix { mk_expr(ExprKind::Not(Box::new(e)), @_) }
+    / postfix
+
+postfix: Expr = p:primary op:postfix_op? &{ make_postfix(p, op, @_) }
+
+atom postfix_op: char = [*+?]
+
+primary: Primary
+    = "(" e:expr sep:("," s:expr { s })? ")" {
+        match sep {
+            Some(sep) => Primary::SepBy(e, sep),
+            None => Primary::Expr(e),
+        }
+    }
+    / "<" e:expr ">" { Primary::Expr(mk_expr(ExprKind::Atomic(Box::new(e)), @_)) }
+    / l:literal { Primary::Expr(mk_expr(ExprKind::Lit(l), @_)) }
+    / c:class { Primary::Expr(mk_expr(ExprKind::Class(c), @_)) }
+    / <"." !"."> { Primary::Expr(mk_expr(ExprKind::Any, @_)) }
+    / p:path { Primary::Expr(mk_expr(ExprKind::Ref(p), @_)) }
+
+path: Path = lc:"::"? first:path_start rest:("::" s:path_start { s })* {
+    let mut segments = vec![first];
+    segments.extend(rest);
+    Path { leading_colon: lc.is_some(), segments, span: sp(@_) }
+}
+
+path_start: Ident = ident / id:ident_raw &{
+    matches!(id.name.as_str(), "crate" | "super" | "self").then_some(id)
+}
+
+// Literals
+
+atom literal: Lit = l:(byte_string / raw_byte_string / string / raw_string / byte_char / char_lit) !ident_continue { l }
+
+atom string: Lit = '"' cs:string_char* '"' { Lit::Str(cs.into_iter().flatten().collect()) }
+
+atom string_char: Option<char> = line_continuation { None } / "\\" c:escape { Some(c) } / c:[^ '"' '\\'] { Some(c) }
+
+atom line_continuation = "\\\n" (c:. &{ c.is_whitespace() })*
+
+atom byte_string: Lit = "b\"" cs:byte_string_char* '"' { Lit::Bytes(cs.into_iter().flatten().collect()) }
+
+atom byte_string_char: Option<u8>
+    = line_continuation { None }
+    / "\\" c:byte_escape { Some(c) }
+    / c:[^ '"' '\\'] &{ if c.is_ascii() { Ok(Some(c as u8)) } else { Err("ASCII character in byte string") } }
+
+atom raw_string: Lit = "r" s:raw_body { Lit::Str(s.to_string()) }
+
+atom raw_byte_string: Lit = "br" s:raw_body { Lit::Bytes(s.as_bytes().to_vec()) }
+
+// Raw strings with up to three `#`s.
+atom raw_body: &'i str
+    = '"' s:(!'"' .)* '"' { #s }
+    / "#\"" s:(!"\"#" .)* "\"#" { #s }
+    / "##\"" s:(!"\"##" .)* "\"##" { #s }
+    / "###\"" s:(!"\"###" .)* "\"###" { #s }
+
+atom char_lit: Lit = "'" c:char_body { Lit::Str(c.to_string()) }
+
+atom char_body: char = "\\" c:escape "'" { c } / c:[^ '\'' '\n'] "'" { c }
+
+atom byte_char: Lit = "b'" c:byte_char_body { Lit::Bytes(vec![c]) }
+
+atom byte_char_body: u8 = "\\" c:byte_escape "'" { c } / c:[^ '\'' '\n'] "'" &{ c.is_ascii().then_some(c as u8) }
+
+atom escape: char
+    = "n" { '\n' }
+    / "r" { '\r' }
+    / "t" { '\t' }
+    / "\\" { '\\' }
+    / "0" { '\0' }
+    / "'" { '\'' }
+    / '"' { '"' }
+    / "x" h:(hex hex) &{
+        let v = u8::from_str_radix(#h, 16).unwrap();
+        if v <= 0x7f { Ok(v as char) } else { Err("character code up to `\\x7F`") }
+    }
+    / "u{" h:hex+ "}" &{
+        u32::from_str_radix(#h, 16).ok().and_then(char::from_u32).ok_or("valid Unicode scalar value")
+    }
+
+atom byte_escape: u8
+    = "n" { b'\n' }
+    / "r" { b'\r' }
+    / "t" { b'\t' }
+    / "\\" { b'\\' }
+    / "0" { b'\0' }
+    / "'" { b'\'' }
+    / '"' { b'"' }
+    / "x" h:(hex hex) { u8::from_str_radix(#h, 16).unwrap() }
+
+atom hex = [0-9a-fA-F]
+
+// Character classes
+
+atom class: Class = "[" neg:"^"? ranges:(spaces r:class_item { r })* spaces "]" {
+    Class { negated: neg.is_some(), ranges, text: #_.to_string() }
+}
+
+atom class_item: (char, char) = lo:class_char hi:(spaces "-" spaces c:class_char { c })? &{
+    match hi {
+        None => Ok((lo, lo)),
+        Some(hi) if lo <= hi => Ok((lo, hi)),
+        Some(_) => Err("range in ascending order"),
+    }
+}
+
+atom class_char: char
+    = "b'" c:byte_char_body { c as char }
+    / "'" c:char_body { c }
+    / c:[^ '[' ']' '\'' '"' '\\'] &{ (!c.is_whitespace()).then_some(c) }
