@@ -60,6 +60,7 @@ grammar!{}  : TokenStream --(rebuild text from token positions)--> SourceText --
   Syntax errors that `syn` finds in them and unknown `#x`/`@x` are then reported as diagnostics at the grammar; inside a macro, the compiler reports them at the original tokens.
   Type errors in files are reported by the compiler in the generated module, since Rust has no `#line` directive.
 * `SourceText` is public (`prpr-runtime`, feature `proc-macro2`), so that users can parse the input of their own proc-macros with a prpr parser and report errors at precise spans.
+  `SourceText::with(tokens, f)` runs `f` on the text and turns the `MacroError` it returns (a `ParseError` converts with `?`) into `compile_error!`, and `prpr::define_proc_macro!(name, parser, expand)` defines a whole proc-macro with it.
 * `include_grammar!("file.peg")` reads a file as a `TextSource`, relative to the invoking file (`Span::local_file`), and emits `include_str!` of it so that the compiler tracks it.
   Diagnostics are rendered with the file's lines into the message of a `compile_error!` at the path.
   A macro cannot make spans in another file, so errors that only the compiler finds in the Rust code of the file are reported at the invocation.

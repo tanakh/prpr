@@ -14,7 +14,7 @@ pub use rt::*;
 #[cfg(feature = "proc-macro2")]
 mod source_text;
 #[cfg(feature = "proc-macro2")]
-pub use source_text::SourceText;
+pub use source_text::{MacroError, SourceText};
 
 /// Includes the module that `prpr_codegen::build` generated in a build script from the grammar
 /// file at `path`, given as in the build script.

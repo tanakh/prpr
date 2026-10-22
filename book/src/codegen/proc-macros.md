@@ -19,13 +19,14 @@ proc-macro2 = "1"
 quote = "1"
 ```
 
-The parser builds a syntax tree with the [span](../guide/values-and-actions.md#the-text-and-the-span-of-a-binding) of each expression, which the macro then turns into Rust code:
+The parser builds a syntax tree with the [span](../guide/values-and-actions.md#the-text-and-the-span-of-a-binding) of each expression.
+`prpr::define_proc_macro!` defines the proc-macro `calc`, which parses its input with `grammar::expr` and turns the syntax tree into Rust code with `expand`:
 
 ```rust,ignore
 //! `calc!(x * (y + 1))`: arithmetic expressions on `i64`s, checked at compile time.
 
 use proc_macro2::TokenStream;
-use prpr::runtime::SourceText;
+use prpr::runtime::{MacroError, SourceText};
 use quote::quote;
 use std::range::Range;
 
@@ -68,34 +69,26 @@ mod grammar {
     }
 }
 
-// Rust code for `e`, or the span and the message of an error.
-fn expand(src: &SourceText, e: &Expr) -> Result<TokenStream, (Range<usize>, &'static str)> {
-    match &e.kind {
+prpr::define_proc_macro! {
+    /// Computes an arithmetic expression on `i64`s, such as `calc!(x * (y + 1))`.
+    calc, grammar::expr, expand
+}
+
+// The Rust code that computes `e`.
+fn expand(src: &SourceText, e: Expr) -> Result<TokenStream, MacroError> {
+    match e.kind {
         Kind::Num(n) => Ok(quote!(#n)),
         // The variable as it was written, with its span, so that it refers to the variable of
         // the caller and errors about it point at it.
         Kind::Var => Ok(src.tokens(e.span)),
         Kind::Bin(l, op, r) => {
-            if *op == "/" && matches!(r.kind, Kind::Num(0)) {
-                return Err((r.span, "division by zero"));
+            if op == "/" && matches!(r.kind, Kind::Num(0)) {
+                return Err(MacroError::new(r.span, "division by zero"));
             }
-            let (l, r) = (expand(src, l)?, expand(src, r)?);
+            let (l, r) = (expand(src, *l)?, expand(src, *r)?);
             let op: TokenStream = op.parse().unwrap();
             Ok(quote!((#l #op #r)))
         }
-    }
-}
-
-#[proc_macro]
-pub fn calc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let src = SourceText::new(input.into());
-    let expr = match grammar::expr(src.text()) {
-        Ok(expr) => expr,
-        Err(e) => return src.parse_error(&e).into(),
-    };
-    match expand(&src, &expr) {
-        Ok(code) => code.into(),
-        Err((span, message)) => src.compile_error(span, message).into(),
     }
 }
 ```
@@ -144,13 +137,45 @@ let c = calc!(width * hieght);
 <span class="ansi-94 ansi-bold">7</span> <span class="ansi-92">+ </span>    let c = calc!(width * <span class="ansi-92">height</span>);
   <span class="ansi-94 ansi-bold">|</span></code></pre>
 
-* The parse error is reported by `parse_error`, at the token where the parser failed.
-* The division by zero is found by the macro, which reports it with `compile_error` at the span of the divisor.
+* The parse error is reported at the token where the parser failed.
+* The division by zero is found by `expand`, which returns a `MacroError` at the span of the divisor.
 * The misspelled variable is found by the compiler, since the variable is passed on with its original token.
+
+## `define_proc_macro!`
+
+```rust,ignore
+prpr::define_proc_macro! {
+    /// Documentation of the proc-macro.
+    name, parser, expand
+}
+```
+
+defines the function-like proc-macro `name!`:
+
+* `parser` parses the text of the input, and returns a value or a `ParseError`, as the functions that grammars generate for their rules do.
+* `expand` takes the `SourceText` of the input and the value, and returns the tokens that the macro expands to, as a `proc_macro2::TokenStream`, or a `MacroError`: a message and the range of the text it is about.
+* Errors are reported at the tokens they are about.
+* Attributes before the name, such as doc comments, are attributes of the proc-macro.
+
+For more control, as to parse the input in several steps, or to keep values that borrow its text, define the proc-macro with `SourceText::with`, which `define_proc_macro!` uses:
+
+```rust,ignore
+#[proc_macro]
+pub fn calc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+    SourceText::with(input.into(), |src| {
+        let expr = grammar::expr(src.text())?;
+        expand(src, expr)
+    })
+    .into()
+}
+```
+
+`with` makes the `SourceText` of the tokens, runs the closure on it, and turns an error that the closure returns into a `compile_error!` invocation at the tokens it is about.
+A `ParseError` converts to a `MacroError` with `?`.
 
 ## `SourceText`
 
-`SourceText::new` takes the input of the macro, as a `proc_macro2::TokenStream`:
+`SourceText::new` takes the input of the macro, as a `proc_macro2::TokenStream`, and `SourceText::with` passes it to a closure:
 
 | method | returns |
 |---|---|

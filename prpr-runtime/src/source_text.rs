@@ -1,6 +1,7 @@
 use crate::{ParseError, span};
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
+use core::fmt;
 use core::range::Range;
 use proc_macro2::{
     Delimiter, Group, Ident, LineColumn, Literal, Punct, Spacing, Span as TokenSpan, TokenStream,
@@ -100,7 +101,62 @@ impl SourceText {
     pub fn parse_error(&self, error: &ParseError) -> TokenStream {
         self.compile_error(error.span(), &error.to_string())
     }
+
+    /// Runs `f` on the text of `tokens`, e.g. the input of a proc-macro, and returns the tokens
+    /// that `f` returns, or a `compile_error!` invocation that reports its error.
+    ///
+    /// ```ignore
+    /// #[proc_macro]
+    /// pub fn my_dsl(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+    ///     SourceText::with(input.into(), |src| {
+    ///         let ast = my_grammar::program(src.text())?;
+    ///         expand(src, ast)
+    ///     })
+    ///     .into()
+    /// }
+    /// ```
+    pub fn with(
+        tokens: TokenStream,
+        f: impl FnOnce(&SourceText) -> Result<TokenStream, MacroError>,
+    ) -> TokenStream {
+        let src = SourceText::new(tokens);
+        f(&src).unwrap_or_else(|e| src.compile_error(e.span, &e.message))
+    }
 }
+
+/// An error to report at a range of the text of a [`SourceText`], e.g. a parse error or a
+/// mistake found in the parsed input of a proc-macro.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct MacroError {
+    /// The byte range of the text that the error is about.
+    pub span: Range<usize>,
+    /// What is wrong.
+    pub message: String,
+}
+
+impl MacroError {
+    /// An error at `span` of the text.
+    pub fn new(span: Range<usize>, message: impl Into<String>) -> Self {
+        MacroError {
+            span,
+            message: message.into(),
+        }
+    }
+}
+
+impl From<ParseError> for MacroError {
+    fn from(error: ParseError) -> Self {
+        MacroError::new(error.span(), error.to_string())
+    }
+}
+
+impl fmt::Display for MacroError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.message)
+    }
+}
+
+impl core::error::Error for MacroError {}
 
 // Whether `inner` lies within `outer`.
 fn covers(outer: Range<usize>, inner: Range<usize>) -> bool {

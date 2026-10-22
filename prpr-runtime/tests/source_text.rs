@@ -28,3 +28,17 @@ fn maps_offsets_to_tokens() {
     // Between tokens, the next token.
     assert_eq!(src.span(at("{") - 1).start().column, at("{"));
 }
+
+#[test]
+fn reports_errors_of_expansions() {
+    use prpr_runtime::MacroError;
+    let input: TokenStream = "1 + x".parse().unwrap();
+    let ok = SourceText::with(input.clone(), |src| Ok(src.text().parse().unwrap()));
+    assert_eq!(ok.to_string(), "1 + x");
+    let error = SourceText::with(input, |src| {
+        let at = src.text().find('x').unwrap();
+        Err(MacroError::new(span(at, at + 1), "unknown variable"))
+    });
+    assert!(error.to_string().contains("compile_error"));
+    assert!(error.to_string().contains("\"unknown variable\""));
+}
