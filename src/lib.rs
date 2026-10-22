@@ -1,6 +1,6 @@
 //! prpr: a Packrat parser generator.
 //!
-//! The book in the `book` directory of the repository explains how to write grammars.
+//! [The prpr Book](https://tanakh.github.io/prpr/) explains how to write grammars.
 
 pub use prpr_macros::grammar;
 pub use prpr_runtime as runtime;

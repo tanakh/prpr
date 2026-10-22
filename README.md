@@ -28,8 +28,8 @@ assert_eq!(expr("1 +").unwrap_err().to_string(), "expected one of `(` or number,
 
 ## Documentation
 
-* [The prpr Book](book/src/SUMMARY.md) explains how to use prpr.
-  Build it with [mdBook](https://rust-lang.github.io/mdBook/): `mdbook build book`.
+* [The prpr Book](https://tanakh.github.io/prpr/) explains how to use prpr.
+  Its source is in [book](book/src/SUMMARY.md); build it with [mdBook](https://rust-lang.github.io/mdBook/): `mdbook build book`.
   Its examples are tested by `cargo test`.
 * The [design note](docs/design.md) explains the design.
 * The [benchmarks](benchmarks/README.md) compare prpr with other libraries.
