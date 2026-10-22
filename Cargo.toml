@@ -9,6 +9,7 @@ rust-version = "1.96"
 authors = ["Hideyuki Tanaka <tanaka.hideyuki@gmail.com>"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/tanakh/prpr"
+homepage = "https://tanakh.github.io/prpr/"
 
 [workspace.dependencies]
 prpr-runtime = { path = "prpr-runtime", version = "=0.1.0" }
@@ -19,13 +20,18 @@ quote = "1.0.47"
 
 [package]
 name = "prpr"
-description = "A Packrat parser generator"
+description = "A Packrat parser generator for Parsing Expression Grammars"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
+homepage.workspace = true
+keywords = ["peg", "parser", "packrat", "parser-generator", "grammar"]
+categories = ["parsing", "development-tools::procedural-macro-helpers"]
+# The book stays in the package for its doctests.
+exclude = [".github", "docs"]
 
 [features]
 # `runtime::SourceText`, for parsing the input of proc-macros.

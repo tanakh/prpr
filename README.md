@@ -38,6 +38,7 @@ assert_eq!(expr("1 +").unwrap_err().to_string(), "expected one of `(` or number,
 
 * `prpr`: the `grammar!` macro and the runtime.
 * `prpr-runtime`: the runtime alone, for generated files.
+* `prpr-macros`: the `grammar!` macro, used through `prpr`.
 * `prpr-codegen`: the code generator, for `build.rs` scripts and tools.
 * `prpr-cli`: the `prpr` command.
 

@@ -7,6 +7,9 @@ rust-version.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
+homepage.workspace = true
+keywords = ["peg", "parser", "packrat", "parser-generator", "proc-macro"]
+categories = ["parsing"]
 
 [lib]
 proc-macro = true
