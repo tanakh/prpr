@@ -50,4 +50,6 @@ Licensed under either of
 
 at your option.
 
+As a special exception, the code that prpr generates, including the runtime that `prpr runtime` writes and that `--inline-runtime` includes in generated modules, may be used, modified and distributed under terms of your choice, without the notices that these licenses require.
+
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
