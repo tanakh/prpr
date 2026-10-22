@@ -235,10 +235,10 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
     let mut docs = Vec::new();
     for attr in &rule.attrs {
         match (attr.name.name.as_str(), &attr.arg) {
-            ("doc", AttrArg::Lit(Lit::Str(s), _)) => docs.push(s.clone()),
+            ("doc", AttrArg::Lit(Lit::Str(s))) => docs.push(s.clone()),
             ("memo", AttrArg::None) => memo = true,
             ("no_boundary", AttrArg::None) => boundary = Boundary::None,
-            ("label", AttrArg::Lit(Lit::Str(s), _)) => label = Some(s.clone()),
+            ("label", AttrArg::Lit(Lit::Str(s))) => label = Some(s.clone()),
             ("boundary", AttrArg::Expr(e)) => boundary = Boundary::Custom(e.clone()),
             (name @ ("doc" | "label"), _) => diags.push(Diagnostic::error(
                 attr.span,
@@ -339,7 +339,6 @@ fn prelude(input: InputKind, defined: &HashMap<String, usize>) -> Vec<Rule> {
     .into_iter()
     .filter(|(name, _)| !defined.contains_key(*name))
     .map(|(name, body)| Rule {
-        span: sp,
         attrs: vec![],
         vis: None,
         atom: true,

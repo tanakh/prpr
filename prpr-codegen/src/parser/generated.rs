@@ -986,7 +986,7 @@ fn __rule_doc_comment<'i>(
                         name: "doc".to_string(),
                         span,
                     },
-                    arg: AttrArg::Lit(Lit::Str(__text_text.to_string()), span),
+                    arg: AttrArg::Lit(Lit::Str(__text_text.to_string())),
                 }
             })(),
             __pos,
@@ -1158,7 +1158,6 @@ fn __rule_attr_value<'i>(
 ) -> __prpr_runtime::PResult<AttrArg> {
     '__l24: {
         if let Ok(__r) = '__l26: {
-            let __start_l = __skip(__cx, __m, __pos);
             let (l, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
@@ -1180,8 +1179,7 @@ fn __rule_attr_value<'i>(
                 Ok(__r) => __r,
                 Err(__f) => break '__l26 Err(__f),
             };
-            let __span_l = __prpr_runtime::span(__start_l, __pos);
-            Ok(((|| -> AttrArg { AttrArg::Lit(l, __span_l) })(), __pos))
+            Ok(((|| -> AttrArg { AttrArg::Lit(l) })(), __pos))
         } {
             break '__l24 Ok(__r);
         }
@@ -2860,7 +2858,6 @@ fn __rule_rule<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<Rule> {
     '__l72: {
-        let __start = __skip(__cx, __m, __pos);
         let (attrs, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
             let mut __p = __pos;
@@ -3046,11 +3043,9 @@ fn __rule_rule<'i>(
             Ok(__r) => __r,
             Err(__f) => break '__l72 Err(__f),
         };
-        let __span__ = __prpr_runtime::span(__start, __pos);
         Ok((
             (|| -> Rule {
                 Rule {
-                    span: __span__,
                     attrs,
                     vis,
                     atom: is_atom.is_some(),
@@ -8778,9 +8773,11 @@ use alloc::string::ToString;
 use core::fmt;
 use core::range::Range;
 
+#[doc(hidden)]
 pub use alloc::vec::Vec;
 
 /// The `(major, minor)` version of this runtime.
+#[doc(hidden)]
 pub const VERSION: (u32, u32) = (0, 1);
 
 /// Fails at compile time when generated code was made for an incompatible runtime.
@@ -8805,6 +8802,7 @@ pub type PResult<T> = Result<(T, usize), Fail>;
 
 /// The kinds of input a parser runs on: `str` and `[u8]`.
 pub trait Input {
+    /// The input as bytes; positions in the input are byte offsets.
     fn as_bytes(&self) -> &[u8];
 
     /// What is found at a byte position, for error messages.
@@ -8842,6 +8840,7 @@ impl Input for [u8] {
 /// The span from `start` to `end`, as a range of byte offsets of the input. If `start > end`,
 /// it is the empty span at `end`.
 #[inline]
+#[doc(hidden)]
 pub const fn span(start: usize, end: usize) -> Range<usize> {
     Range {
         start: if start <= end { start } else { end },
@@ -8851,6 +8850,7 @@ pub const fn span(start: usize, end: usize) -> Range<usize> {
 
 /// Something the parser expected at the error position.
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[non_exhaustive]
 pub enum Expected {
     /// A literal string.
     Literal(&'static str),
@@ -8906,8 +8906,11 @@ fn write_escaped(f: &mut fmt::Formatter<'_>, c: char) -> fmt::Result {
 /// What was found at the error position.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Found {
+    /// A character of text input.
     Char(char),
+    /// A byte of binary input.
     Byte(u8),
+    /// The end of the input.
     Eof,
 }
 
@@ -8954,6 +8957,7 @@ pub struct Cx<'i, I: ?Sized> {
 
 /// The label in effect before [`Cx::push_label`].
 #[derive(Clone, Copy, Debug)]
+#[doc(hidden)]
 pub struct SavedLabel(Option<(usize, &'static str)>);
 
 /// The error state at [`Cx::mark`].
@@ -8987,21 +8991,25 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
         }
     }
 
+    /// The input.
     #[inline]
     pub fn input(&self) -> &'i I {
         self.input
     }
 
+    /// The input as bytes.
     #[inline]
     pub fn bytes(&self) -> &'i [u8] {
         self.bytes
     }
 
+    /// The length of the input in bytes.
     #[inline]
     pub fn len(&self) -> usize {
         self.bytes.len()
     }
 
+    /// Whether the input is empty.
     #[inline]
     pub fn is_empty(&self) -> bool {
         self.bytes.is_empty()
@@ -9102,6 +9110,7 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     /// it is forgotten and the message is reported at `pos`. Without one, the predicate is just
     /// a filter.
     #[cold]
+    #[doc(hidden)]
     pub fn fail_predicate(
         &mut self,
         mark: ErrorMark,
@@ -9122,11 +9131,13 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
 
     /// Stops recording failures until the matching [`Cx::pop_quiet`].
     #[inline]
+    #[doc(hidden)]
     pub fn push_quiet(&mut self) {
         self.quiet += 1;
     }
 
     #[inline]
+    #[doc(hidden)]
     pub fn pop_quiet(&mut self) {
         self.quiet -= 1;
     }
@@ -9134,6 +9145,7 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     /// Reports `label` instead of whatever is expected at `pos`, until the matching
     /// [`Cx::pop_label`]. An enclosing label at the same position takes precedence.
     #[inline]
+    #[doc(hidden)]
     pub fn push_label(&mut self, pos: usize, label: &'static str) -> SavedLabel {
         let saved = SavedLabel(self.label);
         if !matches!(self.label, Some((p, _)) if p == pos) {
@@ -9143,6 +9155,7 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     }
 
     #[inline]
+    #[doc(hidden)]
     pub fn pop_label(&mut self, saved: SavedLabel) {
         self.label = saved.0;
     }
@@ -9211,6 +9224,7 @@ impl<'i> Cx<'i, [u8]> {
 }
 
 /// The result of a semantic predicate `&{ ... }`.
+#[doc(hidden)]
 pub trait Predicate {
     type Output;
 
@@ -9247,6 +9261,7 @@ impl<T, E: fmt::Display> Predicate for Result<T, E> {
 
 /// A cache of the last result of the implicit whitespace rule.
 #[derive(Clone, Copy, Debug)]
+#[doc(hidden)]
 pub struct SkipCache {
     pos: usize,
     end: usize,
@@ -9282,6 +9297,7 @@ impl SkipCache {
 ///
 /// A cached result is handed out every time the rule is invoked at the same position, so the
 /// value is cloned with the function that `get` and `insert` take.
+#[doc(hidden)]
 pub struct MemoTable<T> {
     // Open addressing with linear probing; the capacity is zero or a power of two.
     slots: Vec<Option<(usize, PResult<T>)>>,
@@ -9428,6 +9444,7 @@ pub struct ParseError {
 }
 
 impl ParseError {
+    /// An error at byte offset `offset`, where `found` was found instead of what was `expected`.
     pub fn new(offset: usize, expected: Vec<Expected>, found: Found) -> Self {
         Self {
             offset,
@@ -9451,6 +9468,7 @@ impl ParseError {
         &self.expected
     }
 
+    /// What was found at the error position.
     pub fn found(&self) -> Found {
         self.found
     }
@@ -9496,7 +9514,9 @@ impl core::error::Error for ParseError {}
 /// A one-based line and column. Columns count characters.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct LineCol {
+    /// The line, from 1.
     pub line: usize,
+    /// The column in characters, from 1.
     pub column: usize,
 }
 
@@ -9529,10 +9549,15 @@ fn floor_char_boundary(src: &str, offset: usize) -> usize {
 ///   |     ^
 /// ```
 pub struct Snippet<'a> {
+    /// The word before the message, e.g. `error` or `warning`.
     pub level: &'a str,
+    /// The message.
     pub message: &'a dyn fmt::Display,
+    /// The source text that `span` is in.
     pub src: &'a str,
+    /// The name of the source, e.g. a file name.
     pub origin: &'a str,
+    /// The byte range of `src` to point at. Only its first line is shown.
     pub span: Range<usize>,
 }
 

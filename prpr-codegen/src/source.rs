@@ -4,6 +4,7 @@ use crate::ast::Span;
 use crate::diag::Diagnostic;
 use proc_macro2::{Span as TokenSpan, TokenStream};
 
+/// The text of a grammar, and the Rust tokens of its parts.
 pub trait Source {
     /// The text of the grammar.
     fn text(&self) -> &str;

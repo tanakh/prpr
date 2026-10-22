@@ -46,6 +46,7 @@ enum Node {
 }
 
 impl SourceText {
+    /// Rebuilds the text of `tokens`, e.g. the input of a proc-macro.
     pub fn new(tokens: TokenStream) -> Self {
         let mut builder = Builder {
             text: String::new(),
@@ -61,6 +62,7 @@ impl SourceText {
         }
     }
 
+    /// The text, to be parsed.
     pub fn text(&self) -> &str {
         &self.text
     }

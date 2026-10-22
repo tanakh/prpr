@@ -2,28 +2,39 @@
 
 use crate::ast::Span;
 
+/// How serious a diagnostic is.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Level {
+    /// No code can be generated.
     Error,
+    /// Code can be generated, but the grammar is likely wrong.
     Warning,
 }
 
+/// A problem with a grammar, at a byte range of its text.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Diagnostic {
+    /// How serious the problem is.
     pub level: Level,
+    /// Where the problem is.
     pub span: Span,
+    /// What the problem is.
     pub message: String,
+    /// Further information.
     pub notes: Vec<Note>,
 }
 
 /// Additional information, possibly about another part of the grammar.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Note {
+    /// The part of the grammar that the note is about, if any.
     pub span: Option<Span>,
+    /// The note.
     pub message: String,
 }
 
 impl Diagnostic {
+    /// An error at `span`.
     pub fn error(span: Span, message: impl Into<String>) -> Self {
         Self {
             level: Level::Error,
@@ -33,6 +44,7 @@ impl Diagnostic {
         }
     }
 
+    /// A warning at `span`.
     pub fn warning(span: Span, message: impl Into<String>) -> Self {
         Self {
             level: Level::Warning,
@@ -40,6 +52,7 @@ impl Diagnostic {
         }
     }
 
+    /// Adds a note.
     pub fn note(mut self, message: impl Into<String>) -> Self {
         self.notes.push(Note {
             span: None,
@@ -48,6 +61,7 @@ impl Diagnostic {
         self
     }
 
+    /// Adds a note about `span`.
     pub fn note_at(mut self, span: Span, message: impl Into<String>) -> Self {
         self.notes.push(Note {
             span: Some(span),
@@ -56,6 +70,7 @@ impl Diagnostic {
         self
     }
 
+    /// Whether the diagnostic is an error.
     pub fn is_error(&self) -> bool {
         self.level == Level::Error
     }

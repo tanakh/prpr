@@ -3,17 +3,17 @@
 //! [`compile`] turns a grammar into Rust tokens; the `grammar!` macro and the `prpr` command
 //! are thin wrappers around it.
 
-pub mod analysis;
-pub mod ast;
+mod analysis;
+mod ast;
 mod codegen;
-pub mod diag;
+mod diag;
 #[cfg(feature = "pretty")]
 pub mod file;
-pub mod parser;
-pub mod source;
+mod parser;
+mod source;
 
 pub use codegen::Options;
-pub use diag::Diagnostic;
+pub use diag::{Diagnostic, Level, Note};
 pub use source::{Source, TextSource};
 
 use proc_macro2::TokenStream;

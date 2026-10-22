@@ -19,7 +19,6 @@ pub enum Item {
 
 #[derive(Clone, Debug)]
 pub struct Rule {
-    pub span: Span,
     pub attrs: Vec<Attr>,
     /// `pub`, `pub(crate)`, ...
     pub vis: Option<Span>,
@@ -47,7 +46,7 @@ pub enum AttrArg {
     /// `#[memo]`
     None,
     /// `#[label = "..."]`, and doc comments as `doc = "..."`.
-    Lit(Lit, Span),
+    Lit(Lit),
     /// `#![input = bytes]`
     Ident(Ident),
     /// `#[boundary(expr)]`

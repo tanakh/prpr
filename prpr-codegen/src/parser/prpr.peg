@@ -106,7 +106,7 @@ atom doc_comment: Attr = "///" !"/" text:(!"\n" .)* {
     Attr {
         span,
         name: Ident { name: "doc".to_string(), span },
-        arg: AttrArg::Lit(Lit::Str(#text.to_string()), span),
+        arg: AttrArg::Lit(Lit::Str(#text.to_string())),
     }
 }
 
@@ -115,7 +115,7 @@ attr_body: (Ident, AttrArg)
     / name:ident_raw "(" e:expr ")" { (name, AttrArg::Expr(e)) }
     / name:ident_raw { (name, AttrArg::None) }
 
-attr_value: AttrArg = l:literal { AttrArg::Lit(l, @l) } / id:ident_raw { AttrArg::Ident(id) }
+attr_value: AttrArg = l:literal { AttrArg::Lit(l) } / id:ident_raw { AttrArg::Ident(id) }
 
 #[label = "rule"]
 item: Item = s:rust_item { Item::Rust(s) } / r:rule { Item::Rule(r) }
@@ -168,7 +168,6 @@ atom rust_char_or_lifetime = "'" ("\\" . (!"'" .)* "'" / . "'" / ident_continue*
 
 rule: Rule = attrs:outer_attr* vis:vis? is_atom:"atom"? name:ident_raw ty:(":" !":" t:ty_span { t })? <"=" ![=>]> body:expr {
     Rule {
-        span: @_,
         attrs,
         vis,
         atom: is_atom.is_some(),
