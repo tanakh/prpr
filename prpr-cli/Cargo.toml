@@ -14,3 +14,4 @@ path = "src/main.rs"
 
 [dependencies]
 prpr-codegen = { workspace = true, features = ["pretty"] }
+clap = { version = "4.6.7", features = ["derive"] }
