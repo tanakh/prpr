@@ -238,6 +238,17 @@ impl Gen<'_> {
             let module = self.path_tokens(&module);
             q!(#field: #module::Memo<'i>,)
         });
+        // With `#![profile]`, the rules count their calls in the `Memo`.
+        let profile_field = self.an.profile.then(|| q!(__profile: #rt::Profile,));
+        let profiled = self.an.profile.then(|| {
+            q! {
+                impl<'i> #rt::Profiled for Memo<'i> {
+                    fn profile(&mut self) -> &mut #rt::Profile {
+                        &mut self.__profile
+                    }
+                }
+            }
+        });
         let clones: Vec<TokenStream> = clones.collect();
         let clones = (!clones.is_empty()).then(|| {
             q! {
@@ -255,10 +266,12 @@ impl Gen<'_> {
                 __skip: #rt::SkipCache,
                 #(#tables)*
                 #(#grammars)*
+                #profile_field
                 __phantom: ::core::marker::PhantomData<&'i ()>,
             }
 
             #clones
+            #profiled
         }
     }
 
@@ -424,8 +437,7 @@ impl Gen<'_> {
         let body = if info.memo {
             let field = memo_field(&rule.name.name);
             let clone = clone_fn(&rule.name.name);
-            let hit =
-                profiled.then(|| q!(__cx.profile_memo_hit(::core::module_path!(), #name_str);));
+            let hit = profiled.then(|| q!(__m.__profile.record_memo_hit(#name_str);));
             q! {
                 if let ::core::option::Option::Some(__r) = __m.#field.get(__pos, Memo::#clone) {
                     #hit
@@ -440,7 +452,7 @@ impl Gen<'_> {
         };
         let body = if profiled {
             q! {
-                __cx.profile_call(::core::module_path!(), #name_str, __pos);
+                __m.__profile.record_call(#name_str, __pos);
                 #body
             }
         } else {

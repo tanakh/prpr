@@ -179,8 +179,9 @@ If a way to express the check in plain PEG is found (for example with built-in r
 * To make *not* caching an informed choice:
   * With `#![lint]`, alternatives of one choice that may parse the same syntactic rule at the same position are errors, unless the rule has `#[memo]` or `#[no_memo]`, which states that it is deliberately not memoized.
     It looks at rules in a common start of the alternatives, and at rules that both invoke at their start positions after it, through other rules (from `first_calls`, the analysis behind the left recursion check); only the outermost such rule is reported.
-  * With `#![profile]`, rules count their calls, the calls at positions where they were already called, and memo hits, in `Cx` during `runtime::profile`, which returns a `Profile`.
-    Without the attribute, no counting code is generated, so the runtime needs no feature (a `cfg` in `rt.rs` would also be evaluated in the crates it is inlined into).
+  * With `#![profile]`, rules count their calls, the calls at positions where they were already called, and memo hits, in a `Profile` in the grammar's `Memo`, which implements `Profiled`; `runtime::profile` takes it out after a parse.
+    Grammars without the attribute generate no counting code, and `Cx` has no profiling state, so they pay nothing, and the runtime needs no feature (a `cfg` in `rt.rs` would also be evaluated in the crates it is inlined into).
+    Only the rules of the profiled grammar are counted, not those of grammars it uses.
 
 ### Lints
 

@@ -71,7 +71,7 @@ Two tools help find the rules that are parsed more than once.
 [`#![lint]`](lints.md#rules-parsed-more-than-once) finds rules that alternatives may parse at the same position, from the grammar alone.
 Profiling counts how often each rule is actually parsed again on an input.
 
-With `#![profile]`, the rules of a grammar count their calls, and `prpr::runtime::profile` runs a rule from the start of an input, as `parse_prefix` does, and returns the counts with the result:
+With `#![profile]`, the rules of a grammar count their calls, and `prpr::runtime::profile` runs one of them from the start of an input, as `parse_prefix` does, and returns the counts with the result:
 
 ```rust
 mod calc {
@@ -116,8 +116,24 @@ Here, the first two alternatives of `factor` both parse `"(" expr ")"`, so every
 Memoizing `factor` or `expr`, or factoring out `"(" e:expr ")"`, removes the reparsing.
 
 `profile.rules()` gives the counts as values, for tests or tools.
-Only grammars with `#![profile]` count their calls, and only during `profile`.
-They pay for a check at each call of a rule otherwise, so remove `#![profile]` when you are done.
+
+The counts are kept in the `Memo` of the grammar, so grammars without `#![profile]` pay nothing.
+In turn, `profile` only takes the rules of a grammar with `#![profile]`, and counts the rules of that grammar only, not those of [other grammars](composing.md) it uses:
+
+```rust,compile_fail
+mod uncounted {
+    prpr::grammar! {
+        pub x = "x"
+    }
+}
+
+fn main() {
+    // error: the grammar of `Memo<'_>` does not count the calls of its rules
+    let _ = prpr::runtime::profile("x", uncounted::Rules::x);
+}
+```
+
+A grammar with `#![profile]` counts the calls of its rules whenever they run, which makes it slower, so remove the attribute when you are done.
 
 ## Writing fast grammars
 
