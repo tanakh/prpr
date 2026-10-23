@@ -1,7 +1,4 @@
-//! The code generator of prpr, a Packrat parser generator.
-//!
-//! [`compile`] turns a grammar into Rust tokens; the `grammar!` macro and the `prpr` command
-//! are thin wrappers around it.
+#![doc = include_str!("../README.md")]
 
 mod analysis;
 mod ast;

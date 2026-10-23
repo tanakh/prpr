@@ -20,6 +20,12 @@ mod list {
 
 See [Build scripts](https://tanakh.github.io/prpr/codegen/build-scripts.html) in the prpr Book.
 
+## API
+
+* `build` (feature `build`): generates the modules of grammar files in build scripts.
+* `file` (feature `build`): generates the module of a grammar as text, and writes the runtime as a module.
+* `compile`: compiles a grammar into Rust tokens, for the macros of prpr and other proc-macros, with `Options` and the `Diagnostic`s of mistakes in the grammar.
+
 ## License
 
 Licensed under either of Apache License, Version 2.0 or MIT license at your option.

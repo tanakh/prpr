@@ -1,4 +1,4 @@
-//! The `grammar!` and `include_grammar!` macros of prpr. Use them through the `prpr` crate.
+#![doc = include_str!("../README.md")]
 
 use core::range::Range;
 use proc_macro::TokenStream;

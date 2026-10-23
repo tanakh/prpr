@@ -1,6 +1,4 @@
-//! prpr: a Packrat parser generator.
-//!
-//! [The prpr Book](https://tanakh.github.io/prpr/) explains how to write grammars.
+#![doc = include_str!("../README.md")]
 
 pub use prpr_macros::{grammar, include_grammar};
 pub use prpr_runtime as runtime;

@@ -1,5 +1,12 @@
 # prpr - Packrat parser in Rust
 
+[![crates.io](https://img.shields.io/crates/v/prpr.svg)](https://crates.io/crates/prpr)
+[![docs.rs](https://img.shields.io/docsrs/prpr)](https://docs.rs/prpr)
+[![CI](https://github.com/tanakh/prpr/actions/workflows/ci.yml/badge.svg)](https://github.com/tanakh/prpr/actions/workflows/ci.yml)
+[![Book](https://img.shields.io/badge/book-online-blue.svg)](https://tanakh.github.io/prpr/)
+![Rust 1.96+](https://img.shields.io/badge/rust-1.96%2B-orange.svg)
+[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#license)
+
 This is a library that generates code for performing Packrat parsing on syntax defined using a [Parsing Expression Grammar (PEG)](https://en.wikipedia.org/wiki/Parsing_expression_grammar).
 
 ```rust
@@ -29,16 +36,16 @@ assert_eq!(expr("1 +").unwrap_err().to_string(), "expected one of `(` or number,
 ## Documentation
 
 * [The prpr Book](https://tanakh.github.io/prpr/) explains how to use prpr.
-  Its source is in [book](book/src/SUMMARY.md); build it with [mdBook](https://rust-lang.github.io/mdBook/): `mdbook build book`.
+  Its source is in [book](https://github.com/tanakh/prpr/tree/master/book); build it with [mdBook](https://rust-lang.github.io/mdBook/): `mdbook build book`.
   Its examples are tested by `cargo test`.
-* The [design note](docs/design.md) explains the design.
-* The [benchmarks](benchmarks/README.md) compare prpr with other libraries.
+* The [design note](https://github.com/tanakh/prpr/blob/master/docs/design.md) explains the design.
+* The [benchmarks](https://github.com/tanakh/prpr/tree/master/benchmarks) compare prpr with other libraries.
 
 ## Crates
 
 * `prpr`: the `grammar!` macro and the runtime.
 * `prpr-runtime`: the runtime alone, for generated files.
-* `prpr-macros`: the `grammar!` macro, used through `prpr`.
+* `prpr-macros`: the `grammar!` and `include_grammar!` macros, used through `prpr`.
 * `prpr-codegen`: the code generator, for `build.rs` scripts and tools.
 * `prpr-cli`: the `prpr` command.
 
@@ -46,8 +53,8 @@ assert_eq!(expr("1 +").unwrap_err().to_string(), "expected one of `(` or number,
 
 Licensed under either of
 
-* Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or <https://www.apache.org/licenses/LICENSE-2.0>)
-* MIT license ([LICENSE-MIT](LICENSE-MIT) or <https://opensource.org/licenses/MIT>)
+* Apache License, Version 2.0 ([LICENSE-APACHE](https://github.com/tanakh/prpr/blob/master/LICENSE-APACHE) or <https://www.apache.org/licenses/LICENSE-2.0>)
+* MIT license ([LICENSE-MIT](https://github.com/tanakh/prpr/blob/master/LICENSE-MIT) or <https://opensource.org/licenses/MIT>)
 
 at your option.
 
