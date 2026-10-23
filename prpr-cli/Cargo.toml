@@ -10,6 +10,8 @@ repository.workspace = true
 homepage.workspace = true
 keywords = ["peg", "parser", "packrat", "parser-generator", "cli"]
 categories = ["parsing", "command-line-utilities"]
+# The bootstrap test reads the grammar of grammars from prpr-codegen in the repository.
+exclude = ["tests/bootstrap.rs"]
 
 [[bin]]
 name = "prpr"

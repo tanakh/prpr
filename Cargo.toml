@@ -30,8 +30,9 @@ repository.workspace = true
 homepage.workspace = true
 keywords = ["peg", "parser", "packrat", "parser-generator", "grammar"]
 categories = ["parsing", "development-tools::procedural-macro-helpers"]
-# The book stays in the package for its doctests.
-exclude = [".github", "docs"]
+# The book stays in the package for its doctests. The UI tests need tests/ui-deps, a package of
+# its own, which is not part of this one.
+exclude = [".github", "docs", "tests/ui", "tests/ui.rs"]
 
 [features]
 # `runtime::SourceText`, for parsing the input of proc-macros.
