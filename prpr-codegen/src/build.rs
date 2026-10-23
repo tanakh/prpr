@@ -1,4 +1,4 @@
-//! Generating parsers from grammar files in build scripts.
+//! Generating parsers from grammar files in build scripts. Requires the feature `build`.
 //!
 //! ```no_run
 //! // In `build.rs`:

@@ -1,4 +1,4 @@
-//! Standalone Rust files generated from grammar files.
+//! Standalone Rust files generated from grammar files. Requires the feature `build`.
 
 use crate::source::SourceImpl;
 use crate::{Diagnostic, Options, TextSource};

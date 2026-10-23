@@ -293,7 +293,7 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 1. Runtime core; stage 0 parser; analysis; code generation without memoization; `grammar!`; CLI. (done)
 2. Self-describing grammar and bootstrap. (done)
 3. `#[memo]` and benchmarks, `#![lint]` and `#![profile]` (done).
-4. Byte input, public `SourceText`, cross-grammar references (done); more diagnostics tests.
+4. Byte input, public `SourceText`, cross-grammar references, and tests of diagnostics (done).
 
 Later: left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data, and for closing delimiters that repeat the opening one, as in raw strings and heredocs, if a parameter can be matched as a literal), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
 
