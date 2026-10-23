@@ -13066,6 +13066,8 @@ use core::range::Range;
 pub use alloc::vec::Vec;
 
 /// The `(major, minor)` version of this runtime.
+// A literal, since this file is copied into generated files; `lib.rs` checks that it is the
+// version of the package.
 #[doc(hidden)]
 pub const VERSION: (u32, u32) = (0, 1);
 

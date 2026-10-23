@@ -6,6 +6,24 @@ extern crate alloc;
 mod rt;
 pub use rt::*;
 
+const _: () = assert!(
+    VERSION.0 == parse_u32(env!("CARGO_PKG_VERSION_MAJOR"))
+        && VERSION.1 == parse_u32(env!("CARGO_PKG_VERSION_MINOR")),
+    "`VERSION` in rt.rs must be the version of the package"
+);
+
+// A number of decimal digits.
+const fn parse_u32(digits: &str) -> u32 {
+    let digits = digits.as_bytes();
+    let mut n = 0;
+    let mut i = 0;
+    while i < digits.len() {
+        n = n * 10 + (digits[i] - b'0') as u32;
+        i += 1;
+    }
+    n
+}
+
 #[cfg(feature = "proc-macro2")]
 mod source_text;
 #[cfg(feature = "proc-macro2")]
