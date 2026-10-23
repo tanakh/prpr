@@ -3,5 +3,3 @@ prpr::grammar! {
     //~^ ERROR: `#c` does not refer to a binding of this sequence
     atom word = [a-z]+
 }
-
-fn main() {}

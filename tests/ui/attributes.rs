@@ -51,5 +51,3 @@ mod grammar_attributes {
         a = "x"
     }
 }
-
-fn main() {}

@@ -11,5 +11,3 @@ mod indirect {
         b = "y"? a
     }
 }
-
-fn main() {}

@@ -6,4 +6,3 @@ prpr::grammar! {
     //~^ ERROR: the trait bound `Tree: Clone` is not satisfied
 }
 
-fn main() {}

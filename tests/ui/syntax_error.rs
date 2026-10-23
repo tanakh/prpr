@@ -7,5 +7,3 @@ prpr::grammar! {
     b = "x" @ "y"
     //~^ ERROR: syntax error
 }
-
-fn main() {}

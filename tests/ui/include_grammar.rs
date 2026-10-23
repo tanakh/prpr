@@ -7,5 +7,3 @@ mod missing {
     prpr::include_grammar!("no_such_file.peg");
     //~^ ERROR: cannot read
 }
-
-fn main() {}

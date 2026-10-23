@@ -8,6 +8,8 @@ use ui_test::{Config, run_tests};
 
 fn main() -> ui_test::Result<()> {
     let mut config = Config::rustc("tests/ui");
+    // Libraries, which need no `main`.
+    config.program.args.push("--crate-type=lib".into());
     config.bless_command = Some("cargo test --test ui -- --bless".into());
     let defaults = config.comment_defaults.base();
     defaults.set_custom("edition", Edition("2024".into()));

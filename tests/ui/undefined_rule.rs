@@ -4,5 +4,3 @@ prpr::grammar! {
     //~^ ERROR: cannot find rule `factor`
     fact = "x"
 }
-
-fn main() {}

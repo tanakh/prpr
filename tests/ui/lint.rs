@@ -50,5 +50,3 @@ mod shadowed {
         atom int: i64 = s:([0-9]+) { #s.parse().unwrap() }
     }
 }
-
-fn main() {}

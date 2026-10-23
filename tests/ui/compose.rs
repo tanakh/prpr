@@ -24,5 +24,3 @@ mod uses {
         //~^ ERROR: this rule of another grammar parses another kind of input than this grammar
     }
 }
-
-fn main() {}

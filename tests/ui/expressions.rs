@@ -35,5 +35,3 @@ mod byte_classes {
         //~^ ERROR: a character class for byte input can only contain characters up to
     }
 }
-
-fn main() {}

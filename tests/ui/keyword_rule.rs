@@ -3,5 +3,3 @@ prpr::grammar! {
     match = "y"
     //~^ ERROR: `match` is a keyword and cannot be a rule name
 }
-
-fn main() {}
