@@ -38,6 +38,7 @@ assert_eq!(expr("1 +").unwrap_err().to_string(), "expected one of `(` or number,
 * [The prpr Book](https://tanakh.github.io/prpr/) explains how to use prpr.
   Its source is in [book](https://github.com/tanakh/prpr/tree/master/book); build it with [mdBook](https://rust-lang.github.io/mdBook/): `mdbook build book`.
   Its examples are tested by `cargo test`.
+* The [changelog](https://github.com/tanakh/prpr/blob/master/CHANGELOG.md) lists the changes of each release.
 * The [design note](https://github.com/tanakh/prpr/blob/master/docs/design.md) explains the design.
 * The [benchmarks](https://github.com/tanakh/prpr/tree/master/benchmarks) compare prpr with other libraries.
 
