@@ -63,7 +63,7 @@ grammar!{}  : TokenStream --(rebuild text from token positions)--> SourceText --
   `SourceText::with(tokens, f)` runs `f` on the text and turns the `MacroError` it returns (a `ParseError` converts with `?`) into `compile_error!`, and `prpr::define_proc_macro!(name, parser, expand)` defines a whole proc-macro with it.
 * `include_grammar!("file.peg")` reads a file as a `TextSource`, relative to the invoking file (`Span::local_file`), and emits `include_str!` of it so that the compiler tracks it.
   Diagnostics are rendered with the file's lines into the message of a `compile_error!` at the path.
-  A macro cannot make spans in another file, so errors that only the compiler finds in the Rust code of the file are reported at the invocation.
+  A macro cannot make spans in another file, so errors that only the compiler finds in the Rust code of the file are reported at the invocation, and the names generated for rules get the span of the path, so that the compiler lints them like code the user wrote.
 
 ### Grammar language
 
@@ -190,7 +190,7 @@ If a way to express the check in plain PEG is found (for example with built-in r
 * an alternative after one that always succeeds (judged conservatively: tokens in syntactic rules may fail their delimiter checks);
 * an alternative whose start an earlier alternative matches (the earlier one's elements, structurally, with the last possibly a literal that is a prefix of the later one's, unless delimiters tell them apart);
 * rules parsed more than once at the same position (above);
-* unused private rules: their entry functions deny `dead_code` and get the span of the rule's name, so that the compiler reports them unless Rust code uses them. (It does not lint code that looks generated, so this does not work for `include_grammar!`.)
+* unused private rules: their entry functions deny `dead_code` and get the span of the rule's name, so that the compiler reports them unless Rust code uses them. (It does not lint code that looks generated; with `include_grammar!`, the names get the span of the path, which the user wrote.)
 
 Errors rather than warnings, because stable proc-macros cannot emit warnings; the workaround of using a `#[deprecated]` item reads as a deprecation, which is misleading.
 

@@ -133,4 +133,4 @@ note: the lint level is defined here
 ```
 
 Rules that only Rust code uses, such as private rules used in tests, are not reported.
-Unused rules of grammar files included with [`include_grammar!`](../codegen/cli.md#including-a-grammar-file) are not reported either, since the compiler cannot point into the file.
+For a grammar file included with [`include_grammar!`](../codegen/cli.md#including-a-grammar-file), unused rules are reported at the path of the file, since the compiler cannot point into the file.

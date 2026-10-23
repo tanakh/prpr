@@ -1,0 +1,14 @@
+error: function `c` is never used
+ --> tests/ui/include_grammar_lint.rs:4:28
+  |
+4 |     prpr::include_grammar!("include_grammar_lint.peg");
+  |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+note: the lint level is defined here
+ --> tests/ui/include_grammar_lint.rs:4:28
+  |
+4 |     prpr::include_grammar!("include_grammar_lint.peg");
+  |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
