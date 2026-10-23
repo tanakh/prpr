@@ -9,3 +9,4 @@ publish = false
 
 [dependencies]
 prpr = { path = "../.." }
+calc = { path = "calc" }

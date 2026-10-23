@@ -15,5 +15,13 @@ error: cannot read tests/ui/no_such_file.peg: No such file or directory (os erro
 7 |     prpr::include_grammar!("no_such_file.peg");
   |                            ^^^^^^^^^^^^^^^^^^
 
-error: aborting due to 2 previous errors
+error: expected the path of a grammar file, as a string literal
+  --> tests/ui/include_grammar.rs:12:5
+   |
+12 |     prpr::include_grammar!(concat!("include_grammar", ".peg"));
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in the macro `prpr::include_grammar` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: aborting due to 3 previous errors
 

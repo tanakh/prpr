@@ -1,0 +1,21 @@
+error: expected one of `(`, number, or variable, found `*`
+ --> tests/ui/proc_macro.rs:7:27
+  |
+7 |     let a = calc!(width + * 2);
+  |                           ^
+
+error: division by zero
+  --> tests/ui/proc_macro.rs:10:27
+   |
+10 |     let b = calc!(width / 0);
+   |                           ^
+
+error[E0425]: cannot find value `hieght` in this scope
+  --> tests/ui/proc_macro.rs:13:27
+   |
+13 |     let c = calc!(width * hieght);
+   |                           ^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.

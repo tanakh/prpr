@@ -32,5 +32,12 @@ error: this alternative never matches, because an alternative before it matches 
 44 |         pub num: i64 = n:int { n } / n:int "." { n }
    |                                      ^^^^^^^^^^^^^^^
 
-error: aborting due to 5 previous errors
+error: `b"<="` never matches here, because `b"<"` before it matches its start
+       = note: put longer literals first
+  --> tests/ui/lint.rs:58:25
+   |
+58 |         pub op = b"<" / b"<="
+   |                         ^^^^^
+
+error: aborting due to 6 previous errors
 

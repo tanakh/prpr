@@ -50,3 +50,12 @@ mod shadowed {
         atom int: i64 = s:([0-9]+) { #s.parse().unwrap() }
     }
 }
+
+mod shadowed_bytes {
+    prpr::grammar! {
+        #![input = bytes]
+        #![lint]
+        pub op = b"<" / b"<="
+        //~^ ERROR: `b"<="` never matches here
+    }
+}
