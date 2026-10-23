@@ -15,7 +15,10 @@ fn options() -> Options {
     }
 }
 
-/// Generates a parser from a grammar.
+/// Generates a parser from a grammar: for each rule, a function that parses a whole input with
+/// it, the type `Rules` with an associated function for each rule, and the struct `Memo`.
+///
+/// [The prpr Book](https://tanakh.github.io/prpr/) explains how to write grammars.
 #[proc_macro]
 pub fn grammar(input: TokenStream) -> TokenStream {
     let src = SourceText::new(input.into());
@@ -34,7 +37,8 @@ pub fn grammar(input: TokenStream) -> TokenStream {
 }
 
 /// Generates a parser from a grammar file, as `grammar!` does from a grammar in Rust code.
-/// The path is relative to the file that invokes the macro, as for `include_str!`.
+/// The path is relative to the file that invokes the macro, as for `include_str!`; where the
+/// compiler does not tell which file that is, relative to the directory of `Cargo.toml`.
 #[proc_macro]
 pub fn include_grammar(input: TokenStream) -> TokenStream {
     let Some((lit, path)) = path_literal(input.into()) else {
@@ -111,6 +115,25 @@ fn string_value(text: &str) -> Option<String> {
             't' => '\t',
             '0' => '\0',
             c @ ('\\' | '\'' | '"') => c,
+            'x' => {
+                let code: String = chars.by_ref().take(2).collect();
+                char::from(
+                    u8::from_str_radix(&code, 16)
+                        .ok()
+                        .filter(|b| b.is_ascii())?,
+                )
+            }
+            'u' => {
+                let code: String = chars.by_ref().skip(1).take_while(|&c| c != '}').collect();
+                char::from_u32(u32::from_str_radix(&code, 16).ok()?)?
+            }
+            // A line continuation skips the line break and the whitespace after it.
+            '\n' => {
+                while chars.clone().next().is_some_and(char::is_whitespace) {
+                    chars.next();
+                }
+                continue;
+            }
             _ => return None,
         });
     }
