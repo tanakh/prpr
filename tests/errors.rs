@@ -119,6 +119,7 @@ error: expected `bar`, found `f`
 mod comments {
     prpr::grammar! {
         pub words = word*
+        pub words_then_semicolon = word* ";"
         atom word = [a-z]+
         atom comment = "//" (!"\n" .)* / "/*" (!"*/" .)* "*/"
     }
@@ -140,6 +141,14 @@ fn comments() {
         (
             "expected one of `[a-z]` or end of input, found `1`".into(),
             10
+        )
+    );
+    // A comment that matched adds nothing to the error after it, even at the same position.
+    assert_eq!(
+        err(comments::words_then_semicolon("a // b")),
+        (
+            "expected one of `;` or `[a-z]`, found end of input".into(),
+            6
         )
     );
 }

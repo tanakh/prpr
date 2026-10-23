@@ -39,7 +39,7 @@ prpr reports that position, with everything that was expected there.
 
 A few rules keep the list relevant:
 
-* Whitespace and comments, the rules `spaces`, `whitespace` and `comment`, are never reported as expected, except for what a comment that started expects, such as its end.
+* Whitespace and comments, the rules `spaces`, `whitespace` and `comment`, are never reported as expected, except for the end of a comment that started and cannot end.
 * When an atom (or an atomic group) is used as a token and matches, what was expected inside it is forgotten, as if a lexer had read the token.
   After the `2` in `[1, 2`, the error above does not list digits, even though more digits would have been accepted.
   When the token does not match, what was expected inside it is kept, so that, for example, an unterminated string is reported at its end.

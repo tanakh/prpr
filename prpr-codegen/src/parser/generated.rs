@@ -11413,9 +11413,10 @@ pub struct Cx<'i, I: ?Sized> {
     bytes: &'i [u8],
     // The farthest position of a failure.
     err_pos: usize,
-    // What was expected, with positions in non-decreasing order. Entries before `err_pos` are
-    // only kept while a mark is active, so that the state can be rolled back to the mark.
-    expected: Vec<(usize, Expected)>,
+    // What was expected, with positions in non-decreasing order and whether a comment expected
+    // it. Entries before `err_pos` are only kept while a mark is active, so that the state can be
+    // rolled back to the mark.
+    expected: Vec<(usize, Expected, bool)>,
     marks: u32,
     // Failures at positions up to this one are not recorded: `usize::MAX` while whitespace is
     // skipped or a lookahead or a delimiter is checked, and the start of a comment in it, so that
@@ -11554,9 +11555,14 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
             (_, Some(expected)) => expected,
             (_, None) => return,
         };
-        let recorded = self.expected.iter().rev().take_while(|(p, _)| *p == pos);
-        if !recorded.into_iter().any(|(_, e)| *e == expected) {
-            self.expected.push((pos, expected));
+        // Failures are only recorded in a comment after it started.
+        let in_comment = self.quiet_to.is_some();
+        let recorded = self.expected.iter().rev().take_while(|(p, ..)| *p == pos);
+        if !recorded
+            .into_iter()
+            .any(|(_, e, c)| *e == expected && *c == in_comment)
+        {
+            self.expected.push((pos, expected, in_comment));
         }
     }
 
@@ -11621,7 +11627,9 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     }
 
     /// Starts a comment at `pos`, until the matching [`Cx::pop_quiet`]: what is expected at `pos`,
-    /// a comment, is not recorded, but what is expected after it, such as its end, is.
+    /// a comment, is not recorded, but what is expected after it, such as its end, is. It is only
+    /// reported where nothing else was expected, so that a comment that matched adds nothing to
+    /// the error of what follows it.
     #[inline]
     #[doc(hidden)]
     pub fn push_comment(&mut self, pos: usize) -> SavedQuiet {
@@ -11656,11 +11664,13 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
 
     /// The error for the farthest failure recorded so far.
     pub fn error(&self) -> ParseError {
-        let mut expected: Vec<Expected> = self
-            .expected
-            .iter()
-            .filter(|(p, _)| *p == self.err_pos)
-            .map(|(_, e)| e.clone())
+        let here = || self.expected.iter().filter(|(p, ..)| *p == self.err_pos);
+        // What a comment expected is reported only where nothing else was expected, i.e. for a
+        // comment that cannot end; otherwise it is about a comment that matched before.
+        let only_comments = here().all(|(_, _, in_comment)| *in_comment);
+        let mut expected: Vec<Expected> = here()
+            .filter(|(_, _, in_comment)| only_comments || !in_comment)
+            .map(|(_, e, _)| e.clone())
             .collect();
         expected.sort();
         expected.dedup();

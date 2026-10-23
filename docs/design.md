@@ -142,6 +142,8 @@ Rules are *syntactic* (the default) or *lexical* (`atom`).
 * `spaces` defaults to `(whitespace / comment)*` with `whitespace = [' ' '\t' '\r' '\n']` and no comments.
   `whitespace`, `comment` and `spaces` can all be redefined in the grammar, and must be atoms.
 * Failures inside `spaces` and `whitespace` are never reported as expected tokens, however these rules are invoked, and neither are failures of `comment` at its start; failures after it has started are, so that a comment that cannot end is reported (`Cx` does not record failures at positions up to `quiet_to`).
+  They are marked as the expectations of a comment, and only reported where nothing else was expected: a comment that matched may have expected more at its end, e.g. the end of the input after a line comment, which should not mix with the error of what follows.
+  Marking them costs nothing while failures are not recorded, unlike rolling back the failures of comments that matched, which slowed comment-heavy input down by 11%.
   The last result of `spaces` is cached, so trying several alternatives at the same position skips whitespace only once.
 * Spacing mode is lexically scoped: a lexical rule may call a syntactic rule (e.g. an expression inside string interpolation), which then skips whitespace before its tokens.
   Whitespace after it is up to the lexical rule.
