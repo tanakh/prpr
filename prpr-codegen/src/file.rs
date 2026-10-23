@@ -25,12 +25,17 @@ pub fn generate(text: &str, runtime: &Runtime) -> Result<String, Vec<Diagnostic>
         Runtime::Inline => INLINE_RUNTIME,
     };
     let opts = Options {
-        runtime: path.parse().map_err(|_| {
-            vec![Diagnostic::error(
-                Default::default(),
-                format!("invalid runtime path `{path}`"),
-            )]
-        })?,
+        runtime: syn::parse_str::<syn::Path>(path)
+            .ok()
+            .and_then(|_| path.parse().ok())
+            .ok_or_else(|| {
+                vec![Diagnostic::error(
+                    Default::default(),
+                    format!(
+                        "invalid runtime path `{path}`: expected a path such as `::prpr_runtime` or `crate::rt`"
+                    ),
+                )]
+            })?,
         // An inlined runtime always matches.
         check_version: matches!(runtime, Runtime::Path(_)),
     };

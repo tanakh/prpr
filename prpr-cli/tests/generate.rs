@@ -36,3 +36,53 @@ fn unknown_bindings_are_located() {
         " --> g.peg:2:25"
     );
 }
+
+// All the errors of a grammar, as `prpr check` shows them.
+fn errors(grammar: &str) -> String {
+    match generate(grammar, &Runtime::Inline) {
+        Ok(_) => panic!("no errors"),
+        Err(diags) => {
+            let rendered: Vec<String> = diags.iter().map(|d| d.render(grammar, "g.peg")).collect();
+            rendered.join("\n\n")
+        }
+    }
+}
+
+#[test]
+fn diagnostics_are_rendered_with_their_notes() {
+    let grammar = "list = \"[\" (numbr, \",\")* \"]\"\natom number = [0-9]+\nlist = \"x\"\n";
+    assert_eq!(
+        errors(grammar),
+        "\
+error: rule `list` is defined more than once
+ --> g.peg:3:1
+  |
+3 | list = \"x\"
+  | ^^^^
+note: the first definition is here
+ --> g.peg:1:1
+  |
+1 | list = \"[\" (numbr, \",\")* \"]\"
+  | ^^^^
+
+error: cannot find rule `numbr`
+ --> g.peg:1:13
+  |
+1 | list = \"[\" (numbr, \",\")* \"]\"
+  |             ^^^^^
+  = note: a rule with a similar name exists: `number`"
+    );
+}
+
+#[test]
+fn invalid_runtime_paths_are_reported() {
+    for path in ["not a path!", "\"crate::rt", ""] {
+        let e = generate("a = \"x\"", &Runtime::Path(path.into())).unwrap_err();
+        assert!(
+            e[0].message.starts_with("invalid runtime path"),
+            "{path}: {}",
+            e[0].message
+        );
+    }
+    assert!(generate("a = \"x\"", &Runtime::Path("crate::rt".into())).is_ok());
+}
