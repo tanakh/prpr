@@ -652,12 +652,14 @@ pub const fn foreign_atom<'i, I: ?Sized, T, R: ForeignRule<'i, I, T>>(_rule: &R)
     R::ATOM
 }
 
-/// Runs `rule` from the start of `input` and requires the whole input to be consumed.
-/// `trailing` skips what may follow the rule (e.g. whitespace).
+/// Runs `rule` from the start of `input` and requires the whole input to be consumed: the
+/// entry functions of rules. `trailing` skips what may follow the rule, i.e. the whitespace of
+/// its grammar, which only the generated code has.
 ///
 /// The first attempt does not record failures, which is cheaper. Only when it fails is the
 /// input parsed again to find out what was expected, so actions may run twice for invalid
 /// input.
+#[doc(hidden)]
 pub fn parse_full<'i, I, M, T>(
     input: &'i I,
     rule: impl Fn(&mut Cx<'i, I>, &mut M, usize) -> PResult<T>,
@@ -684,13 +686,17 @@ where
     run(&mut cx).ok_or_else(|| cx.error())
 }
 
-/// Skips nothing; the `trailing` argument of [`parse_full`] for rules without implicit whitespace.
+/// Skips nothing; the `trailing` argument of [`parse_full`] for atoms.
+#[doc(hidden)]
 pub fn no_skip<I: ?Sized, M>(_cx: &mut Cx<'_, I>, _memo: &mut M, pos: usize) -> usize {
     pos
 }
 
 /// Runs `rule` from the start of `input` and returns its value and the position after it.
-/// Like [`parse_full`], it parses twice when it fails.
+///
+/// The first attempt does not record failures, which is cheaper. Only when it fails is the
+/// input parsed again to find out what was expected, so actions may run twice for invalid
+/// input.
 pub fn parse_prefix<'i, I, M, T>(
     input: &'i I,
     rule: impl Fn(&mut Cx<'i, I>, &mut M, usize) -> PResult<T>,

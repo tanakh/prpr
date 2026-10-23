@@ -90,4 +90,4 @@ fn main() {
 }
 ```
 
-`prpr::runtime::parse_full` is what the generated functions use to parse a whole input.
+To parse a whole input, use the function generated for the rule, such as `number::number`.

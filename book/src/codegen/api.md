@@ -69,7 +69,7 @@ Unlike entry functions, it does not need to reach the end of the input, and a sy
 An atom does not check that it is [delimited](../guide/whitespace.md#delimiters); grammars that use it as a token check that.
 
 Rule functions are how [other grammars](../guide/composing.md) use the rules of a grammar.
-From Rust code, `prpr::runtime::parse_prefix` runs one at the start of an input, and `prpr::runtime::parse_full` requires it to match the whole input, as entry functions do.
+From Rust code, `prpr::runtime::parse_prefix` runs one at the start of an input.
 For more control, call a rule function with a context and a `Memo` of your own:
 
 ```rust
@@ -108,7 +108,7 @@ The context, `Cx`, holds the input and records what was expected where parsing f
 
 A `Memo` holds the state of a parse: the results of [memoized](../guide/memoization.md) rules, including those of other grammars the grammar uses, and where the whitespace at each position ends.
 Create one with `Memo::default()` for each input, and use it with that input only.
-Entry functions, `parse_prefix` and `parse_full` create their own.
+Entry functions and `parse_prefix` create their own.
 
 ## The runtime
 
