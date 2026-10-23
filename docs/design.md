@@ -295,7 +295,9 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 3. `#[memo]` and benchmarks, `#![lint]` and `#![profile]` (done).
 4. Byte input, public `SourceText`, cross-grammar references (done); more diagnostics tests.
 
-Later: cut operator (which would also sharpen syntax errors), left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data, and for closing delimiters that repeat the opening one, as in raw strings and heredocs, if a parameter can be matched as a literal), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
+Later: left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data, and for closing delimiters that repeat the opening one, as in raw strings and heredocs, if a parameter can be matched as a literal), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
+
+Not planned: a cut operator. Memoization takes care of the cost of backtracking, errors are reported at the farthest failure with labels, and memo tables only hold the positions where memoized rules were tried; a cut would also change what grammars accept, beyond plain PEGs.
 
 When a need arises: tokens written in Rust, for what grammars cannot express (closing delimiters that repeat the opening one, as in raw strings and heredocs; indentation) or for speed (e.g. `memchr`).
 They would be atoms, which need neither memoization nor implicit whitespace, written with the documented part of `Cx`; grammars could refer to them as they refer to the rules of other grammars, through a type like `Rules`.
