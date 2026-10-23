@@ -24,8 +24,8 @@ enum Command {
         #[arg(short, long)]
         output: Option<PathBuf>,
         /// Refers to the runtime at PATH, e.g. a module written by `prpr runtime`.
-        #[arg(long, value_name = "PATH", default_value = "::prpr_runtime")]
-        runtime_path: String,
+        #[arg(long, value_name = "PATH", default_value = "::prpr_runtime", value_parser = runtime_path)]
+        runtime_path: Runtime,
         /// Includes the runtime in the generated module.
         #[arg(long, conflicts_with = "runtime_path")]
         inline_runtime: bool,
@@ -62,7 +62,7 @@ fn run(command: Command) -> Result<(), ()> {
             let runtime = if inline_runtime {
                 Runtime::Inline
             } else {
-                Runtime::Path(runtime_path)
+                runtime_path
             };
             let code = generate(&grammar, &runtime)?;
             write(output.as_deref(), &code)
@@ -76,6 +76,10 @@ fn run(command: Command) -> Result<(), ()> {
             write(output.as_deref(), &prpr_codegen::file::runtime_module())
         }
     }
+}
+
+fn runtime_path(path: &str) -> Result<Runtime, &'static str> {
+    Runtime::path(path).ok_or("expected a path such as `::prpr_runtime` or `crate::rt`")
 }
 
 fn generate(path: &Path, runtime: &Runtime) -> Result<String, ()> {

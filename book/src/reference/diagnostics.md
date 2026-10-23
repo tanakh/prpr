@@ -58,6 +58,10 @@ To use a rule of another grammar, write its path, such as `lexer::ident`.
 A path like `::ident` names no module.
 Write the path of the module of the grammar, such as `crate::lexer::ident`.
 
+**`` a rule of this grammar is referred to by its name, without `self::` ``**
+
+A path is for the rules of other grammars; write `ident` rather than `self::ident`.
+
 **`` rule `name` is defined more than once ``**
 
 Two rules have the same name.
@@ -82,9 +86,13 @@ The attributes of rules and grammars are listed in [Rules](../guide/rules.md#att
 An attribute has the wrong kind of argument.
 The same goes for `#[no_memo]`, `#[no_boundary]` and `#![profile]`, which take no arguments.
 
-**`` a rule cannot have both `#[memo]` and `#[no_memo]` ``**
+**`` a rule cannot have more than one `#[label]` ``**, **`` a grammar cannot have more than one `#![input]` ``**
 
-Choose one: `#[memo]` memoizes the rule, and `#[no_memo]` says that it is not memoized on purpose.
+An attribute is given twice; remove one of them.
+
+**`` a rule cannot have both `#[memo]` and `#[no_memo]` ``**, **`` a rule cannot have both `#[boundary]` and `#[no_boundary]` ``**
+
+Choose one: `#[memo]` memoizes the rule, and `#[no_memo]` says that it is not memoized on purpose; `#[boundary(e)]` checks that `e` follows the token, and `#[no_boundary]` checks nothing.
 
 **`` `#[boundary]` and `#[no_boundary]` only apply to `atom` rules ``**
 
@@ -113,7 +121,7 @@ Sequences in parentheses have bindings of their own, so the same name may be use
 
 **`repetition of an expression that can match empty input`**
 
-A repetition such as `("a"?)*` would repeat forever without consuming input.
+A repetition such as `("a"?)*` would repeat forever without consuming input, in a rule or in `#[boundary(e)]`.
 Repeat the part that consumes input, as in `"a"*`.
 
 **`` left recursion: `expr` -> `expr` ``**
@@ -142,7 +150,7 @@ Memoize the rule with `#[memo]`, factor out what the alternatives start with, or
 
 **`` function `name` is never used ``**
 
-Reported by the compiler for a private rule that neither other rules nor Rust code use.
+Reported by the compiler for a private rule that neither other rules nor Rust code use (see [Unused rules](../guide/lints.md#unused-rules)).
 
 ## Rust code
 
@@ -150,6 +158,7 @@ Reported by the compiler for a private rule that neither other rules nor Rust co
 
 `#name` and `@name` in an action refer to bindings of the sequence of the action.
 Bindings of other sequences, such as sequences in parentheses, are not visible.
+This is checked even for actions that never run, such as those in rules without types.
 
 **`invalid Rust code: ...`**
 

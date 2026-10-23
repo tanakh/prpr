@@ -35,3 +35,11 @@ mod byte_classes {
         //~^ ERROR: a character class for byte input can only contain characters up to
     }
 }
+
+mod self_paths {
+    prpr::grammar! {
+        a = self::b
+        //~^ ERROR: a rule of this grammar is referred to by its name, without `self::`
+        b = "x"
+    }
+}

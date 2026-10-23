@@ -460,8 +460,12 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
         // What a comment expected is reported only where nothing else was expected, i.e. for a
         // comment that cannot end; otherwise it is about a comment that matched before.
         let only_comments = here().all(|(_, _, in_comment)| *in_comment);
+        // A message of a predicate is about input that matched but is invalid, which says more
+        // than what else could have been there.
+        let messages = here().any(|(_, e, _)| matches!(e, Expected::Message(_)));
         let expected: Vec<Expected> = here()
             .filter(|(_, _, in_comment)| only_comments || !in_comment)
+            .filter(|(_, e, _)| !messages || matches!(e, Expected::Message(_)))
             .map(|(_, e, _)| e.clone())
             .collect();
         ParseError::new(self.err_pos, expected, self.input.found_at(self.err_pos))

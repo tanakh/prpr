@@ -29,5 +29,11 @@ error: a character class for byte input can only contain characters up to `\u{ff
 34 |         a = [a-'\u{100}']
    |             ^^^^^^^^^^^^^
 
-error: aborting due to 5 previous errors
+error: a rule of this grammar is referred to by its name, without `self::`
+  --> tests/ui/expressions.rs:41:13
+   |
+41 |         a = self::b
+   |             ^^^^^^^
+
+error: aborting due to 6 previous errors
 

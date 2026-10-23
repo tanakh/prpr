@@ -10,6 +10,10 @@ prpr::grammar! {
     pair: (&'i str, Range<usize>, &'i str, Range<usize>) = "(" a:word "," b:word ")" { (#a, @a, #b, @b) }
 
     atom word = [a-z]+
+
+    // A syntactic rule in an atom skips whitespace itself.
+    atom interpolation: (&'i str, Range<usize>) = "${" e:sum "}" { (#e, @e) }
+    sum = word "+" word
 }
 
 #[test]
@@ -37,5 +41,9 @@ fn no_leading_whitespace() {
     assert_eq!(
         pair("( foo ,  bar )"),
         Ok(("foo", Range::from(2..5), "bar", Range::from(9..12)))
+    );
+    assert_eq!(
+        interpolation("${  a + b}"),
+        Ok(("a + b", Range::from(4..9)))
     );
 }

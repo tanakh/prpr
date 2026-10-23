@@ -92,7 +92,7 @@ fn main() {
 }
 ```
 
-The sequence matched, but it is not valid as a whole, so what was expected inside it is forgotten.
+The sequence matched, but it is not valid as a whole, so what was expected inside it is forgotten, and so is what other alternatives expected at the same place: the message says more about the input than they do.
 A predicate that returns `None` or `false` only filters, and leaves the other errors as they are.
 
 ## Displaying errors

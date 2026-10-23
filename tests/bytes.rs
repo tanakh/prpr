@@ -13,6 +13,8 @@ mod records {
         pub any_byte: u8 = .
         pub high: u8 = [b'\x80'-b'\xff']
         pub word = "abc"
+        // Byte literals are slices, whatever their lengths.
+        pub op: &'static [u8] = b"+" / b"--"
     }
 }
 
@@ -39,4 +41,5 @@ fn bytes() {
     assert!(records::high(b"\x7f").is_err());
     // No implicit whitespace or delimiters with byte input.
     assert!(records::word(b" abc").is_err());
+    assert_eq!(records::op(b"--"), Ok(&b"--"[..]));
 }

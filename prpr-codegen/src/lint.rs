@@ -301,14 +301,7 @@ fn same(a: &Expr, b: &Expr) -> bool {
         (Lit(a), Lit(b)) => a == b,
         (Class(a), Class(b)) => a.negated == b.negated && a.ranges == b.ranges,
         (Any, Any) => true,
-        (Ref(a), Ref(b)) => {
-            a.leading_colon == b.leading_colon
-                && a.segments.len() == b.segments.len()
-                && a.segments
-                    .iter()
-                    .zip(&b.segments)
-                    .all(|(a, b)| a.name == b.name)
-        }
+        (Ref(a), Ref(b)) => a.same(b),
         _ => false,
     }
 }

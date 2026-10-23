@@ -14,3 +14,13 @@ pub mod unused {
         used_by_rust("z").is_ok()
     }
 }
+
+// Rules that implicit whitespace and delimiter checks use are used.
+pub mod implicit {
+    prpr::grammar! {
+        #![lint]
+        pub list = "[" ("x", ",")* "]"
+        atom spaces = [' ' '\n']*
+        atom word_char = [a-z]
+    }
+}

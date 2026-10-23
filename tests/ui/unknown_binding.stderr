@@ -4,5 +4,11 @@ error: `#c` does not refer to a binding of this sequence
 2 |     pair: (String, String) = a:word "," b:word { (#a.to_string(), #c.to_string()) }
   |                                                                    ^
 
-error: aborting due to 1 previous error
+error: `#y` does not refer to a binding of this sequence
+  --> tests/ui/unknown_binding.rs:10:22
+   |
+10 |         a = x:"a" { #y }
+   |                      ^
+
+error: aborting due to 2 previous errors
 

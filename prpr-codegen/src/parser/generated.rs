@@ -72,7 +72,7 @@ fn make_postfix(p: Primary, op: Option<char>, span: Span) -> Result<Expr, &'stat
 }
 /// The state of a parse with this grammar besides the input.
 #[allow(dead_code, non_snake_case)]
-#[derive(Default)]
+#[derive(::core::default::Default)]
 pub struct Memo<'i> {
     __skip: __prpr_runtime::SkipCache,
     __phantom: ::core::marker::PhantomData<&'i ()>,
@@ -89,8 +89,8 @@ fn __skip<'i>(
     }
     let __saved = __cx.push_quiet();
     let __end = match __rule_spaces(__cx, __m, __pos) {
-        Ok((_, __p)) => __p,
-        Err(_) => __pos,
+        ::core::result::Result::Ok((_, __p)) => __p,
+        ::core::result::Result::Err(_) => __pos,
     };
     __cx.pop_quiet(__saved);
     __m.__skip.set(__pos, __end);
@@ -107,8 +107,8 @@ fn __word_char<'i>(
     let __r = __rule_word_char(__cx, __m, __pos);
     __cx.pop_quiet(__saved);
     match __r {
-        Ok((_, __p)) => ::core::option::Option::Some(__p),
-        Err(_) => ::core::option::Option::None,
+        ::core::result::Result::Ok((_, __p)) => ::core::option::Option::Some(__p),
+        ::core::result::Result::Err(_) => ::core::option::Option::None,
     }
 }
 #[allow(dead_code)]
@@ -141,9 +141,9 @@ fn __rule_whitespace<'i>(
             ) if ::core::matches!(
                 __c, ' ' | '\t' | '\r' | '\n' | '\u{b}' | '\u{c}' | '\u{85}' | '\u{200e}'
                 | '\u{200f}' | '\u{2028}' | '\u{2029}'
-            ) => Ok(__p),
+            ) => ::core::result::Result::Ok(__p),
             _ => {
-                Err(
+                ::core::result::Result::Err(
                     __cx
                         .fail(
                             __pos,
@@ -154,8 +154,8 @@ fn __rule_whitespace<'i>(
                 )
             }
         } {
-            Ok(__p) => Ok(((), __p)),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         }
     };
     __cx.pop_quiet(__saved);
@@ -163,6 +163,7 @@ fn __rule_whitespace<'i>(
 }
 /// Parses the whole input with the rule `whitespace`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn whitespace<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -177,46 +178,58 @@ fn __rule_comment<'i>(
     let __saved = __cx.push_comment(__pos);
     let __r = {
         match '__l0: {
-            if let Ok(__r) = '__l1: {
+            if let ::core::result::Result::Ok(__r) = '__l1: {
                 let __pos = match __cx.lit(__pos, "//") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l1 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l1 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __saved = __cx.push_quiet();
                     let __r = '__l2: {
                         let __pos = match __cx.lit(__pos, "/") {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l2 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l2 ::core::result::Result::Err(__f);
+                            }
                         };
                         let __pos = match {
                             let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, "/");
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __pos;
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l2 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l2 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(__pos)
+                        ::core::result::Result::Ok(__pos)
                     };
                     __cx.pop_quiet(__saved);
                     match __r {
-                        Ok(_) => {
+                        ::core::result::Result::Ok(_) => {
                             let __at = __pos;
-                            Err(__cx.fail_unexpected(__at))
+                            ::core::result::Result::Err(__cx.fail_unexpected(__at))
                         }
-                        Err(_) => Ok(__pos),
+                        ::core::result::Result::Err(_) => {
+                            ::core::result::Result::Ok(__pos)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l1 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l1 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let mut __p = __pos;
@@ -229,28 +242,38 @@ fn __rule_comment<'i>(
                                 let __r = __cx.lit(__pos, "\n");
                                 __cx.pop_quiet(__saved);
                                 match __r {
-                                    Ok(_) => {
+                                    ::core::result::Result::Ok(_) => {
                                         let __at = __pos;
-                                        Err(__cx.fail_unexpected(__at))
+                                        ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                     }
-                                    Err(_) => Ok(__pos),
+                                    ::core::result::Result::Err(_) => {
+                                        ::core::result::Result::Ok(__pos)
+                                    }
                                 }
                             } {
-                                Ok(__p) => __p,
-                                Err(__f) => break '__l3 Err(__f),
+                                ::core::result::Result::Ok(__p) => __p,
+                                ::core::result::Result::Err(__f) => {
+                                    break '__l3 ::core::result::Result::Err(__f);
+                                }
                             };
                             let __pos = match match __cx.peek_char(__pos) {
-                                ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                                ::core::option::Option::Some((__c, __p)) => {
+                                    ::core::result::Result::Ok(__p)
+                                }
                                 ::core::option::Option::None => {
-                                    Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                                    )
                                 }
                             } {
-                                Ok(__p) => __p,
-                                Err(__f) => break '__l3 Err(__f),
+                                ::core::result::Result::Ok(__p) => __p,
+                                ::core::result::Result::Err(__f) => {
+                                    break '__l3 ::core::result::Result::Err(__f);
+                                }
                             };
-                            Ok(__pos)
+                            ::core::result::Result::Ok(__pos)
                         } {
-                            Ok(__q) => {
+                            ::core::result::Result::Ok(__q) => {
                                 let __progress = __q != __p;
                                 __first = false;
                                 __p = __q;
@@ -258,25 +281,27 @@ fn __rule_comment<'i>(
                                     break;
                                 }
                             }
-                            Err(_) => break,
+                            ::core::result::Result::Err(_) => break,
                         }
                     }
-                    Ok(__p)
+                    ::core::result::Result::Ok(__p)
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l1 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l1 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                break '__l0 Ok(__r);
+                break '__l0 ::core::result::Result::Ok(__r);
             }
             match __rule_block_comment(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok(__p) => Ok(((), __p)),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         }
     };
     __cx.pop_quiet(__saved);
@@ -284,6 +309,7 @@ fn __rule_comment<'i>(
 }
 /// Parses the whole input with the rule `comment`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn comment<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -297,8 +323,10 @@ fn __rule_block_comment<'i>(
 ) -> __prpr_runtime::PResult<()> {
     match '__l4: {
         let __pos = match __cx.lit(__pos, "/*") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l4 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l4 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let mut __p = __pos;
@@ -306,11 +334,19 @@ fn __rule_block_comment<'i>(
             loop {
                 let __pos = __p;
                 match '__l5: {
-                    if let Ok(__r) = match __rule_block_comment(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                    if let ::core::result::Result::Ok(__r) = match __rule_block_comment(
+                        __cx,
+                        __m,
+                        __pos,
+                    ) {
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        break '__l5 Ok(__r);
+                        break '__l5 ::core::result::Result::Ok(__r);
                     }
                     '__l6: {
                         let __pos = match {
@@ -318,29 +354,39 @@ fn __rule_block_comment<'i>(
                             let __r = __cx.lit(__pos, "*/");
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __pos;
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l6 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l6 ::core::result::Result::Err(__f);
+                            }
                         };
                         let __pos = match match __cx.peek_char(__pos) {
-                            ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                            ::core::option::Option::Some((__c, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
                             ::core::option::Option::None => {
-                                Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                                )
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l6 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l6 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(__pos)
+                        ::core::result::Result::Ok(__pos)
                     }
                 } {
-                    Ok(__q) => {
+                    ::core::result::Result::Ok(__q) => {
                         let __progress = __q != __p;
                         __first = false;
                         __p = __q;
@@ -348,26 +394,31 @@ fn __rule_block_comment<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l4 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l4 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match __cx.lit(__pos, "*/") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l4 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l4 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `block_comment`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn block_comment<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -380,15 +431,16 @@ fn __rule_word_char<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match match __rule_ident_continue(__cx, __m, __pos) {
-        Ok((_, __p)) => Ok(__p),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `word_char`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn word_char<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -401,53 +453,71 @@ fn __rule_ident_start<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match '__l7: {
-        if let Ok(__r) = match __cx.peek_char(__pos) {
+        if let ::core::result::Result::Ok(__r) = match __cx.peek_char(__pos) {
             ::core::option::Option::Some(
                 (__c, __p),
-            ) if ::core::matches!(__c, 'a'..= 'z' | 'A'..= 'Z' | '_') => Ok(__p),
-            _ => Err(__cx.fail(__pos, __prpr_runtime::Expected::Class("[a-zA-Z_]"))),
+            ) if ::core::matches!(__c, 'a'..= 'z' | 'A'..= 'Z' | '_') => {
+                ::core::result::Result::Ok(__p)
+            }
+            _ => {
+                ::core::result::Result::Err(
+                    __cx.fail(__pos, __prpr_runtime::Expected::Class("[a-zA-Z_]")),
+                )
+            }
         } {
-            break '__l7 Ok(__r);
+            break '__l7 ::core::result::Result::Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
             match '__l8: {
                 let (c, __pos) = match match __cx.peek_char(__pos) {
-                    ::core::option::Option::Some((__c, __p)) => Ok((__c, __p)),
+                    ::core::option::Option::Some((__c, __p)) => {
+                        ::core::result::Result::Ok((__c, __p))
+                    }
                     ::core::option::Option::None => {
-                        Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                        ::core::result::Result::Err(
+                            __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                        )
                     }
                 } {
-                    Ok(__r) => __r,
-                    Err(__f) => break '__l8 Err(__f),
+                    ::core::result::Result::Ok(__r) => __r,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l8 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(((|| { c.is_alphabetic() })(), __pos))
+                ::core::result::Result::Ok((
+                    (|| { unicode_ident::is_xid_start(c) })(),
+                    __pos,
+                ))
             } {
-                Ok((__o, __pos)) => {
+                ::core::result::Result::Ok((__o, __pos)) => {
                     match __prpr_runtime::Predicate::into_outcome(__o) {
-                        Ok(__v) => {
+                        ::core::result::Result::Ok(__v) => {
                             __cx.commit(__mark);
-                            Ok(__pos)
+                            ::core::result::Result::Ok(__pos)
                         }
-                        Err(__message) => {
-                            Err(__cx.fail_predicate(__mark, __start, __message))
+                        ::core::result::Result::Err(__message) => {
+                            ::core::result::Result::Err(
+                                __cx.fail_predicate(__mark, __start, __message),
+                            )
                         }
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `ident_start`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn ident_start<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -460,55 +530,71 @@ fn __rule_ident_continue<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match '__l9: {
-        if let Ok(__r) = match __cx.peek_char(__pos) {
+        if let ::core::result::Result::Ok(__r) = match __cx.peek_char(__pos) {
             ::core::option::Option::Some(
                 (__c, __p),
             ) if ::core::matches!(__c, 'a'..= 'z' | 'A'..= 'Z' | '0'..= '9' | '_') => {
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             }
-            _ => Err(__cx.fail(__pos, __prpr_runtime::Expected::Class("[a-zA-Z0-9_]"))),
+            _ => {
+                ::core::result::Result::Err(
+                    __cx.fail(__pos, __prpr_runtime::Expected::Class("[a-zA-Z0-9_]")),
+                )
+            }
         } {
-            break '__l9 Ok(__r);
+            break '__l9 ::core::result::Result::Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
             match '__l10: {
                 let (c, __pos) = match match __cx.peek_char(__pos) {
-                    ::core::option::Option::Some((__c, __p)) => Ok((__c, __p)),
+                    ::core::option::Option::Some((__c, __p)) => {
+                        ::core::result::Result::Ok((__c, __p))
+                    }
                     ::core::option::Option::None => {
-                        Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                        ::core::result::Result::Err(
+                            __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                        )
                     }
                 } {
-                    Ok(__r) => __r,
-                    Err(__f) => break '__l10 Err(__f),
+                    ::core::result::Result::Ok(__r) => __r,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l10 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(((|| { c.is_alphanumeric() })(), __pos))
+                ::core::result::Result::Ok((
+                    (|| { unicode_ident::is_xid_continue(c) })(),
+                    __pos,
+                ))
             } {
-                Ok((__o, __pos)) => {
+                ::core::result::Result::Ok((__o, __pos)) => {
                     match __prpr_runtime::Predicate::into_outcome(__o) {
-                        Ok(__v) => {
+                        ::core::result::Result::Ok(__v) => {
                             __cx.commit(__mark);
-                            Ok(__pos)
+                            ::core::result::Result::Ok(__pos)
                         }
-                        Err(__message) => {
-                            Err(__cx.fail_predicate(__mark, __start, __message))
+                        ::core::result::Result::Err(__message) => {
+                            ::core::result::Result::Err(
+                                __cx.fail_predicate(__mark, __start, __message),
+                            )
                         }
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `ident_continue`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn ident_continue<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -520,18 +606,24 @@ fn __rule_ident_raw<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Ident> {
-    {
+    let __at = __pos;
+    let __saved = __cx.push_label(__at, "identifier");
+    let __r = {
         let __start = __pos;
         let __mark = __cx.mark();
         match '__l11: {
             let __start_s = __pos;
             let __pos = match '__l12: {
                 let __pos = match match __rule_ident_start(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l12 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l12 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let mut __p = __pos;
@@ -539,10 +631,14 @@ fn __rule_ident_raw<'i>(
                     loop {
                         let __pos = __p;
                         match match __rule_ident_continue(__cx, __m, __pos) {
-                            Ok((_, __p)) => Ok(__p),
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Ok((_, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         } {
-                            Ok(__q) => {
+                            ::core::result::Result::Ok(__q) => {
                                 let __progress = __q != __p;
                                 __first = false;
                                 __p = __q;
@@ -550,22 +646,26 @@ fn __rule_ident_raw<'i>(
                                     break;
                                 }
                             }
-                            Err(_) => break,
+                            ::core::result::Result::Err(_) => break,
                         }
                     }
-                    Ok(__p)
+                    ::core::result::Result::Ok(__p)
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l12 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l12 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l11 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l11 ::core::result::Result::Err(__f);
+                }
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __span_s = __prpr_runtime::span(__start_s, __pos);
-            Ok((
+            ::core::result::Result::Ok((
                 (|| {
                     (__text_s != "_")
                         .then(|| Ident {
@@ -576,26 +676,31 @@ fn __rule_ident_raw<'i>(
                 __pos,
             ))
         } {
-            Ok((__o, __pos)) => {
+            ::core::result::Result::Ok((__o, __pos)) => {
                 match __prpr_runtime::Predicate::into_outcome(__o) {
-                    Ok(__v) => {
+                    ::core::result::Result::Ok(__v) => {
                         __cx.commit(__mark);
-                        Ok((__v, __pos))
+                        ::core::result::Result::Ok((__v, __pos))
                     }
-                    Err(__message) => {
-                        Err(__cx.fail_predicate(__mark, __start, __message))
+                    ::core::result::Result::Err(__message) => {
+                        ::core::result::Result::Err(
+                            __cx.fail_predicate(__mark, __start, __message),
+                        )
                     }
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
-    }
+    };
+    __cx.pop_label(__saved);
+    __r
 }
 /// Parses the whole input with the rule `ident_raw`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn ident_raw<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Ident, __prpr_runtime::ParseError> {
@@ -612,31 +717,39 @@ fn __rule_ident<'i>(
         let __mark = __cx.mark();
         match '__l13: {
             let (id, __pos) = match __rule_ident_raw(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l13 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l13 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| { (!is_keyword(&id.name)).then_some(id) })(), __pos))
+            ::core::result::Result::Ok((
+                (|| { (!is_keyword(&id.name)).then_some(id) })(),
+                __pos,
+            ))
         } {
-            Ok((__o, __pos)) => {
+            ::core::result::Result::Ok((__o, __pos)) => {
                 match __prpr_runtime::Predicate::into_outcome(__o) {
-                    Ok(__v) => {
+                    ::core::result::Result::Ok(__v) => {
                         __cx.commit(__mark);
-                        Ok((__v, __pos))
+                        ::core::result::Result::Ok((__v, __pos))
                     }
-                    Err(__message) => {
-                        Err(__cx.fail_predicate(__mark, __start, __message))
+                    ::core::result::Result::Err(__message) => {
+                        ::core::result::Result::Err(
+                            __cx.fail_predicate(__mark, __start, __message),
+                        )
                     }
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
 }
 /// Parses the whole input with the rule `ident`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn ident<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Ident, __prpr_runtime::ParseError> {
@@ -656,7 +769,7 @@ fn __rule_grammar<'i>(
             loop {
                 let __pos = __p;
                 match __rule_inner_attr(__cx, __m, __pos) {
-                    Ok((__v, __q)) => {
+                    ::core::result::Result::Ok((__v, __q)) => {
                         __vs.push(__v);
                         let __progress = __q != __p;
                         __first = false;
@@ -665,13 +778,15 @@ fn __rule_grammar<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok((__vs, __p))
+            ::core::result::Result::Ok((__vs, __p))
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l14 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l14 ::core::result::Result::Err(__f);
+            }
         };
         let (items, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -680,7 +795,7 @@ fn __rule_grammar<'i>(
             loop {
                 let __pos = __p;
                 match __rule_item(__cx, __m, __pos) {
-                    Ok((__v, __q)) => {
+                    ::core::result::Result::Ok((__v, __q)) => {
                         __vs.push(__v);
                         let __progress = __q != __p;
                         __first = false;
@@ -689,19 +804,25 @@ fn __rule_grammar<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok((__vs, __p))
+            ::core::result::Result::Ok((__vs, __p))
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l14 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l14 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(((|| -> Grammar { Grammar { attrs, items } })(), __pos))
+        ::core::result::Result::Ok((
+            (|| -> Grammar { Grammar { attrs, items } })(),
+            __pos,
+        ))
     }
 }
 /// Parses the whole input with the rule `grammar`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 pub fn grammar<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Grammar, __prpr_runtime::ParseError> {
@@ -718,77 +839,96 @@ fn __rule_inner_attr<'i>(
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "#") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l15 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l15 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "!") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l15 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l15 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "[") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l15 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l15 ::core::result::Result::Err(__f);
+            }
         };
         let (body, __pos) = match __rule_attr_body(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l15 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l15 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "]") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l15 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l15 ::core::result::Result::Err(__f);
+            }
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
-        Ok(((|| -> Attr { mk_attr(__span__, body) })(), __pos))
+        ::core::result::Result::Ok(((|| -> Attr { mk_attr(__span__, body) })(), __pos))
     }
 }
 /// Parses the whole input with the rule `inner_attr`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn inner_attr<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Attr, __prpr_runtime::ParseError> {
@@ -801,87 +941,107 @@ fn __rule_outer_attr<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<Attr> {
     '__l16: {
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match __rule_doc_comment(__cx, __m, __pos) {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r.1) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            break '__l16 Ok(__r);
+            break '__l16 ::core::result::Result::Ok(__r);
         }
         '__l17: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "#") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l17 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l17 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "[") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l17 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l17 ::core::result::Result::Err(__f);
+                }
             };
             let (body, __pos) = match __rule_attr_body(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l17 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l17 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "]") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l17 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l17 ::core::result::Result::Err(__f);
+                }
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
-            Ok(((|| -> Attr { mk_attr(__span__, body) })(), __pos))
+            ::core::result::Result::Ok((
+                (|| -> Attr { mk_attr(__span__, body) })(),
+                __pos,
+            ))
         }
     }
 }
 /// Parses the whole input with the rule `outer_attr`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn outer_attr<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Attr, __prpr_runtime::ParseError> {
@@ -896,23 +1056,27 @@ fn __rule_doc_comment<'i>(
     '__l18: {
         let __start = __pos;
         let __pos = match __cx.lit(__pos, "///") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l18 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l18 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let __saved = __cx.push_quiet();
             let __r = __cx.lit(__pos, "/");
             __cx.pop_quiet(__saved);
             match __r {
-                Ok(_) => {
+                ::core::result::Result::Ok(_) => {
                     let __at = __pos;
-                    Err(__cx.fail_unexpected(__at))
+                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                 }
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l18 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l18 ::core::result::Result::Err(__f);
+            }
         };
         let __start_text = __pos;
         let __pos = match {
@@ -926,28 +1090,38 @@ fn __rule_doc_comment<'i>(
                         let __r = __cx.lit(__pos, "\n");
                         __cx.pop_quiet(__saved);
                         match __r {
-                            Ok(_) => {
+                            ::core::result::Result::Ok(_) => {
                                 let __at = __pos;
-                                Err(__cx.fail_unexpected(__at))
+                                ::core::result::Result::Err(__cx.fail_unexpected(__at))
                             }
-                            Err(_) => Ok(__pos),
+                            ::core::result::Result::Err(_) => {
+                                ::core::result::Result::Ok(__pos)
+                            }
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l19 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l19 ::core::result::Result::Err(__f);
+                        }
                     };
                     let __pos = match match __cx.peek_char(__pos) {
-                        ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                        ::core::option::Option::Some((__c, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
                         ::core::option::Option::None => {
-                            Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                            ::core::result::Result::Err(
+                                __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                            )
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l19 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l19 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(__pos)
+                    ::core::result::Result::Ok(__pos)
                 } {
-                    Ok(__q) => {
+                    ::core::result::Result::Ok(__q) => {
                         let __progress = __q != __p;
                         __first = false;
                         __p = __q;
@@ -955,17 +1129,19 @@ fn __rule_doc_comment<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l18 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l18 ::core::result::Result::Err(__f);
+            }
         };
         let __text_text = __cx.slice(__start_text, __pos);
         let __span__ = __prpr_runtime::span(__start, __pos);
-        Ok((
+        ::core::result::Result::Ok((
             (|| -> Attr {
                 let span = __span__;
                 Attr {
@@ -983,6 +1159,7 @@ fn __rule_doc_comment<'i>(
 }
 /// Parses the whole input with the rule `doc_comment`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn doc_comment<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Attr, __prpr_runtime::ParseError> {
@@ -995,211 +1172,266 @@ fn __rule_attr_body<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<(Ident, AttrArg)> {
     '__l20: {
-        if let Ok(__r) = '__l22: {
+        if let ::core::result::Result::Ok(__r) = '__l22: {
             let (name, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match __rule_ident_raw(__cx, __m, __pos) {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r.1) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l22 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l22 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "=") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l22 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l22 ::core::result::Result::Err(__f);
+                }
             };
             let (arg, __pos) = match __rule_attr_value(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l22 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l22 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> (Ident, AttrArg) { (name, arg) })(), __pos))
+            ::core::result::Result::Ok((
+                (|| -> (Ident, AttrArg) { (name, arg) })(),
+                __pos,
+            ))
         } {
-            break '__l20 Ok(__r);
+            break '__l20 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l23: {
+        if let ::core::result::Result::Ok(__r) = '__l23: {
             let (name, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match __rule_ident_raw(__cx, __m, __pos) {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r.1) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l23 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l23 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l23 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l23 ::core::result::Result::Err(__f);
+                }
             };
             let (e, __pos) = match __rule_expr(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l23 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l23 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ")") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l23 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l23 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "]") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(_) => Ok(__pos),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok(_) => ::core::result::Result::Ok(__pos),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l23 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l23 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> (Ident, AttrArg) { (name, AttrArg::Expr(e)) })(), __pos))
+            ::core::result::Result::Ok((
+                (|| -> (Ident, AttrArg) { (name, AttrArg::Expr(e)) })(),
+                __pos,
+            ))
         } {
-            break '__l20 Ok(__r);
+            break '__l20 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l24: {
+        if let ::core::result::Result::Ok(__r) = '__l24: {
             let (name, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match __rule_ident_raw(__cx, __m, __pos) {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r.1) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l24 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l24 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match match __rule_rust_group(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l24 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l24 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> (Ident, AttrArg) { (name, AttrArg::Other) })(), __pos))
+            ::core::result::Result::Ok((
+                (|| -> (Ident, AttrArg) { (name, AttrArg::Other) })(),
+                __pos,
+            ))
         } {
-            break '__l20 Ok(__r);
+            break '__l20 ::core::result::Result::Ok(__r);
         }
         '__l21: {
             let (name, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match __rule_ident_raw(__cx, __m, __pos) {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r.1) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l21 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l21 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> (Ident, AttrArg) { (name, AttrArg::None) })(), __pos))
+            ::core::result::Result::Ok((
+                (|| -> (Ident, AttrArg) { (name, AttrArg::None) })(),
+                __pos,
+            ))
         }
     }
 }
 /// Parses the whole input with the rule `attr_body`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn attr_body<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(Ident, AttrArg), __prpr_runtime::ParseError> {
@@ -1212,127 +1444,150 @@ fn __rule_attr_value<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<AttrArg> {
     '__l25: {
-        if let Ok(__r) = '__l27: {
+        if let ::core::result::Result::Ok(__r) = '__l27: {
             let (l, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match __rule_literal(__cx, __m, __pos) {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r.1) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l27 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l27 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "]") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(_) => Ok(__pos),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok(_) => ::core::result::Result::Ok(__pos),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l27 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l27 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> AttrArg { AttrArg::Lit(l) })(), __pos))
+            ::core::result::Result::Ok(((|| -> AttrArg { AttrArg::Lit(l) })(), __pos))
         } {
-            break '__l25 Ok(__r);
+            break '__l25 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l28: {
+        if let ::core::result::Result::Ok(__r) = '__l28: {
             let (id, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match __rule_ident_raw(__cx, __m, __pos) {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r.1) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l28 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l28 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "]") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(_) => Ok(__pos),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok(_) => ::core::result::Result::Ok(__pos),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l28 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l28 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> AttrArg { AttrArg::Ident(id) })(), __pos))
+            ::core::result::Result::Ok(((|| -> AttrArg { AttrArg::Ident(id) })(), __pos))
         } {
-            break '__l25 Ok(__r);
+            break '__l25 ::core::result::Result::Ok(__r);
         }
         '__l26: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match match __rule_attr_tokens(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l26 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l26 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> AttrArg { AttrArg::Other })(), __pos))
+            ::core::result::Result::Ok(((|| -> AttrArg { AttrArg::Other })(), __pos))
         }
     }
 }
 /// Parses the whole input with the rule `attr_value`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn attr_value<'i>(
     input: &'i str,
 ) -> ::core::result::Result<AttrArg, __prpr_runtime::ParseError> {
@@ -1355,26 +1610,34 @@ fn __rule_attr_tokens<'i>(
                     let __r = __cx.lit(__pos, "]");
                     __cx.pop_quiet(__saved);
                     match __r {
-                        Ok(_) => {
+                        ::core::result::Result::Ok(_) => {
                             let __at = __pos;
-                            Err(__cx.fail_unexpected(__at))
+                            ::core::result::Result::Err(__cx.fail_unexpected(__at))
                         }
-                        Err(_) => Ok(__pos),
+                        ::core::result::Result::Err(_) => {
+                            ::core::result::Result::Ok(__pos)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l29 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l29 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l29 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l29 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                Ok(__q) => {
+                ::core::result::Result::Ok(__q) => {
                     let __progress = __q != __p;
                     __first = false;
                     __p = __q;
@@ -1382,17 +1645,22 @@ fn __rule_attr_tokens<'i>(
                         break;
                     }
                 }
-                Err(_) => break,
+                ::core::result::Result::Err(_) => break,
             }
         }
-        if __first { Err(__prpr_runtime::Fail) } else { Ok(__p) }
+        if __first {
+            ::core::result::Result::Err(__prpr_runtime::Fail)
+        } else {
+            ::core::result::Result::Ok(__p)
+        }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `attr_tokens`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn attr_tokens<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -1407,21 +1675,25 @@ fn __rule_item<'i>(
     let __at = __skip(__cx, __m, __pos);
     let __saved = __cx.push_label(__at, "rule");
     let __r = '__l30: {
-        if let Ok(__r) = '__l32: {
+        if let ::core::result::Result::Ok(__r) = '__l32: {
             let (s, __pos) = match __rule_rust_item(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l32 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l32 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> Item { Item::Rust(s) })(), __pos))
+            ::core::result::Result::Ok(((|| -> Item { Item::Rust(s) })(), __pos))
         } {
-            break '__l30 Ok(__r);
+            break '__l30 ::core::result::Result::Ok(__r);
         }
         '__l31: {
             let (r, __pos) = match __rule_rule(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l31 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l31 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> Item { Item::Rule(r) })(), __pos))
+            ::core::result::Result::Ok(((|| -> Item { Item::Rule(r) })(), __pos))
         }
     };
     __cx.pop_label(__saved);
@@ -1429,6 +1701,7 @@ fn __rule_item<'i>(
 }
 /// Parses the whole input with the rule `item`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn item<'i>(input: &'i str) -> ::core::result::Result<Item, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_item, __skip)
 }
@@ -1446,52 +1719,64 @@ fn __rule_rust_item<'i>(
             loop {
                 let __pos = __p;
                 match '__l34: {
-                    if let Ok(__r) = {
+                    if let ::core::result::Result::Ok(__r) = {
                         let __pos = __skip(__cx, __m, __pos);
                         let __mark = __cx.mark();
                         match match __rule_rust_attr(__cx, __m, __pos) {
-                            Ok((_, __p)) => Ok(__p),
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Ok((_, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         } {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 __cx.rollback(__mark);
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => {
+                            ::core::result::Result::Err(__f) => {
                                 __cx.commit(__mark);
-                                Err(__f)
+                                ::core::result::Result::Err(__f)
                             }
                         }
                     } {
-                        break '__l34 Ok(__r);
+                        break '__l34 ::core::result::Result::Ok(__r);
                     }
                     {
                         let __pos = __skip(__cx, __m, __pos);
                         let __mark = __cx.mark();
                         match match __rule_rust_doc_comment(__cx, __m, __pos) {
-                            Ok((_, __p)) => Ok(__p),
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Ok((_, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         } {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 __cx.rollback(__mark);
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => {
+                            ::core::result::Result::Err(__f) => {
                                 __cx.commit(__mark);
-                                Err(__f)
+                                ::core::result::Result::Err(__f)
                             }
                         }
                     }
                 } {
-                    Ok(__q) => {
+                    ::core::result::Result::Ok(__q) => {
                         let __progress = __q != __p;
                         __first = false;
                         __p = __q;
@@ -1499,111 +1784,142 @@ fn __rule_rust_item<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l33 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l33 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match match __rule_vis(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => Ok(__p),
-            Err(_) => Ok(__pos),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l33 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l33 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match '__l35: {
-            if let Ok(__r) = '__l37: {
+            if let ::core::result::Result::Ok(__r) = '__l37: {
                 let __pos = match match match __rule_semi_item(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(_) => Ok(__pos),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok(_) => ::core::result::Result::Ok(__pos),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l37 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l37 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     let __mark = __cx.mark();
                     match match __rule_rust_to_semi(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             __cx.rollback(__mark);
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => {
+                        ::core::result::Result::Err(__f) => {
                             __cx.commit(__mark);
-                            Err(__f)
+                            ::core::result::Result::Err(__f)
                         }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l37 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l37 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                break '__l35 Ok(__r);
+                break '__l35 ::core::result::Result::Ok(__r);
             }
             '__l36: {
                 let __pos = match match match __rule_brace_item(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(_) => Ok(__pos),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok(_) => ::core::result::Result::Ok(__pos),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l36 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l36 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     let __mark = __cx.mark();
                     match match __rule_rust_to_brace(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             __cx.rollback(__mark);
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => {
+                        ::core::result::Result::Err(__f) => {
                             __cx.commit(__mark);
-                            Err(__f)
+                            ::core::result::Result::Err(__f)
                         }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l36 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l36 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l33 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l33 ::core::result::Result::Err(__f);
+            }
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
-        Ok(((|| -> Span { __span__ })(), __pos))
+        ::core::result::Result::Ok(((|| -> Span { __span__ })(), __pos))
     }
 }
 /// Parses the whole input with the rule `rust_item`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_item<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Span, __prpr_runtime::ParseError> {
@@ -1617,52 +1933,65 @@ fn __rule_rust_attr<'i>(
 ) -> __prpr_runtime::PResult<()> {
     match '__l38: {
         let __pos = match __cx.lit(__pos, "#") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l38 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l38 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match __rule_spaces(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l38 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l38 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match __cx.lit(__pos, "!") {
-            Ok(__p) => Ok(__p),
-            Err(_) => Ok(__pos),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l38 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l38 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match __rule_spaces(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l38 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l38 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match __cx.lit(__pos, "[") {
-            Ok(_) => Ok(__pos),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok(_) => ::core::result::Result::Ok(__pos),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l38 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l38 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match __rule_rust_group(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l38 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l38 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `rust_attr`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_attr<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -1676,8 +2005,10 @@ fn __rule_rust_doc_comment<'i>(
 ) -> __prpr_runtime::PResult<()> {
     match '__l39: {
         let __pos = match __cx.lit(__pos, "///") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l39 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l39 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let mut __p = __pos;
@@ -1690,28 +2021,38 @@ fn __rule_rust_doc_comment<'i>(
                         let __r = __cx.lit(__pos, "\n");
                         __cx.pop_quiet(__saved);
                         match __r {
-                            Ok(_) => {
+                            ::core::result::Result::Ok(_) => {
                                 let __at = __pos;
-                                Err(__cx.fail_unexpected(__at))
+                                ::core::result::Result::Err(__cx.fail_unexpected(__at))
                             }
-                            Err(_) => Ok(__pos),
+                            ::core::result::Result::Err(_) => {
+                                ::core::result::Result::Ok(__pos)
+                            }
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l40 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l40 ::core::result::Result::Err(__f);
+                        }
                     };
                     let __pos = match match __cx.peek_char(__pos) {
-                        ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                        ::core::option::Option::Some((__c, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
                         ::core::option::Option::None => {
-                            Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                            ::core::result::Result::Err(
+                                __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                            )
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l40 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l40 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(__pos)
+                    ::core::result::Result::Ok(__pos)
                 } {
-                    Ok(__q) => {
+                    ::core::result::Result::Ok(__q) => {
                         let __progress = __q != __p;
                         __first = false;
                         __p = __q;
@@ -1719,22 +2060,25 @@ fn __rule_rust_doc_comment<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l39 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l39 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `rust_doc_comment`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_doc_comment<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -1747,188 +2091,225 @@ fn __rule_semi_item<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match '__l41: {
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "use") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l41 Ok(__r);
+            break '__l41 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "static") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l41 Ok(__r);
+            break '__l41 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "type") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l41 Ok(__r);
+            break '__l41 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l43: {
+        if let ::core::result::Result::Ok(__r) = '__l43: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "const") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l43 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l43 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __saved = __cx.push_quiet();
                 let __r = '__l44: {
-                    if let Ok(__r) = {
+                    if let ::core::result::Result::Ok(__r) = {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "fn") {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         }
                     } {
-                        break '__l44 Ok(__r);
+                        break '__l44 ::core::result::Result::Ok(__r);
                     }
-                    if let Ok(__r) = {
+                    if let ::core::result::Result::Ok(__r) = {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "unsafe") {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         }
                     } {
-                        break '__l44 Ok(__r);
+                        break '__l44 ::core::result::Result::Ok(__r);
                     }
-                    if let Ok(__r) = {
+                    if let ::core::result::Result::Ok(__r) = {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "async") {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         }
                     } {
-                        break '__l44 Ok(__r);
+                        break '__l44 ::core::result::Result::Ok(__r);
                     }
                     {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "extern") {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         }
                     }
                 };
                 __cx.pop_quiet(__saved);
                 match __r {
-                    Ok(_) => {
+                    ::core::result::Result::Ok(_) => {
                         let __at = __skip(__cx, __m, __pos);
-                        Err(__cx.fail_unexpected(__at))
+                        ::core::result::Result::Err(__cx.fail_unexpected(__at))
                     }
-                    Err(_) => Ok(__pos),
+                    ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l43 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l43 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l41 Ok(__r);
+            break '__l41 ::core::result::Result::Ok(__r);
         }
         '__l42: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "extern") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l42 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l42 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "crate") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l42 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l42 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `semi_item`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn semi_item<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -1941,243 +2322,282 @@ fn __rule_brace_item<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match '__l45: {
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "const") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "extern") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "fn") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "struct") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "enum") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "impl") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "trait") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "mod") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "unsafe") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "async") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l47: {
+        if let ::core::result::Result::Ok(__r) = '__l47: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "union") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l47 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l47 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match match __rule_ident_raw(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l47 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l47 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l45 Ok(__r);
+            break '__l45 ::core::result::Result::Ok(__r);
         }
         '__l46: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "macro_rules") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l46 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l46 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "!") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l46 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l46 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `brace_item`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn brace_item<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -2201,26 +2621,36 @@ fn __rule_rust_to_semi<'i>(
                         let __r = __cx.lit(__pos, ";");
                         __cx.pop_quiet(__saved);
                         match __r {
-                            Ok(_) => {
+                            ::core::result::Result::Ok(_) => {
                                 let __at = __pos;
-                                Err(__cx.fail_unexpected(__at))
+                                ::core::result::Result::Err(__cx.fail_unexpected(__at))
                             }
-                            Err(_) => Ok(__pos),
+                            ::core::result::Result::Err(_) => {
+                                ::core::result::Result::Ok(__pos)
+                            }
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l49 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l49 ::core::result::Result::Err(__f);
+                        }
                     };
                     let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l49 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l49 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(__pos)
+                    ::core::result::Result::Ok(__pos)
                 } {
-                    Ok(__q) => {
+                    ::core::result::Result::Ok(__q) => {
                         let __progress = __q != __p;
                         __first = false;
                         __p = __q;
@@ -2228,26 +2658,31 @@ fn __rule_rust_to_semi<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l48 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l48 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match __cx.lit(__pos, ";") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l48 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l48 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `rust_to_semi`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_to_semi<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -2271,41 +2706,55 @@ fn __rule_rust_to_brace<'i>(
                         let __r = __cx.lit(__pos, ";");
                         __cx.pop_quiet(__saved);
                         match __r {
-                            Ok(_) => {
+                            ::core::result::Result::Ok(_) => {
                                 let __at = __pos;
-                                Err(__cx.fail_unexpected(__at))
+                                ::core::result::Result::Err(__cx.fail_unexpected(__at))
                             }
-                            Err(_) => Ok(__pos),
+                            ::core::result::Result::Err(_) => {
+                                ::core::result::Result::Ok(__pos)
+                            }
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l51 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l51 ::core::result::Result::Err(__f);
+                        }
                     };
                     let __pos = match {
                         let __saved = __cx.push_quiet();
                         let __r = __cx.lit(__pos, "{");
                         __cx.pop_quiet(__saved);
                         match __r {
-                            Ok(_) => {
+                            ::core::result::Result::Ok(_) => {
                                 let __at = __pos;
-                                Err(__cx.fail_unexpected(__at))
+                                ::core::result::Result::Err(__cx.fail_unexpected(__at))
                             }
-                            Err(_) => Ok(__pos),
+                            ::core::result::Result::Err(_) => {
+                                ::core::result::Result::Ok(__pos)
+                            }
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l51 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l51 ::core::result::Result::Err(__f);
+                        }
                     };
                     let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l51 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l51 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(__pos)
+                    ::core::result::Result::Ok(__pos)
                 } {
-                    Ok(__q) => {
+                    ::core::result::Result::Ok(__q) => {
                         let __progress = __q != __p;
                         __first = false;
                         __p = __q;
@@ -2313,34 +2762,39 @@ fn __rule_rust_to_brace<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l50 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l50 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match '__l52: {
-            if let Ok(__r) = __cx.lit(__pos, ";") {
-                break '__l52 Ok(__r);
+            if let ::core::result::Result::Ok(__r) = __cx.lit(__pos, ";") {
+                break '__l52 ::core::result::Result::Ok(__r);
             }
             match __rule_rust_group(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l50 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l50 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `rust_to_brace`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_to_brace<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -2357,52 +2811,61 @@ fn __rule_vis<'i>(
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "pub") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l53 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l53 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match match __rule_rust_paren(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            Ok(__p) => Ok(__p),
-            Err(_) => Ok(__pos),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l53 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l53 ::core::result::Result::Err(__f);
+            }
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
-        Ok(((|| -> Span { __span__ })(), __pos))
+        ::core::result::Result::Ok(((|| -> Span { __span__ })(), __pos))
     }
 }
 /// Parses the whole input with the rule `vis`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn vis<'i>(input: &'i str) -> ::core::result::Result<Span, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_vis, __skip)
 }
@@ -2414,27 +2877,32 @@ fn __rule_rust_paren<'i>(
 ) -> __prpr_runtime::PResult<()> {
     match '__l54: {
         let __pos = match match __cx.lit(__pos, "(") {
-            Ok(_) => Ok(__pos),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok(_) => ::core::result::Result::Ok(__pos),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l54 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l54 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match __rule_rust_group(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l54 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l54 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `rust_paren`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_paren<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -2446,11 +2914,15 @@ fn __rule_rust_tt<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l55: {
-        if let Ok(__r) = '__l56: {
+    let __at = __pos;
+    let __saved = __cx.push_label(__at, "Rust token");
+    let __r = match '__l55: {
+        if let ::core::result::Result::Ok(__r) = '__l56: {
             let __pos = match __cx.lit(__pos, "//") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l56 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l56 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let mut __p = __pos;
@@ -2463,28 +2935,38 @@ fn __rule_rust_tt<'i>(
                             let __r = __cx.lit(__pos, "\n");
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __pos;
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l57 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l57 ::core::result::Result::Err(__f);
+                            }
                         };
                         let __pos = match match __cx.peek_char(__pos) {
-                            ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                            ::core::option::Option::Some((__c, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
                             ::core::option::Option::None => {
-                                Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                                )
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l57 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l57 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(__pos)
+                        ::core::result::Result::Ok(__pos)
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -2492,48 +2974,68 @@ fn __rule_rust_tt<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l56 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l56 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l55 Ok(__r);
+            break '__l55 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = match __rule_block_comment(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+        if let ::core::result::Result::Ok(__r) = match __rule_block_comment(
+            __cx,
+            __m,
+            __pos,
+        ) {
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            break '__l55 Ok(__r);
+            break '__l55 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = match __rule_rust_string(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+        if let ::core::result::Result::Ok(__r) = match __rule_rust_string(
+            __cx,
+            __m,
+            __pos,
+        ) {
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            break '__l55 Ok(__r);
+            break '__l55 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = match __rule_rust_char_or_lifetime(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+        if let ::core::result::Result::Ok(__r) = match __rule_rust_char_or_lifetime(
+            __cx,
+            __m,
+            __pos,
+        ) {
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            break '__l55 Ok(__r);
+            break '__l55 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = match __rule_rust_group(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+        if let ::core::result::Result::Ok(__r) = match __rule_rust_group(
+            __cx,
+            __m,
+            __pos,
+        ) {
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            break '__l55 Ok(__r);
+            break '__l55 ::core::result::Result::Ok(__r);
         }
         match __cx.peek_char(__pos) {
             ::core::option::Option::Some(
                 (__c, __p),
-            ) if !::core::matches!(__c, '(' | ')' | '[' | ']' | '{' | '}') => Ok(__p),
+            ) if !::core::matches!(__c, '(' | ')' | '[' | ']' | '{' | '}') => {
+                ::core::result::Result::Ok(__p)
+            }
             _ => {
-                Err(
+                ::core::result::Result::Err(
                     __cx
                         .fail(
                             __pos,
@@ -2545,12 +3047,15 @@ fn __rule_rust_tt<'i>(
             }
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
-    }
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
+    };
+    __cx.pop_label(__saved);
+    __r
 }
 /// Parses the whole input with the rule `rust_tt`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_tt<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -2563,10 +3068,12 @@ fn __rule_rust_group<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match '__l58: {
-        if let Ok(__r) = '__l61: {
+        if let ::core::result::Result::Ok(__r) = '__l61: {
             let __pos = match __cx.lit(__pos, "(") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l61 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l61 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let mut __p = __pos;
@@ -2579,26 +3086,36 @@ fn __rule_rust_group<'i>(
                             let __r = __cx.lit(__pos, ")");
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __pos;
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l62 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l62 ::core::result::Result::Err(__f);
+                            }
                         };
                         let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
-                            Ok((_, __p)) => Ok(__p),
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Ok((_, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l62 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l62 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(__pos)
+                        ::core::result::Result::Ok(__pos)
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -2606,26 +3123,32 @@ fn __rule_rust_group<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l61 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l61 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match __cx.lit(__pos, ")") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l61 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l61 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l58 Ok(__r);
+            break '__l58 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l63: {
+        if let ::core::result::Result::Ok(__r) = '__l63: {
             let __pos = match __cx.lit(__pos, "[") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l63 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l63 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let mut __p = __pos;
@@ -2638,26 +3161,36 @@ fn __rule_rust_group<'i>(
                             let __r = __cx.lit(__pos, "]");
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __pos;
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l64 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l64 ::core::result::Result::Err(__f);
+                            }
                         };
                         let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
-                            Ok((_, __p)) => Ok(__p),
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Ok((_, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l64 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l64 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(__pos)
+                        ::core::result::Result::Ok(__pos)
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -2665,26 +3198,32 @@ fn __rule_rust_group<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l63 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l63 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match __cx.lit(__pos, "]") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l63 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l63 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l58 Ok(__r);
+            break '__l58 ::core::result::Result::Ok(__r);
         }
         '__l59: {
             let __pos = match __cx.lit(__pos, "{") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l59 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l59 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let mut __p = __pos;
@@ -2697,26 +3236,36 @@ fn __rule_rust_group<'i>(
                             let __r = __cx.lit(__pos, "}");
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __pos;
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l60 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l60 ::core::result::Result::Err(__f);
+                            }
                         };
                         let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
-                            Ok((_, __p)) => Ok(__p),
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Ok((_, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l60 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l60 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(__pos)
+                        ::core::result::Result::Ok(__pos)
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -2724,27 +3273,32 @@ fn __rule_rust_group<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l59 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l59 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match __cx.lit(__pos, "}") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l59 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l59 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `rust_group`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_group<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -2757,22 +3311,30 @@ fn __rule_rust_string<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match '__l65: {
-        if let Ok(__r) = '__l67: {
+        if let ::core::result::Result::Ok(__r) = '__l67: {
             let __pos = match match match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
-                ) if ::core::matches!(__c, 'b' | 'c') => Ok(__p),
-                _ => Err(__cx.fail(__pos, __prpr_runtime::Expected::Class("[bc]"))),
+                ) if ::core::matches!(__c, 'b' | 'c') => ::core::result::Result::Ok(__p),
+                _ => {
+                    ::core::result::Result::Err(
+                        __cx.fail(__pos, __prpr_runtime::Expected::Class("[bc]")),
+                    )
+                }
             } {
-                Ok(__p) => Ok(__p),
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l67 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l67 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match __cx.lit(__pos, "\"") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l67 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l67 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let mut __p = __pos;
@@ -2780,30 +3342,40 @@ fn __rule_rust_string<'i>(
                 loop {
                     let __pos = __p;
                     match '__l68: {
-                        if let Ok(__r) = '__l69: {
+                        if let ::core::result::Result::Ok(__r) = '__l69: {
                             let __pos = match __cx.lit(__pos, "\\") {
-                                Ok(__p) => __p,
-                                Err(__f) => break '__l69 Err(__f),
+                                ::core::result::Result::Ok(__p) => __p,
+                                ::core::result::Result::Err(__f) => {
+                                    break '__l69 ::core::result::Result::Err(__f);
+                                }
                             };
                             let __pos = match match __cx.peek_char(__pos) {
-                                ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                                ::core::option::Option::Some((__c, __p)) => {
+                                    ::core::result::Result::Ok(__p)
+                                }
                                 ::core::option::Option::None => {
-                                    Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                                    )
                                 }
                             } {
-                                Ok(__p) => __p,
-                                Err(__f) => break '__l69 Err(__f),
+                                ::core::result::Result::Ok(__p) => __p,
+                                ::core::result::Result::Err(__f) => {
+                                    break '__l69 ::core::result::Result::Err(__f);
+                                }
                             };
-                            Ok(__pos)
+                            ::core::result::Result::Ok(__pos)
                         } {
-                            break '__l68 Ok(__r);
+                            break '__l68 ::core::result::Result::Ok(__r);
                         }
                         match __cx.peek_char(__pos) {
                             ::core::option::Option::Some(
                                 (__c, __p),
-                            ) if !::core::matches!(__c, '"' | '\\') => Ok(__p),
+                            ) if !::core::matches!(__c, '"' | '\\') => {
+                                ::core::result::Result::Ok(__p)
+                            }
                             _ => {
-                                Err(
+                                ::core::result::Result::Err(
                                     __cx
                                         .fail(
                                             __pos,
@@ -2813,7 +3385,7 @@ fn __rule_rust_string<'i>(
                             }
                         }
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -2821,55 +3393,70 @@ fn __rule_rust_string<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l67 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l67 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match __cx.lit(__pos, "\"") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l67 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l67 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l65 Ok(__r);
+            break '__l65 ::core::result::Result::Ok(__r);
         }
         '__l66: {
             let __pos = match match match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
-                ) if ::core::matches!(__c, 'b' | 'c') => Ok(__p),
-                _ => Err(__cx.fail(__pos, __prpr_runtime::Expected::Class("[bc]"))),
+                ) if ::core::matches!(__c, 'b' | 'c') => ::core::result::Result::Ok(__p),
+                _ => {
+                    ::core::result::Result::Err(
+                        __cx.fail(__pos, __prpr_runtime::Expected::Class("[bc]")),
+                    )
+                }
             } {
-                Ok(__p) => Ok(__p),
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l66 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l66 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match __cx.lit(__pos, "r") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l66 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l66 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_raw_body(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l66 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l66 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `rust_string`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_string<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -2883,23 +3470,33 @@ fn __rule_rust_char_or_lifetime<'i>(
 ) -> __prpr_runtime::PResult<()> {
     match '__l70: {
         let __pos = match __cx.lit(__pos, "'") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l70 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l70 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match '__l71: {
-            if let Ok(__r) = '__l72: {
+            if let ::core::result::Result::Ok(__r) = '__l72: {
                 let __pos = match __cx.lit(__pos, "\\") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l72 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l72 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match match __cx.peek_char(__pos) {
-                    ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                    ::core::option::Option::Some((__c, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
                     ::core::option::Option::None => {
-                        Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                        ::core::result::Result::Err(
+                            __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                        )
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l72 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l72 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let mut __p = __pos;
@@ -2912,28 +3509,38 @@ fn __rule_rust_char_or_lifetime<'i>(
                                 let __r = __cx.lit(__pos, "'");
                                 __cx.pop_quiet(__saved);
                                 match __r {
-                                    Ok(_) => {
+                                    ::core::result::Result::Ok(_) => {
                                         let __at = __pos;
-                                        Err(__cx.fail_unexpected(__at))
+                                        ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                     }
-                                    Err(_) => Ok(__pos),
+                                    ::core::result::Result::Err(_) => {
+                                        ::core::result::Result::Ok(__pos)
+                                    }
                                 }
                             } {
-                                Ok(__p) => __p,
-                                Err(__f) => break '__l73 Err(__f),
+                                ::core::result::Result::Ok(__p) => __p,
+                                ::core::result::Result::Err(__f) => {
+                                    break '__l73 ::core::result::Result::Err(__f);
+                                }
                             };
                             let __pos = match match __cx.peek_char(__pos) {
-                                ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                                ::core::option::Option::Some((__c, __p)) => {
+                                    ::core::result::Result::Ok(__p)
+                                }
                                 ::core::option::Option::None => {
-                                    Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                                    )
                                 }
                             } {
-                                Ok(__p) => __p,
-                                Err(__f) => break '__l73 Err(__f),
+                                ::core::result::Result::Ok(__p) => __p,
+                                ::core::result::Result::Err(__f) => {
+                                    break '__l73 ::core::result::Result::Err(__f);
+                                }
                             };
-                            Ok(__pos)
+                            ::core::result::Result::Ok(__pos)
                         } {
-                            Ok(__q) => {
+                            ::core::result::Result::Ok(__q) => {
                                 let __progress = __q != __p;
                                 __first = false;
                                 __p = __q;
@@ -2941,39 +3548,51 @@ fn __rule_rust_char_or_lifetime<'i>(
                                     break;
                                 }
                             }
-                            Err(_) => break,
+                            ::core::result::Result::Err(_) => break,
                         }
                     }
-                    Ok(__p)
+                    ::core::result::Result::Ok(__p)
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l72 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l72 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match __cx.lit(__pos, "'") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l72 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l72 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                break '__l71 Ok(__r);
+                break '__l71 ::core::result::Result::Ok(__r);
             }
-            if let Ok(__r) = '__l74: {
+            if let ::core::result::Result::Ok(__r) = '__l74: {
                 let __pos = match match __cx.peek_char(__pos) {
-                    ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                    ::core::option::Option::Some((__c, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
                     ::core::option::Option::None => {
-                        Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                        ::core::result::Result::Err(
+                            __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                        )
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l74 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l74 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match __cx.lit(__pos, "'") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l74 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l74 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                break '__l71 Ok(__r);
+                break '__l71 ::core::result::Result::Ok(__r);
             }
             {
                 let mut __p = __pos;
@@ -2981,10 +3600,14 @@ fn __rule_rust_char_or_lifetime<'i>(
                 loop {
                     let __pos = __p;
                     match match __rule_ident_continue(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -2992,23 +3615,26 @@ fn __rule_rust_char_or_lifetime<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l70 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l70 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `rust_char_or_lifetime`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_char_or_lifetime<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -3032,7 +3658,7 @@ fn __rule_rule<'i>(
             loop {
                 let __pos = __p;
                 match __rule_outer_attr(__cx, __m, __pos) {
-                    Ok((__v, __q)) => {
+                    ::core::result::Result::Ok((__v, __q)) => {
                         __vs.push(__v);
                         let __progress = __q != __p;
                         __first = false;
@@ -3041,176 +3667,230 @@ fn __rule_rule<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok((__vs, __p))
+            ::core::result::Result::Ok((__vs, __p))
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l75 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l75 ::core::result::Result::Err(__f);
+            }
         };
         let (vis, __pos) = match match __rule_vis(__cx, __m, __pos) {
-            Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-            Err(_) => Ok((::core::option::Option::None, __pos)),
+            ::core::result::Result::Ok((__v, __p)) => {
+                ::core::result::Result::Ok((::core::option::Option::Some(__v), __p))
+            }
+            ::core::result::Result::Err(_) => {
+                ::core::result::Result::Ok((::core::option::Option::None, __pos))
+            }
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l75 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l75 ::core::result::Result::Err(__f);
+            }
         };
         let (is_atom, __pos) = match match {
             let __pos = __skip(__cx, __m, __pos);
             match match __cx.lit(__pos, "atom") {
-                Ok(__p) => Ok(("atom", __p)),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok(__p) => {
+                    ::core::result::Result::Ok(("atom", __p))
+                }
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r.1) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-            Err(_) => Ok((::core::option::Option::None, __pos)),
+            ::core::result::Result::Ok((__v, __p)) => {
+                ::core::result::Result::Ok((::core::option::Option::Some(__v), __p))
+            }
+            ::core::result::Result::Err(_) => {
+                ::core::result::Result::Ok((::core::option::Option::None, __pos))
+            }
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l75 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l75 ::core::result::Result::Err(__f);
+            }
         };
         let (name, __pos) = match {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match __rule_ident_raw(__cx, __m, __pos) {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r.1) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l75 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l75 ::core::result::Result::Err(__f);
+            }
         };
         let (ty, __pos) = match match '__l76: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ":") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l76 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l76 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __saved = __cx.push_quiet();
                 let __r = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ":") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 };
                 __cx.pop_quiet(__saved);
                 match __r {
-                    Ok(_) => {
+                    ::core::result::Result::Ok(_) => {
                         let __at = __skip(__cx, __m, __pos);
-                        Err(__cx.fail_unexpected(__at))
+                        ::core::result::Result::Err(__cx.fail_unexpected(__at))
                     }
-                    Err(_) => Ok(__pos),
+                    ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l76 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l76 ::core::result::Result::Err(__f);
+                }
             };
             let (t, __pos) = match __rule_ty_span(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l76 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l76 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| { t })(), __pos))
+            ::core::result::Result::Ok(((|| { t })(), __pos))
         } {
-            Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-            Err(_) => Ok((::core::option::Option::None, __pos)),
+            ::core::result::Result::Ok((__v, __p)) => {
+                ::core::result::Result::Ok((::core::option::Option::Some(__v), __p))
+            }
+            ::core::result::Result::Err(_) => {
+                ::core::result::Result::Ok((::core::option::Option::None, __pos))
+            }
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l75 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l75 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match '__l77: {
                 let __pos = match __cx.lit(__pos, "=") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l77 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l77 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __saved = __cx.push_quiet();
                     let __r = match __cx.peek_char(__pos) {
                         ::core::option::Option::Some(
                             (__c, __p),
-                        ) if ::core::matches!(__c, '=' | '>') => Ok(__p),
+                        ) if ::core::matches!(__c, '=' | '>') => {
+                            ::core::result::Result::Ok(__p)
+                        }
                         _ => {
-                            Err(
+                            ::core::result::Result::Err(
                                 __cx.fail(__pos, __prpr_runtime::Expected::Class("[=>]")),
                             )
                         }
                     };
                     __cx.pop_quiet(__saved);
                     match __r {
-                        Ok(_) => {
+                        ::core::result::Result::Ok(_) => {
                             let __at = __pos;
-                            Err(__cx.fail_unexpected(__at))
+                            ::core::result::Result::Err(__cx.fail_unexpected(__at))
                         }
-                        Err(_) => Ok(__pos),
+                        ::core::result::Result::Err(_) => {
+                            ::core::result::Result::Ok(__pos)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l77 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l77 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l75 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l75 ::core::result::Result::Err(__f);
+            }
         };
         let (body, __pos) = match __rule_expr(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l75 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l75 ::core::result::Result::Err(__f);
+            }
         };
-        Ok((
+        ::core::result::Result::Ok((
             (|| -> Rule {
                 Rule {
                     attrs,
@@ -3227,6 +3907,7 @@ fn __rule_rule<'i>(
 }
 /// Parses the whole input with the rule `rule`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rule<'i>(input: &'i str) -> ::core::result::Result<Rule, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_rule, __skip)
 }
@@ -3241,144 +3922,175 @@ fn __rule_rule_header<'i>(
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match match __rule_ident_raw(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l78 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l78 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match '__l79: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ":") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l79 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l79 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __saved = __cx.push_quiet();
                 let __r = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ":") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 };
                 __cx.pop_quiet(__saved);
                 match __r {
-                    Ok(_) => {
+                    ::core::result::Result::Ok(_) => {
                         let __at = __skip(__cx, __m, __pos);
-                        Err(__cx.fail_unexpected(__at))
+                        ::core::result::Result::Err(__cx.fail_unexpected(__at))
                     }
-                    Err(_) => Ok(__pos),
+                    ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l79 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l79 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l79 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l79 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            Ok(__p) => Ok(__p),
-            Err(_) => Ok(__pos),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l78 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l78 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match '__l80: {
                 let __pos = match __cx.lit(__pos, "=") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l80 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l80 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __saved = __cx.push_quiet();
                     let __r = match __cx.peek_char(__pos) {
                         ::core::option::Option::Some(
                             (__c, __p),
-                        ) if ::core::matches!(__c, '=' | '>') => Ok(__p),
+                        ) if ::core::matches!(__c, '=' | '>') => {
+                            ::core::result::Result::Ok(__p)
+                        }
                         _ => {
-                            Err(
+                            ::core::result::Result::Err(
                                 __cx.fail(__pos, __prpr_runtime::Expected::Class("[=>]")),
                             )
                         }
                     };
                     __cx.pop_quiet(__saved);
                     match __r {
-                        Ok(_) => {
+                        ::core::result::Result::Ok(_) => {
                             let __at = __pos;
-                            Err(__cx.fail_unexpected(__at))
+                            ::core::result::Result::Err(__cx.fail_unexpected(__at))
                         }
-                        Err(_) => Ok(__pos),
+                        ::core::result::Result::Err(_) => {
+                            ::core::result::Result::Ok(__pos)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l80 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l80 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l78 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l78 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `rule_header`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rule_header<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -3391,132 +4103,165 @@ fn __rule_item_start<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match '__l81: {
-        if let Ok(__r) = match __rule_rule_header(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+        if let ::core::result::Result::Ok(__r) = match __rule_rule_header(
+            __cx,
+            __m,
+            __pos,
+        ) {
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            break '__l81 Ok(__r);
+            break '__l81 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l84: {
+        if let ::core::result::Result::Ok(__r) = '__l84: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "macro_rules") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l84 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l84 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "!") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l84 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l84 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l81 Ok(__r);
+            break '__l81 ::core::result::Result::Ok(__r);
         }
         '__l82: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "union") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l82 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l82 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match match __rule_ident_raw(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l82 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l82 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match '__l83: {
-                if let Ok(__r) = {
+                if let ::core::result::Result::Ok(__r) = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "{") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    break '__l83 Ok(__r);
+                    break '__l83 ::core::result::Result::Ok(__r);
                 }
                 {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "<") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l82 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l82 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `item_start`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn item_start<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -3531,18 +4276,21 @@ fn __rule_ty_span<'i>(
     '__l85: {
         let __start = __skip(__cx, __m, __pos);
         let __pos = match match __rule_ty(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l85 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l85 ::core::result::Result::Err(__f);
+            }
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
-        Ok(((|| -> Span { __span__ })(), __pos))
+        ::core::result::Result::Ok(((|| -> Span { __span__ })(), __pos))
     }
 }
 /// Parses the whole input with the rule `ty_span`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn ty_span<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Span, __prpr_runtime::ParseError> {
@@ -3557,441 +4305,548 @@ fn __rule_ty<'i>(
     let __at = __skip(__cx, __m, __pos);
     let __saved = __cx.push_label(__at, "type");
     let __r = match '__l86: {
-        if let Ok(__r) = '__l87: {
+        if let ::core::result::Result::Ok(__r) = '__l87: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "&") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l87 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l87 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match match __rule_lifetime(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => Ok(__p),
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l87 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l87 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "mut") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => Ok(__p),
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l87 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l87 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l87 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l87 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l86 Ok(__r);
+            break '__l86 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l88: {
+        if let ::core::result::Result::Ok(__r) = '__l88: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "*") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l88 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match '__l89: {
-                if let Ok(__r) = {
+                if let ::core::result::Result::Ok(__r) = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "const") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    break '__l89 Ok(__r);
+                    break '__l89 ::core::result::Result::Ok(__r);
                 }
                 {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "mut") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l88 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l88 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l86 Ok(__r);
+            break '__l86 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l90: {
+        if let ::core::result::Result::Ok(__r) = '__l90: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l90 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l90 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_ty_list(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l90 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l90 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ")") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l90 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l90 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l86 Ok(__r);
+            break '__l86 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l91: {
+        if let ::core::result::Result::Ok(__r) = '__l91: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "[") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l91 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l91 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l91 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l91 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match '__l92: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ";") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l92 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l92 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     let __mark = __cx.mark();
                     match match __rule_array_len(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             __cx.rollback(__mark);
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => {
+                        ::core::result::Result::Err(__f) => {
                             __cx.commit(__mark);
-                            Err(__f)
+                            ::core::result::Result::Err(__f)
                         }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l92 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l92 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                Ok(__p) => Ok(__p),
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l91 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l91 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "]") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l91 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l91 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l86 Ok(__r);
+            break '__l86 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l93: {
+        if let ::core::result::Result::Ok(__r) = '__l93: {
             let __pos = match '__l94: {
-                if let Ok(__r) = {
+                if let ::core::result::Result::Ok(__r) = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "dyn") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    break '__l94 Ok(__r);
+                    break '__l94 ::core::result::Result::Ok(__r);
                 }
                 {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "impl") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l93 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l93 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_bounds(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l93 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l93 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l86 Ok(__r);
+            break '__l86 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l95: {
+        if let ::core::result::Result::Ok(__r) = '__l95: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "fn") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l95 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l95 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l95 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l95 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_ty_list(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l95 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l95 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ")") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l95 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l95 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match '__l96: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "->") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l96 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l96 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match match __rule_ty(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l96 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l96 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                Ok(__p) => Ok(__p),
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l95 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l95 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l86 Ok(__r);
+            break '__l86 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "!") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l86 Ok(__r);
+            break '__l86 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "_") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            break '__l86 Ok(__r);
+            break '__l86 ::core::result::Result::Ok(__r);
         }
         match __rule_type_path(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     };
     __cx.pop_label(__saved);
     __r
 }
 /// Parses the whole input with the rule `ty`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn ty<'i>(input: &'i str) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_ty, __skip)
 }
@@ -4013,25 +4868,31 @@ fn __rule_ty_list<'i>(
                     match {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, ",") {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         }
                     } {
-                        Ok(__q) => __q,
-                        Err(_) => break,
+                        ::core::result::Result::Ok(__q) => __q,
+                        ::core::result::Result::Err(_) => break,
                     }
                 };
                 match match __rule_ty(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__q) => {
+                    ::core::result::Result::Ok(__q) => {
                         let __progress = __q != __p;
                         __first = false;
                         __p = __q;
@@ -4039,41 +4900,48 @@ fn __rule_ty_list<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l97 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l97 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, ",") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok(__p) => Ok(__p),
-            Err(_) => Ok(__pos),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l97 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l97 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `ty_list`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn ty_list<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -4096,26 +4964,34 @@ fn __rule_array_len<'i>(
                     let __r = __cx.lit(__pos, "]");
                     __cx.pop_quiet(__saved);
                     match __r {
-                        Ok(_) => {
+                        ::core::result::Result::Ok(_) => {
                             let __at = __pos;
-                            Err(__cx.fail_unexpected(__at))
+                            ::core::result::Result::Err(__cx.fail_unexpected(__at))
                         }
-                        Err(_) => Ok(__pos),
+                        ::core::result::Result::Err(_) => {
+                            ::core::result::Result::Ok(__pos)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l98 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l98 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l98 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l98 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                Ok(__q) => {
+                ::core::result::Result::Ok(__q) => {
                     let __progress = __q != __p;
                     __first = false;
                     __p = __q;
@@ -4123,17 +4999,18 @@ fn __rule_array_len<'i>(
                         break;
                     }
                 }
-                Err(_) => break,
+                ::core::result::Result::Err(_) => break,
             }
         }
-        Ok(__p)
+        ::core::result::Result::Ok(__p)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `array_len`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn array_len<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -4149,28 +5026,34 @@ fn __rule_type_path<'i>(
         let __pos = match match {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "::") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok(__p) => Ok(__p),
-            Err(_) => Ok(__pos),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l99 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l99 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match __rule_path_segment(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l99 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l99 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let mut __p = __pos;
@@ -4181,29 +5064,41 @@ fn __rule_type_path<'i>(
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "::") {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l100 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l100 ::core::result::Result::Err(__f);
+                        }
                     };
                     let __pos = match match __rule_path_segment(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l100 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l100 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(__pos)
+                    ::core::result::Result::Ok(__pos)
                 } {
-                    Ok(__q) => {
+                    ::core::result::Result::Ok(__q) => {
                         let __progress = __q != __p;
                         __first = false;
                         __p = __q;
@@ -4211,22 +5106,25 @@ fn __rule_type_path<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l99 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l99 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `type_path`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn type_path<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -4243,62 +5141,78 @@ fn __rule_path_segment<'i>(
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match match __rule_ident_raw(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l101 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l101 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match '__l102: {
-            if let Ok(__r) = '__l105: {
+            if let ::core::result::Result::Ok(__r) = '__l105: {
                 let __pos = match match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "::") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => Ok(__p),
-                    Err(_) => Ok(__pos),
+                    ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                    ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l105 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l105 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "<") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l105 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l105 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let mut __p = __pos;
@@ -4311,25 +5225,33 @@ fn __rule_path_segment<'i>(
                             match {
                                 let __pos = __skip(__cx, __m, __pos);
                                 match __cx.lit(__pos, ",") {
-                                    Ok(__r) => {
+                                    ::core::result::Result::Ok(__r) => {
                                         if __delimited(__cx, __m, __pos, __r) {
-                                            Ok(__r)
+                                            ::core::result::Result::Ok(__r)
                                         } else {
-                                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                            ::core::result::Result::Err(
+                                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                            )
                                         }
                                     }
-                                    Err(__f) => Err(__f),
+                                    ::core::result::Result::Err(__f) => {
+                                        ::core::result::Result::Err(__f)
+                                    }
                                 }
                             } {
-                                Ok(__q) => __q,
-                                Err(_) => break,
+                                ::core::result::Result::Ok(__q) => __q,
+                                ::core::result::Result::Err(_) => break,
                             }
                         };
                         match match __rule_generic_arg(__cx, __m, __pos) {
-                            Ok((_, __p)) => Ok(__p),
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Ok((_, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         } {
-                            Ok(__q) => {
+                            ::core::result::Result::Ok(__q) => {
                                 let __progress = __q != __p;
                                 __first = false;
                                 __p = __q;
@@ -4337,142 +5259,189 @@ fn __rule_path_segment<'i>(
                                     break;
                                 }
                             }
-                            Err(_) => break,
+                            ::core::result::Result::Err(_) => break,
                         }
                     }
-                    Ok(__p)
+                    ::core::result::Result::Ok(__p)
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l105 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l105 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ",") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => Ok(__p),
-                    Err(_) => Ok(__pos),
+                    ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                    ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l105 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l105 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ">") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l105 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l105 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                break '__l102 Ok(__r);
+                break '__l102 ::core::result::Result::Ok(__r);
             }
             '__l103: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "(") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l103 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l103 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match match __rule_ty_list(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l103 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l103 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ")") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l103 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l103 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match match '__l104: {
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "->") {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l104 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l104 ::core::result::Result::Err(__f);
+                        }
                     };
                     let __pos = match match __rule_ty(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l104 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l104 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(__pos)
+                    ::core::result::Result::Ok(__pos)
                 } {
-                    Ok(__p) => Ok(__p),
-                    Err(_) => Ok(__pos),
+                    ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                    ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l103 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l103 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             }
         } {
-            Ok(__p) => Ok(__p),
-            Err(_) => Ok(__pos),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l101 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l101 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `path_segment`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn path_segment<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -4485,171 +5454,200 @@ fn __rule_generic_arg<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match '__l106: {
-        if let Ok(__r) = match __rule_lifetime(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+        if let ::core::result::Result::Ok(__r) = match __rule_lifetime(
+            __cx,
+            __m,
+            __pos,
+        ) {
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            break '__l106 Ok(__r);
+            break '__l106 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l107: {
+        if let ::core::result::Result::Ok(__r) = '__l107: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match match __rule_ident_raw(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l107 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l107 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "=") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l107 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l107 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __saved = __cx.push_quiet();
                 let __r = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "=") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 };
                 __cx.pop_quiet(__saved);
                 match __r {
-                    Ok(_) => {
+                    ::core::result::Result::Ok(_) => {
                         let __at = __skip(__cx, __m, __pos);
-                        Err(__cx.fail_unexpected(__at))
+                        ::core::result::Result::Err(__cx.fail_unexpected(__at))
                     }
-                    Err(_) => Ok(__pos),
+                    ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l107 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l107 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l107 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l107 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l106 Ok(__r);
+            break '__l106 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = match __rule_ty(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+        if let ::core::result::Result::Ok(__r) = match __rule_ty(__cx, __m, __pos) {
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            break '__l106 Ok(__r);
+            break '__l106 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match match __rule_rust_string(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            break '__l106 Ok(__r);
+            break '__l106 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match match __rule_rust_brace(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            break '__l106 Ok(__r);
+            break '__l106 ::core::result::Result::Ok(__r);
         }
         {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match match __rule_number(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `generic_arg`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn generic_arg<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -4671,18 +5669,21 @@ fn __rule_number<'i>(
             __p += 1;
         }
         if __p == __pos {
-            Err(__cx.fail(__pos, __prpr_runtime::Expected::Class("[0-9]")))
+            ::core::result::Result::Err(
+                __cx.fail(__pos, __prpr_runtime::Expected::Class("[0-9]")),
+            )
         } else {
             __cx.expect(__p, __prpr_runtime::Expected::Class("[0-9]"));
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `number`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn number<'i>(input: &'i str) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_number, __prpr_runtime::no_skip)
 }
@@ -4703,25 +5704,29 @@ fn __rule_bounds<'i>(
                 match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "+") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__q) => __q,
-                    Err(_) => break,
+                    ::core::result::Result::Ok(__q) => __q,
+                    ::core::result::Result::Err(_) => break,
                 }
             };
             match match __rule_bound(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__q) => {
+                ::core::result::Result::Ok(__q) => {
                     let __progress = __q != __p;
                     __first = false;
                     __p = __q;
@@ -4729,17 +5734,22 @@ fn __rule_bounds<'i>(
                         break;
                     }
                 }
-                Err(_) => break,
+                ::core::result::Result::Err(_) => break,
             }
         }
-        if __first { Err(__prpr_runtime::Fail) } else { Ok(__p) }
+        if __first {
+            ::core::result::Result::Err(__prpr_runtime::Fail)
+        } else {
+            ::core::result::Result::Ok(__p)
+        }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `bounds`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn bounds<'i>(input: &'i str) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_bounds, __skip)
 }
@@ -4750,108 +5760,138 @@ fn __rule_bound<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match '__l108: {
-        if let Ok(__r) = match __rule_lifetime(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+        if let ::core::result::Result::Ok(__r) = match __rule_lifetime(
+            __cx,
+            __m,
+            __pos,
+        ) {
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            break '__l108 Ok(__r);
+            break '__l108 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l111: {
+        if let ::core::result::Result::Ok(__r) = '__l111: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l111 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l111 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_bound(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l111 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l111 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ")") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l111 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l111 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            break '__l108 Ok(__r);
+            break '__l108 ::core::result::Result::Ok(__r);
         }
         '__l109: {
             let __pos = match match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "?") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => Ok(__p),
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l109 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l109 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match '__l110: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "for") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l110 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l110 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "<") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l110 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l110 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let mut __p = __pos;
@@ -4864,25 +5904,33 @@ fn __rule_bound<'i>(
                             match {
                                 let __pos = __skip(__cx, __m, __pos);
                                 match __cx.lit(__pos, ",") {
-                                    Ok(__r) => {
+                                    ::core::result::Result::Ok(__r) => {
                                         if __delimited(__cx, __m, __pos, __r) {
-                                            Ok(__r)
+                                            ::core::result::Result::Ok(__r)
                                         } else {
-                                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                            ::core::result::Result::Err(
+                                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                            )
                                         }
                                     }
-                                    Err(__f) => Err(__f),
+                                    ::core::result::Result::Err(__f) => {
+                                        ::core::result::Result::Err(__f)
+                                    }
                                 }
                             } {
-                                Ok(__q) => __q,
-                                Err(_) => break,
+                                ::core::result::Result::Ok(__q) => __q,
+                                ::core::result::Result::Err(_) => break,
                             }
                         };
                         match match __rule_lifetime(__cx, __m, __pos) {
-                            Ok((_, __p)) => Ok(__p),
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Ok((_, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         } {
-                            Ok(__q) => {
+                            ::core::result::Result::Ok(__q) => {
                                 let __progress = __q != __p;
                                 __first = false;
                                 __p = __q;
@@ -4890,73 +5938,92 @@ fn __rule_bound<'i>(
                                     break;
                                 }
                             }
-                            Err(_) => break,
+                            ::core::result::Result::Err(_) => break,
                         }
                     }
-                    Ok(__p)
+                    ::core::result::Result::Ok(__p)
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l110 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l110 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ",") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => Ok(__p),
-                    Err(_) => Ok(__pos),
+                    ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                    ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l110 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l110 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ">") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l110 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l110 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                Ok(__p) => Ok(__p),
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l109 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l109 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_type_path(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l109 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l109 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `bound`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn bound<'i>(input: &'i str) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_bound, __skip)
 }
@@ -4971,8 +6038,10 @@ fn __rule_lifetime<'i>(
         let __mark = __cx.mark();
         match '__l112: {
             let __pos = match __cx.lit(__pos, "'") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l112 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l112 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let mut __p = __pos;
@@ -4980,10 +6049,14 @@ fn __rule_lifetime<'i>(
                 loop {
                     let __pos = __p;
                     match match __rule_ident_continue(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -4991,36 +6064,45 @@ fn __rule_lifetime<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                if __first { Err(__prpr_runtime::Fail) } else { Ok(__p) }
+                if __first {
+                    ::core::result::Result::Err(__prpr_runtime::Fail)
+                } else {
+                    ::core::result::Result::Ok(__p)
+                }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l112 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l112 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(__pos)
+            ::core::result::Result::Ok(__pos)
         } {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 if __delimited(__cx, __m, __pos, __r) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `lifetime`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn lifetime<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -5036,6 +6118,7 @@ fn __rule_expr<'i>(
 }
 /// Parses the whole input with the rule `expr`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn expr<'i>(input: &'i str) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_expr, __skip)
 }
@@ -5048,8 +6131,10 @@ fn __rule_choice<'i>(
     '__l113: {
         let __start = __skip(__cx, __m, __pos);
         let (first, __pos) = match __rule_sequence(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l113 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l113 ::core::result::Result::Err(__f);
+            }
         };
         let (rest, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -5062,33 +6147,43 @@ fn __rule_choice<'i>(
                         let __pos = __skip(__cx, __m, __pos);
                         let __mark = __cx.mark();
                         match match __rule_choice_sep(__cx, __m, __pos) {
-                            Ok((_, __p)) => Ok(__p),
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Ok((_, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         } {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 __cx.rollback(__mark);
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => {
+                            ::core::result::Result::Err(__f) => {
                                 __cx.commit(__mark);
-                                Err(__f)
+                                ::core::result::Result::Err(__f)
                             }
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l114 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l114 ::core::result::Result::Err(__f);
+                        }
                     };
                     let (s, __pos) = match __rule_sequence(__cx, __m, __pos) {
-                        Ok(__r) => __r,
-                        Err(__f) => break '__l114 Err(__f),
+                        ::core::result::Result::Ok(__r) => __r,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l114 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(((|| { s })(), __pos))
+                    ::core::result::Result::Ok(((|| { s })(), __pos))
                 } {
-                    Ok((__v, __q)) => {
+                    ::core::result::Result::Ok((__v, __q)) => {
                         __vs.push(__v);
                         let __progress = __q != __p;
                         __first = false;
@@ -5097,20 +6192,26 @@ fn __rule_choice<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok((__vs, __p))
+            ::core::result::Result::Ok((__vs, __p))
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l113 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l113 ::core::result::Result::Err(__f);
+            }
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
-        Ok(((|| -> Expr { make_choice(first, rest, __span__) })(), __pos))
+        ::core::result::Result::Ok((
+            (|| -> Expr { make_choice(first, rest, __span__) })(),
+            __pos,
+        ))
     }
 }
 /// Parses the whole input with the rule `choice`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn choice<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
@@ -5124,37 +6225,46 @@ fn __rule_choice_sep<'i>(
 ) -> __prpr_runtime::PResult<()> {
     match '__l115: {
         let __pos = match __cx.lit(__pos, "/") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l115 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l115 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let __saved = __cx.push_quiet();
             let __r = match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
-                ) if ::core::matches!(__c, '/' | '*') => Ok(__p),
-                _ => Err(__cx.fail(__pos, __prpr_runtime::Expected::Class("['/' '*']"))),
+                ) if ::core::matches!(__c, '/' | '*') => ::core::result::Result::Ok(__p),
+                _ => {
+                    ::core::result::Result::Err(
+                        __cx.fail(__pos, __prpr_runtime::Expected::Class("['/' '*']")),
+                    )
+                }
             };
             __cx.pop_quiet(__saved);
             match __r {
-                Ok(_) => {
+                ::core::result::Result::Ok(_) => {
                     let __at = __pos;
-                    Err(__cx.fail_unexpected(__at))
+                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                 }
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l115 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l115 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `choice_sep`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn choice_sep<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -5183,28 +6293,38 @@ fn __rule_sequence<'i>(
                         let __pos = match {
                             let __saved = __cx.push_quiet();
                             let __r = match __rule_item_start(__cx, __m, __pos) {
-                                Ok((_, __p)) => Ok(__p),
-                                Err(__f) => Err(__f),
+                                ::core::result::Result::Ok((_, __p)) => {
+                                    ::core::result::Result::Ok(__p)
+                                }
+                                ::core::result::Result::Err(__f) => {
+                                    ::core::result::Result::Err(__f)
+                                }
                             };
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __skip(__cx, __m, __pos);
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l117 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l117 ::core::result::Result::Err(__f);
+                            }
                         };
                         let (e, __pos) = match __rule_element(__cx, __m, __pos) {
-                            Ok(__r) => __r,
-                            Err(__f) => break '__l117 Err(__f),
+                            ::core::result::Result::Ok(__r) => __r,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l117 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(((|| { e })(), __pos))
+                        ::core::result::Result::Ok(((|| { e })(), __pos))
                     } {
-                        Ok((__v, __q)) => {
+                        ::core::result::Result::Ok((__v, __q)) => {
                             __vs.push(__v);
                             let __progress = __q != __p;
                             __first = false;
@@ -5213,39 +6333,52 @@ fn __rule_sequence<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok((__vs, __p))
+                ::core::result::Result::Ok((__vs, __p))
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l116 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l116 ::core::result::Result::Err(__f);
+                }
             };
             let __span_elems = __prpr_runtime::span(__start_elems, __pos);
             let (action, __pos) = match match __rule_action(__cx, __m, __pos) {
-                Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-                Err(_) => Ok((::core::option::Option::None, __pos)),
+                ::core::result::Result::Ok((__v, __p)) => {
+                    ::core::result::Result::Ok((::core::option::Option::Some(__v), __p))
+                }
+                ::core::result::Result::Err(_) => {
+                    ::core::result::Result::Ok((::core::option::Option::None, __pos))
+                }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l116 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l116 ::core::result::Result::Err(__f);
+                }
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
-            Ok(((|| { make_sequence(elems, __span_elems, action, __span__) })(), __pos))
+            ::core::result::Result::Ok((
+                (|| { make_sequence(elems, __span_elems, action, __span__) })(),
+                __pos,
+            ))
         } {
-            Ok((__o, __pos)) => {
+            ::core::result::Result::Ok((__o, __pos)) => {
                 match __prpr_runtime::Predicate::into_outcome(__o) {
-                    Ok(__v) => {
+                    ::core::result::Result::Ok(__v) => {
                         __cx.commit(__mark);
-                        Ok((__v, __pos))
+                        ::core::result::Result::Ok((__v, __pos))
                     }
-                    Err(__message) => {
-                        Err(__cx.fail_predicate(__mark, __start, __message))
+                    ::core::result::Result::Err(__message) => {
+                        ::core::result::Result::Err(
+                            __cx.fail_predicate(__mark, __start, __message),
+                        )
                     }
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     };
@@ -5254,6 +6387,7 @@ fn __rule_sequence<'i>(
 }
 /// Parses the whole input with the rule `sequence`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn sequence<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
@@ -5269,51 +6403,67 @@ fn __rule_action<'i>(
         let (pred, __pos) = match match {
             let __pos = __skip(__cx, __m, __pos);
             match match __cx.lit(__pos, "&") {
-                Ok(__p) => Ok(("&", __p)),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(("&", __p)),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r.1) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-            Err(_) => Ok((::core::option::Option::None, __pos)),
+            ::core::result::Result::Ok((__v, __p)) => {
+                ::core::result::Result::Ok((::core::option::Option::Some(__v), __p))
+            }
+            ::core::result::Result::Err(_) => {
+                ::core::result::Result::Ok((::core::option::Option::None, __pos))
+            }
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l118 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l118 ::core::result::Result::Err(__f);
+            }
         };
         let (code, __pos) = match {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match __rule_rust_brace(__cx, __m, __pos) {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r.1) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l118 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l118 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(((|| -> (Span, bool) { (code, pred.is_some()) })(), __pos))
+        ::core::result::Result::Ok((
+            (|| -> (Span, bool) { (code, pred.is_some()) })(),
+            __pos,
+        ))
     }
 }
 /// Parses the whole input with the rule `action`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn action<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(Span, bool), __prpr_runtime::ParseError> {
@@ -5328,25 +6478,30 @@ fn __rule_rust_brace<'i>(
     '__l119: {
         let __start = __pos;
         let __pos = match match __cx.lit(__pos, "{") {
-            Ok(_) => Ok(__pos),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok(_) => ::core::result::Result::Ok(__pos),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l119 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l119 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match __rule_rust_group(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l119 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l119 ::core::result::Result::Err(__f);
+            }
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
-        Ok(((|| -> Span { __span__ })(), __pos))
+        ::core::result::Result::Ok(((|| -> Span { __span__ })(), __pos))
     }
 }
 /// Parses the whole input with the rule `rust_brace`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn rust_brace<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Span, __prpr_runtime::ParseError> {
@@ -5361,8 +6516,8 @@ fn __rule_element<'i>(
     let __at = __skip(__cx, __m, __pos);
     let __saved = __cx.push_label(__at, "expression");
     let __r = '__l120: {
-        if let Ok(__r) = __rule_bind(__cx, __m, __pos) {
-            break '__l120 Ok(__r);
+        if let ::core::result::Result::Ok(__r) = __rule_bind(__cx, __m, __pos) {
+            break '__l120 ::core::result::Result::Ok(__r);
         }
         __rule_prefix(__cx, __m, __pos)
     };
@@ -5371,6 +6526,7 @@ fn __rule_element<'i>(
 }
 /// Parses the whole input with the rule `element`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn element<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
@@ -5388,72 +6544,86 @@ fn __rule_bind<'i>(
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match __rule_ident(__cx, __m, __pos) {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r.1) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l121 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l121 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, ":") {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l121 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l121 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let __saved = __cx.push_quiet();
             let __r = {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ":") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             };
             __cx.pop_quiet(__saved);
             match __r {
-                Ok(_) => {
+                ::core::result::Result::Ok(_) => {
                     let __at = __skip(__cx, __m, __pos);
-                    Err(__cx.fail_unexpected(__at))
+                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                 }
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l121 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l121 ::core::result::Result::Err(__f);
+            }
         };
         let (e, __pos) = match __rule_prefix(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l121 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l121 ::core::result::Result::Err(__f);
+            }
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
-        Ok((
+        ::core::result::Result::Ok((
             (|| -> Expr {
                 Expr::new(
                     ExprKind::Bind {
@@ -5469,6 +6639,7 @@ fn __rule_bind<'i>(
 }
 /// Parses the whole input with the rule `bind`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn bind<'i>(input: &'i str) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_bind, __skip)
 }
@@ -5478,99 +6649,122 @@ fn __rule_prefix<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Expr> {
-    '__l122: {
-        if let Ok(__r) = '__l123: {
+    let __at = __skip(__cx, __m, __pos);
+    let __saved = __cx.push_label(__at, "expression");
+    let __r = '__l122: {
+        if let ::core::result::Result::Ok(__r) = '__l123: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "&") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l123 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l123 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __saved = __cx.push_quiet();
                 let __r = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "{") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 };
                 __cx.pop_quiet(__saved);
                 match __r {
-                    Ok(_) => {
+                    ::core::result::Result::Ok(_) => {
                         let __at = __skip(__cx, __m, __pos);
-                        Err(__cx.fail_unexpected(__at))
+                        ::core::result::Result::Err(__cx.fail_unexpected(__at))
                     }
-                    Err(_) => Ok(__pos),
+                    ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l123 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l123 ::core::result::Result::Err(__f);
+                }
             };
             let (e, __pos) = match __rule_prefix(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l123 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l123 ::core::result::Result::Err(__f);
+                }
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
-            Ok((
+            ::core::result::Result::Ok((
                 (|| -> Expr { Expr::new(ExprKind::And(Box::new(e)), __span__) })(),
                 __pos,
             ))
         } {
-            break '__l122 Ok(__r);
+            break '__l122 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l124: {
+        if let ::core::result::Result::Ok(__r) = '__l124: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "!") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l124 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l124 ::core::result::Result::Err(__f);
+                }
             };
             let (e, __pos) = match __rule_prefix(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l124 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l124 ::core::result::Result::Err(__f);
+                }
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
-            Ok((
+            ::core::result::Result::Ok((
                 (|| -> Expr { Expr::new(ExprKind::Not(Box::new(e)), __span__) })(),
                 __pos,
             ))
         } {
-            break '__l122 Ok(__r);
+            break '__l122 ::core::result::Result::Ok(__r);
         }
         __rule_postfix(__cx, __m, __pos)
-    }
+    };
+    __cx.pop_label(__saved);
+    __r
 }
 /// Parses the whole input with the rule `prefix`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn prefix<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
@@ -5587,56 +6781,69 @@ fn __rule_postfix<'i>(
         let __mark = __cx.mark();
         match '__l125: {
             let (p, __pos) = match __rule_primary(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l125 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l125 ::core::result::Result::Err(__f);
+                }
             };
             let (op, __pos) = match match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match __rule_postfix_op(__cx, __m, __pos) {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r.1) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-                Err(_) => Ok((::core::option::Option::None, __pos)),
+                ::core::result::Result::Ok((__v, __p)) => {
+                    ::core::result::Result::Ok((::core::option::Option::Some(__v), __p))
+                }
+                ::core::result::Result::Err(_) => {
+                    ::core::result::Result::Ok((::core::option::Option::None, __pos))
+                }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l125 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l125 ::core::result::Result::Err(__f);
+                }
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
-            Ok(((|| { make_postfix(p, op, __span__) })(), __pos))
+            ::core::result::Result::Ok(((|| { make_postfix(p, op, __span__) })(), __pos))
         } {
-            Ok((__o, __pos)) => {
+            ::core::result::Result::Ok((__o, __pos)) => {
                 match __prpr_runtime::Predicate::into_outcome(__o) {
-                    Ok(__v) => {
+                    ::core::result::Result::Ok(__v) => {
                         __cx.commit(__mark);
-                        Ok((__v, __pos))
+                        ::core::result::Result::Ok((__v, __pos))
                     }
-                    Err(__message) => {
-                        Err(__cx.fail_predicate(__mark, __start, __message))
+                    ::core::result::Result::Err(__message) => {
+                        ::core::result::Result::Err(
+                            __cx.fail_predicate(__mark, __start, __message),
+                        )
                     }
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
 }
 /// Parses the whole input with the rule `postfix`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn postfix<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Expr, __prpr_runtime::ParseError> {
@@ -5651,12 +6858,19 @@ fn __rule_postfix_op<'i>(
     match __cx.peek_char(__pos) {
         ::core::option::Option::Some(
             (__c, __p),
-        ) if ::core::matches!(__c, '*' | '+' | '?') => Ok((__c, __p)),
-        _ => Err(__cx.fail(__pos, __prpr_runtime::Expected::Class("[*+?]"))),
+        ) if ::core::matches!(__c, '*' | '+' | '?') => {
+            ::core::result::Result::Ok((__c, __p))
+        }
+        _ => {
+            ::core::result::Result::Err(
+                __cx.fail(__pos, __prpr_runtime::Expected::Class("[*+?]")),
+            )
+        }
     }
 }
 /// Parses the whole input with the rule `postfix_op`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn postfix_op<'i>(
     input: &'i str,
 ) -> ::core::result::Result<char, __prpr_runtime::ParseError> {
@@ -5669,258 +6883,317 @@ fn __rule_primary<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<Primary> {
     '__l126: {
-        if let Ok(__r) = '__l128: {
+        if let ::core::result::Result::Ok(__r) = '__l128: {
+            let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l128 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l128 ::core::result::Result::Err(__f);
+                }
             };
             let (e, __pos) = match __rule_expr(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l128 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l128 ::core::result::Result::Err(__f);
+                }
             };
             let (sep, __pos) = match match '__l129: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ",") {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l129 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l129 ::core::result::Result::Err(__f);
+                    }
                 };
                 let (s, __pos) = match __rule_expr(__cx, __m, __pos) {
-                    Ok(__r) => __r,
-                    Err(__f) => break '__l129 Err(__f),
+                    ::core::result::Result::Ok(__r) => __r,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l129 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(((|| { s })(), __pos))
+                ::core::result::Result::Ok(((|| { s })(), __pos))
             } {
-                Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-                Err(_) => Ok((::core::option::Option::None, __pos)),
+                ::core::result::Result::Ok((__v, __p)) => {
+                    ::core::result::Result::Ok((::core::option::Option::Some(__v), __p))
+                }
+                ::core::result::Result::Err(_) => {
+                    ::core::result::Result::Ok((::core::option::Option::None, __pos))
+                }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l128 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l128 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ")") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l128 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l128 ::core::result::Result::Err(__f);
+                }
             };
-            Ok((
+            let __span__ = __prpr_runtime::span(__start, __pos);
+            ::core::result::Result::Ok((
                 (|| -> Primary {
                     match sep {
                         Some(sep) => Primary::SepBy(e, sep),
+                        None if matches!(e.kind, ExprKind::Bind { .. }) => {
+                            Primary::Expr(Expr::new(ExprKind::Seq(vec![e]), __span__))
+                        }
                         None => Primary::Expr(e),
                     }
                 })(),
                 __pos,
             ))
         } {
-            break '__l126 Ok(__r);
+            break '__l126 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l130: {
+        if let ::core::result::Result::Ok(__r) = '__l130: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "<") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l130 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l130 ::core::result::Result::Err(__f);
+                }
             };
             let (e, __pos) = match __rule_expr(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l130 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l130 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ">") {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l130 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l130 ::core::result::Result::Err(__f);
+                }
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
-            Ok((
+            ::core::result::Result::Ok((
                 (|| -> Primary {
                     Primary::Expr(Expr::new(ExprKind::Atomic(Box::new(e)), __span__))
                 })(),
                 __pos,
             ))
         } {
-            break '__l126 Ok(__r);
+            break '__l126 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l131: {
+        if let ::core::result::Result::Ok(__r) = '__l131: {
             let __start = __skip(__cx, __m, __pos);
             let (l, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match __rule_literal(__cx, __m, __pos) {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r.1) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l131 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l131 ::core::result::Result::Err(__f);
+                }
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
-            Ok((
+            ::core::result::Result::Ok((
                 (|| -> Primary {
                     Primary::Expr(Expr::new(ExprKind::Lit(l), __span__))
                 })(),
                 __pos,
             ))
         } {
-            break '__l126 Ok(__r);
+            break '__l126 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l132: {
+        if let ::core::result::Result::Ok(__r) = '__l132: {
             let __start = __skip(__cx, __m, __pos);
             let (c, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match __rule_class(__cx, __m, __pos) {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r.1) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l132 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l132 ::core::result::Result::Err(__f);
+                }
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
-            Ok((
+            ::core::result::Result::Ok((
                 (|| -> Primary {
                     Primary::Expr(Expr::new(ExprKind::Class(c), __span__))
                 })(),
                 __pos,
             ))
         } {
-            break '__l126 Ok(__r);
+            break '__l126 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l133: {
+        if let ::core::result::Result::Ok(__r) = '__l133: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match '__l134: {
                     let __pos = match __cx.lit(__pos, ".") {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l134 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l134 ::core::result::Result::Err(__f);
+                        }
                     };
                     let __pos = match {
                         let __saved = __cx.push_quiet();
                         let __r = __cx.lit(__pos, ".");
                         __cx.pop_quiet(__saved);
                         match __r {
-                            Ok(_) => {
+                            ::core::result::Result::Ok(_) => {
                                 let __at = __pos;
-                                Err(__cx.fail_unexpected(__at))
+                                ::core::result::Result::Err(__cx.fail_unexpected(__at))
                             }
-                            Err(_) => Ok(__pos),
+                            ::core::result::Result::Err(_) => {
+                                ::core::result::Result::Ok(__pos)
+                            }
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l134 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l134 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(__pos)
+                    ::core::result::Result::Ok(__pos)
                 } {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
+                            ::core::result::Result::Ok(__r)
                         } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            ::core::result::Result::Err(
+                                __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                            )
                         }
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l133 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l133 ::core::result::Result::Err(__f);
+                }
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
-            Ok((
+            ::core::result::Result::Ok((
                 (|| -> Primary { Primary::Expr(Expr::new(ExprKind::Any, __span__)) })(),
                 __pos,
             ))
         } {
-            break '__l126 Ok(__r);
+            break '__l126 ::core::result::Result::Ok(__r);
         }
         '__l127: {
             let __start = __skip(__cx, __m, __pos);
             let (p, __pos) = match __rule_path(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l127 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l127 ::core::result::Result::Err(__f);
+                }
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
-            Ok((
+            ::core::result::Result::Ok((
                 (|| -> Primary {
                     Primary::Expr(Expr::new(ExprKind::Ref(p), __span__))
                 })(),
@@ -5931,6 +7204,7 @@ fn __rule_primary<'i>(
 }
 /// Parses the whole input with the rule `primary`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn primary<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Primary, __prpr_runtime::ParseError> {
@@ -5947,28 +7221,40 @@ fn __rule_path<'i>(
         let (lc, __pos) = match match {
             let __pos = __skip(__cx, __m, __pos);
             match match __cx.lit(__pos, "::") {
-                Ok(__p) => Ok(("::", __p)),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok(__p) => {
+                    ::core::result::Result::Ok(("::", __p))
+                }
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     if __delimited(__cx, __m, __pos, __r.1) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => Err(__f),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             }
         } {
-            Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-            Err(_) => Ok((::core::option::Option::None, __pos)),
+            ::core::result::Result::Ok((__v, __p)) => {
+                ::core::result::Result::Ok((::core::option::Option::Some(__v), __p))
+            }
+            ::core::result::Result::Err(_) => {
+                ::core::result::Result::Ok((::core::option::Option::None, __pos))
+            }
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l135 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l135 ::core::result::Result::Err(__f);
+            }
         };
         let (first, __pos) = match __rule_path_start(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l135 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l135 ::core::result::Result::Err(__f);
+            }
         };
         let (rest, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -5980,26 +7266,34 @@ fn __rule_path<'i>(
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "::") {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 if __delimited(__cx, __m, __pos, __r) {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                                    ::core::result::Result::Err(
+                                        __cx.fail(__r, __prpr_runtime::Expected::Delimiter),
+                                    )
                                 }
                             }
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l136 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l136 ::core::result::Result::Err(__f);
+                        }
                     };
                     let (s, __pos) = match __rule_path_start(__cx, __m, __pos) {
-                        Ok(__r) => __r,
-                        Err(__f) => break '__l136 Err(__f),
+                        ::core::result::Result::Ok(__r) => __r,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l136 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(((|| { s })(), __pos))
+                    ::core::result::Result::Ok(((|| { s })(), __pos))
                 } {
-                    Ok((__v, __q)) => {
+                    ::core::result::Result::Ok((__v, __q)) => {
                         __vs.push(__v);
                         let __progress = __q != __p;
                         __first = false;
@@ -6008,16 +7302,18 @@ fn __rule_path<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok((__vs, __p))
+            ::core::result::Result::Ok((__vs, __p))
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l135 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l135 ::core::result::Result::Err(__f);
+            }
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
-        Ok((
+        ::core::result::Result::Ok((
             (|| -> Path {
                 let mut segments = vec![first];
                 segments.extend(rest);
@@ -6033,6 +7329,7 @@ fn __rule_path<'i>(
 }
 /// Parses the whole input with the rule `path`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn path<'i>(input: &'i str) -> ::core::result::Result<Path, __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_path, __skip)
 }
@@ -6043,25 +7340,27 @@ fn __rule_path_start<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<Ident> {
     '__l137: {
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
             match __rule_ident(__cx, __m, __pos) {
-                Ok(__r) => {
+                ::core::result::Result::Ok(__r) => {
                     __cx.rollback(__mark);
                     if __delimited(__cx, __m, __pos, __r.1) {
-                        Ok(__r)
+                        ::core::result::Result::Ok(__r)
                     } else {
-                        Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                        ::core::result::Result::Err(
+                            __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                        )
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            break '__l137 Ok(__r);
+            break '__l137 ::core::result::Result::Ok(__r);
         }
         {
             let __start = __skip(__cx, __m, __pos);
@@ -6071,24 +7370,28 @@ fn __rule_path_start<'i>(
                     let __pos = __skip(__cx, __m, __pos);
                     let __mark = __cx.mark();
                     match __rule_ident_raw(__cx, __m, __pos) {
-                        Ok(__r) => {
+                        ::core::result::Result::Ok(__r) => {
                             __cx.rollback(__mark);
                             if __delimited(__cx, __m, __pos, __r.1) {
-                                Ok(__r)
+                                ::core::result::Result::Ok(__r)
                             } else {
-                                Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__r.1, __prpr_runtime::Expected::Delimiter),
+                                )
                             }
                         }
-                        Err(__f) => {
+                        ::core::result::Result::Err(__f) => {
                             __cx.commit(__mark);
-                            Err(__f)
+                            ::core::result::Result::Err(__f)
                         }
                     }
                 } {
-                    Ok(__r) => __r,
-                    Err(__f) => break '__l138 Err(__f),
+                    ::core::result::Result::Ok(__r) => __r,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l138 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok((
+                ::core::result::Result::Ok((
                     (|| {
                         matches!(id.name.as_str(), "crate" | "super" | "self")
                             .then_some(id)
@@ -6096,20 +7399,22 @@ fn __rule_path_start<'i>(
                     __pos,
                 ))
             } {
-                Ok((__o, __pos)) => {
+                ::core::result::Result::Ok((__o, __pos)) => {
                     match __prpr_runtime::Predicate::into_outcome(__o) {
-                        Ok(__v) => {
+                        ::core::result::Result::Ok(__v) => {
                             __cx.commit(__mark);
-                            Ok((__v, __pos))
+                            ::core::result::Result::Ok((__v, __pos))
                         }
-                        Err(__message) => {
-                            Err(__cx.fail_predicate(__mark, __start, __message))
+                        ::core::result::Result::Err(__message) => {
+                            ::core::result::Result::Err(
+                                __cx.fail_predicate(__mark, __start, __message),
+                            )
                         }
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         }
@@ -6117,6 +7422,7 @@ fn __rule_path_start<'i>(
 }
 /// Parses the whole input with the rule `path_start`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn path_start<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Ident, __prpr_runtime::ParseError> {
@@ -6130,49 +7436,66 @@ fn __rule_literal<'i>(
 ) -> __prpr_runtime::PResult<Lit> {
     '__l139: {
         let (l, __pos) = match '__l140: {
-            if let Ok(__r) = __rule_byte_string(__cx, __m, __pos) {
-                break '__l140 Ok(__r);
+            if let ::core::result::Result::Ok(__r) = __rule_byte_string(
+                __cx,
+                __m,
+                __pos,
+            ) {
+                break '__l140 ::core::result::Result::Ok(__r);
             }
-            if let Ok(__r) = __rule_raw_byte_string(__cx, __m, __pos) {
-                break '__l140 Ok(__r);
+            if let ::core::result::Result::Ok(__r) = __rule_raw_byte_string(
+                __cx,
+                __m,
+                __pos,
+            ) {
+                break '__l140 ::core::result::Result::Ok(__r);
             }
-            if let Ok(__r) = __rule_string(__cx, __m, __pos) {
-                break '__l140 Ok(__r);
+            if let ::core::result::Result::Ok(__r) = __rule_string(__cx, __m, __pos) {
+                break '__l140 ::core::result::Result::Ok(__r);
             }
-            if let Ok(__r) = __rule_raw_string(__cx, __m, __pos) {
-                break '__l140 Ok(__r);
+            if let ::core::result::Result::Ok(__r) = __rule_raw_string(
+                __cx,
+                __m,
+                __pos,
+            ) {
+                break '__l140 ::core::result::Result::Ok(__r);
             }
-            if let Ok(__r) = __rule_byte_char(__cx, __m, __pos) {
-                break '__l140 Ok(__r);
+            if let ::core::result::Result::Ok(__r) = __rule_byte_char(__cx, __m, __pos) {
+                break '__l140 ::core::result::Result::Ok(__r);
             }
             __rule_char_lit(__cx, __m, __pos)
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l139 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l139 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let __saved = __cx.push_quiet();
             let __r = match __rule_ident_continue(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             };
             __cx.pop_quiet(__saved);
             match __r {
-                Ok(_) => {
+                ::core::result::Result::Ok(_) => {
                     let __at = __pos;
-                    Err(__cx.fail_unexpected(__at))
+                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                 }
-                Err(_) => Ok(__pos),
+                ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
             }
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l139 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l139 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(((|| -> Lit { l })(), __pos))
+        ::core::result::Result::Ok(((|| -> Lit { l })(), __pos))
     }
 }
 /// Parses the whole input with the rule `literal`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn literal<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
@@ -6186,8 +7509,10 @@ fn __rule_string<'i>(
 ) -> __prpr_runtime::PResult<Lit> {
     '__l141: {
         let __pos = match __cx.lit(__pos, "\"") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l141 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l141 ::core::result::Result::Err(__f);
+            }
         };
         let (cs, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -6196,7 +7521,7 @@ fn __rule_string<'i>(
             loop {
                 let __pos = __p;
                 match __rule_string_char(__cx, __m, __pos) {
-                    Ok((__v, __q)) => {
+                    ::core::result::Result::Ok((__v, __q)) => {
                         __vs.push(__v);
                         let __progress = __q != __p;
                         __first = false;
@@ -6205,23 +7530,31 @@ fn __rule_string<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok((__vs, __p))
+            ::core::result::Result::Ok((__vs, __p))
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l141 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l141 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match __cx.lit(__pos, "\"") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l141 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l141 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(((|| -> Lit { Lit::Str(cs.into_iter().flatten().collect()) })(), __pos))
+        ::core::result::Result::Ok((
+            (|| -> Lit { Lit::Str(cs.into_iter().flatten().collect()) })(),
+            __pos,
+        ))
     }
 }
 /// Parses the whole input with the rule `string`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn string<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
@@ -6233,39 +7566,49 @@ fn __rule_string_char<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Option<char>> {
-    '__l142: {
-        if let Ok(__r) = '__l144: {
+    let __at = __pos;
+    let __saved = __cx.push_label(__at, "character");
+    let __r = '__l142: {
+        if let ::core::result::Result::Ok(__r) = '__l144: {
             let __pos = match match __rule_line_continuation(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l144 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l144 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> Option<char> { None })(), __pos))
+            ::core::result::Result::Ok(((|| -> Option<char> { None })(), __pos))
         } {
-            break '__l142 Ok(__r);
+            break '__l142 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l145: {
+        if let ::core::result::Result::Ok(__r) = '__l145: {
             let __pos = match __cx.lit(__pos, "\\") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l145 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l145 ::core::result::Result::Err(__f);
+                }
             };
             let (c, __pos) = match __rule_escape(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l145 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l145 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> Option<char> { Some(c) })(), __pos))
+            ::core::result::Result::Ok(((|| -> Option<char> { Some(c) })(), __pos))
         } {
-            break '__l142 Ok(__r);
+            break '__l142 ::core::result::Result::Ok(__r);
         }
         '__l143: {
             let (c, __pos) = match match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
-                ) if !::core::matches!(__c, '"' | '\\') => Ok((__c, __p)),
+                ) if !::core::matches!(__c, '"' | '\\') => {
+                    ::core::result::Result::Ok((__c, __p))
+                }
                 _ => {
-                    Err(
+                    ::core::result::Result::Err(
                         __cx
                             .fail(
                                 __pos,
@@ -6274,15 +7617,20 @@ fn __rule_string_char<'i>(
                     )
                 }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l143 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l143 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> Option<char> { Some(c) })(), __pos))
+            ::core::result::Result::Ok(((|| -> Option<char> { Some(c) })(), __pos))
         }
-    }
+    };
+    __cx.pop_label(__saved);
+    __r
 }
 /// Parses the whole input with the rule `string_char`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn string_char<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Option<char>, __prpr_runtime::ParseError> {
@@ -6296,8 +7644,10 @@ fn __rule_line_continuation<'i>(
 ) -> __prpr_runtime::PResult<()> {
     match '__l146: {
         let __pos = match __cx.lit(__pos, "\\\n") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l146 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l146 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match {
             let mut __p = __pos;
@@ -6309,34 +7659,42 @@ fn __rule_line_continuation<'i>(
                     let __mark = __cx.mark();
                     match '__l147: {
                         let (c, __pos) = match match __cx.peek_char(__pos) {
-                            ::core::option::Option::Some((__c, __p)) => Ok((__c, __p)),
+                            ::core::option::Option::Some((__c, __p)) => {
+                                ::core::result::Result::Ok((__c, __p))
+                            }
                             ::core::option::Option::None => {
-                                Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                                )
                             }
                         } {
-                            Ok(__r) => __r,
-                            Err(__f) => break '__l147 Err(__f),
+                            ::core::result::Result::Ok(__r) => __r,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l147 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(((|| { c.is_whitespace() })(), __pos))
+                        ::core::result::Result::Ok(((|| { c.is_whitespace() })(), __pos))
                     } {
-                        Ok((__o, __pos)) => {
+                        ::core::result::Result::Ok((__o, __pos)) => {
                             match __prpr_runtime::Predicate::into_outcome(__o) {
-                                Ok(__v) => {
+                                ::core::result::Result::Ok(__v) => {
                                     __cx.commit(__mark);
-                                    Ok(__pos)
+                                    ::core::result::Result::Ok(__pos)
                                 }
-                                Err(__message) => {
-                                    Err(__cx.fail_predicate(__mark, __start, __message))
+                                ::core::result::Result::Err(__message) => {
+                                    ::core::result::Result::Err(
+                                        __cx.fail_predicate(__mark, __start, __message),
+                                    )
                                 }
                             }
                         }
-                        Err(__f) => {
+                        ::core::result::Result::Err(__f) => {
                             __cx.commit(__mark);
-                            Err(__f)
+                            ::core::result::Result::Err(__f)
                         }
                     }
                 } {
-                    Ok(__q) => {
+                    ::core::result::Result::Ok(__q) => {
                         let __progress = __q != __p;
                         __first = false;
                         __p = __q;
@@ -6344,22 +7702,25 @@ fn __rule_line_continuation<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l146 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l146 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(__pos)
+        ::core::result::Result::Ok(__pos)
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `line_continuation`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn line_continuation<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
@@ -6373,8 +7734,10 @@ fn __rule_byte_string<'i>(
 ) -> __prpr_runtime::PResult<Lit> {
     '__l148: {
         let __pos = match __cx.lit(__pos, "b\"") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l148 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l148 ::core::result::Result::Err(__f);
+            }
         };
         let (cs, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -6383,7 +7746,7 @@ fn __rule_byte_string<'i>(
             loop {
                 let __pos = __p;
                 match __rule_byte_string_char(__cx, __m, __pos) {
-                    Ok((__v, __q)) => {
+                    ::core::result::Result::Ok((__v, __q)) => {
                         __vs.push(__v);
                         let __progress = __q != __p;
                         __first = false;
@@ -6392,23 +7755,31 @@ fn __rule_byte_string<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok((__vs, __p))
+            ::core::result::Result::Ok((__vs, __p))
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l148 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l148 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match __cx.lit(__pos, "\"") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l148 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l148 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(((|| -> Lit { Lit::Bytes(cs.into_iter().flatten().collect()) })(), __pos))
+        ::core::result::Result::Ok((
+            (|| -> Lit { Lit::Bytes(cs.into_iter().flatten().collect()) })(),
+            __pos,
+        ))
     }
 }
 /// Parses the whole input with the rule `byte_string`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn byte_string<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
@@ -6420,31 +7791,39 @@ fn __rule_byte_string_char<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Option<u8>> {
-    '__l149: {
-        if let Ok(__r) = '__l151: {
+    let __at = __pos;
+    let __saved = __cx.push_label(__at, "character");
+    let __r = '__l149: {
+        if let ::core::result::Result::Ok(__r) = '__l151: {
             let __pos = match match __rule_line_continuation(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l151 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l151 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> Option<u8> { None })(), __pos))
+            ::core::result::Result::Ok(((|| -> Option<u8> { None })(), __pos))
         } {
-            break '__l149 Ok(__r);
+            break '__l149 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l152: {
+        if let ::core::result::Result::Ok(__r) = '__l152: {
             let __pos = match __cx.lit(__pos, "\\") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l152 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l152 ::core::result::Result::Err(__f);
+                }
             };
             let (c, __pos) = match __rule_byte_escape(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l152 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l152 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> Option<u8> { Some(c) })(), __pos))
+            ::core::result::Result::Ok(((|| -> Option<u8> { Some(c) })(), __pos))
         } {
-            break '__l149 Ok(__r);
+            break '__l149 ::core::result::Result::Ok(__r);
         }
         {
             let __start = __pos;
@@ -6453,9 +7832,11 @@ fn __rule_byte_string_char<'i>(
                 let (c, __pos) = match match __cx.peek_char(__pos) {
                     ::core::option::Option::Some(
                         (__c, __p),
-                    ) if !::core::matches!(__c, '"' | '\\') => Ok((__c, __p)),
+                    ) if !::core::matches!(__c, '"' | '\\') => {
+                        ::core::result::Result::Ok((__c, __p))
+                    }
                     _ => {
-                        Err(
+                        ::core::result::Result::Err(
                             __cx
                                 .fail(
                                     __pos,
@@ -6464,10 +7845,12 @@ fn __rule_byte_string_char<'i>(
                         )
                     }
                 } {
-                    Ok(__r) => __r,
-                    Err(__f) => break '__l150 Err(__f),
+                    ::core::result::Result::Ok(__r) => __r,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l150 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok((
+                ::core::result::Result::Ok((
                     (|| {
                         if c.is_ascii() {
                             Ok(Some(c as u8))
@@ -6478,27 +7861,32 @@ fn __rule_byte_string_char<'i>(
                     __pos,
                 ))
             } {
-                Ok((__o, __pos)) => {
+                ::core::result::Result::Ok((__o, __pos)) => {
                     match __prpr_runtime::Predicate::into_outcome(__o) {
-                        Ok(__v) => {
+                        ::core::result::Result::Ok(__v) => {
                             __cx.commit(__mark);
-                            Ok((__v, __pos))
+                            ::core::result::Result::Ok((__v, __pos))
                         }
-                        Err(__message) => {
-                            Err(__cx.fail_predicate(__mark, __start, __message))
+                        ::core::result::Result::Err(__message) => {
+                            ::core::result::Result::Err(
+                                __cx.fail_predicate(__mark, __start, __message),
+                            )
                         }
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         }
-    }
+    };
+    __cx.pop_label(__saved);
+    __r
 }
 /// Parses the whole input with the rule `byte_string_char`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn byte_string_char<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Option<u8>, __prpr_runtime::ParseError> {
@@ -6512,18 +7900,23 @@ fn __rule_raw_string<'i>(
 ) -> __prpr_runtime::PResult<Lit> {
     '__l153: {
         let __pos = match __cx.lit(__pos, "r") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l153 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l153 ::core::result::Result::Err(__f);
+            }
         };
         let (s, __pos) = match __rule_raw_body(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l153 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l153 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(((|| -> Lit { Lit::Str(s.to_string()) })(), __pos))
+        ::core::result::Result::Ok(((|| -> Lit { Lit::Str(s.to_string()) })(), __pos))
     }
 }
 /// Parses the whole input with the rule `raw_string`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn raw_string<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
@@ -6537,18 +7930,26 @@ fn __rule_raw_byte_string<'i>(
 ) -> __prpr_runtime::PResult<Lit> {
     '__l154: {
         let __pos = match __cx.lit(__pos, "br") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l154 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l154 ::core::result::Result::Err(__f);
+            }
         };
         let (s, __pos) = match __rule_raw_body(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l154 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l154 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(((|| -> Lit { Lit::Bytes(s.as_bytes().to_vec()) })(), __pos))
+        ::core::result::Result::Ok((
+            (|| -> Lit { Lit::Bytes(s.as_bytes().to_vec()) })(),
+            __pos,
+        ))
     }
 }
 /// Parses the whole input with the rule `raw_byte_string`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn raw_byte_string<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
@@ -6561,10 +7962,12 @@ fn __rule_raw_body<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<&'i str> {
     '__l155: {
-        if let Ok(__r) = '__l158: {
+        if let ::core::result::Result::Ok(__r) = '__l158: {
             let __pos = match __cx.lit(__pos, "\"") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l158 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l158 ::core::result::Result::Err(__f);
+                }
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6578,28 +7981,38 @@ fn __rule_raw_body<'i>(
                             let __r = __cx.lit(__pos, "\"");
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __pos;
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l159 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l159 ::core::result::Result::Err(__f);
+                            }
                         };
                         let __pos = match match __cx.peek_char(__pos) {
-                            ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                            ::core::option::Option::Some((__c, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
                             ::core::option::Option::None => {
-                                Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                                )
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l159 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l159 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(__pos)
+                        ::core::result::Result::Ok(__pos)
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -6607,27 +8020,33 @@ fn __rule_raw_body<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l158 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l158 ::core::result::Result::Err(__f);
+                }
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l158 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l158 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> &'i str { __text_s })(), __pos))
+            ::core::result::Result::Ok(((|| -> &'i str { __text_s })(), __pos))
         } {
-            break '__l155 Ok(__r);
+            break '__l155 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l160: {
+        if let ::core::result::Result::Ok(__r) = '__l160: {
             let __pos = match __cx.lit(__pos, "#\"") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l160 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l160 ::core::result::Result::Err(__f);
+                }
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6641,28 +8060,38 @@ fn __rule_raw_body<'i>(
                             let __r = __cx.lit(__pos, "\"#");
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __pos;
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l161 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l161 ::core::result::Result::Err(__f);
+                            }
                         };
                         let __pos = match match __cx.peek_char(__pos) {
-                            ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                            ::core::option::Option::Some((__c, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
                             ::core::option::Option::None => {
-                                Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                                )
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l161 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l161 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(__pos)
+                        ::core::result::Result::Ok(__pos)
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -6670,27 +8099,33 @@ fn __rule_raw_body<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l160 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l160 ::core::result::Result::Err(__f);
+                }
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"#") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l160 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l160 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> &'i str { __text_s })(), __pos))
+            ::core::result::Result::Ok(((|| -> &'i str { __text_s })(), __pos))
         } {
-            break '__l155 Ok(__r);
+            break '__l155 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l162: {
+        if let ::core::result::Result::Ok(__r) = '__l162: {
             let __pos = match __cx.lit(__pos, "##\"") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l162 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l162 ::core::result::Result::Err(__f);
+                }
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6704,28 +8139,38 @@ fn __rule_raw_body<'i>(
                             let __r = __cx.lit(__pos, "\"##");
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __pos;
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l163 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l163 ::core::result::Result::Err(__f);
+                            }
                         };
                         let __pos = match match __cx.peek_char(__pos) {
-                            ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                            ::core::option::Option::Some((__c, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
                             ::core::option::Option::None => {
-                                Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                                )
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l163 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l163 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(__pos)
+                        ::core::result::Result::Ok(__pos)
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -6733,27 +8178,33 @@ fn __rule_raw_body<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l162 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l162 ::core::result::Result::Err(__f);
+                }
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"##") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l162 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l162 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> &'i str { __text_s })(), __pos))
+            ::core::result::Result::Ok(((|| -> &'i str { __text_s })(), __pos))
         } {
-            break '__l155 Ok(__r);
+            break '__l155 ::core::result::Result::Ok(__r);
         }
         '__l156: {
             let __pos = match __cx.lit(__pos, "###\"") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l156 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l156 ::core::result::Result::Err(__f);
+                }
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6767,28 +8218,38 @@ fn __rule_raw_body<'i>(
                             let __r = __cx.lit(__pos, "\"###");
                             __cx.pop_quiet(__saved);
                             match __r {
-                                Ok(_) => {
+                                ::core::result::Result::Ok(_) => {
                                     let __at = __pos;
-                                    Err(__cx.fail_unexpected(__at))
+                                    ::core::result::Result::Err(__cx.fail_unexpected(__at))
                                 }
-                                Err(_) => Ok(__pos),
+                                ::core::result::Result::Err(_) => {
+                                    ::core::result::Result::Ok(__pos)
+                                }
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l157 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l157 ::core::result::Result::Err(__f);
+                            }
                         };
                         let __pos = match match __cx.peek_char(__pos) {
-                            ::core::option::Option::Some((__c, __p)) => Ok(__p),
+                            ::core::option::Option::Some((__c, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
                             ::core::option::Option::None => {
-                                Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                                ::core::result::Result::Err(
+                                    __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                                )
                             }
                         } {
-                            Ok(__p) => __p,
-                            Err(__f) => break '__l157 Err(__f),
+                            ::core::result::Result::Ok(__p) => __p,
+                            ::core::result::Result::Err(__f) => {
+                                break '__l157 ::core::result::Result::Err(__f);
+                            }
                         };
-                        Ok(__pos)
+                        ::core::result::Result::Ok(__pos)
                     } {
-                        Ok(__q) => {
+                        ::core::result::Result::Ok(__q) => {
                             let __progress = __q != __p;
                             __first = false;
                             __p = __q;
@@ -6796,25 +8257,30 @@ fn __rule_raw_body<'i>(
                                 break;
                             }
                         }
-                        Err(_) => break,
+                        ::core::result::Result::Err(_) => break,
                     }
                 }
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l156 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l156 ::core::result::Result::Err(__f);
+                }
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"###") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l156 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l156 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> &'i str { __text_s })(), __pos))
+            ::core::result::Result::Ok(((|| -> &'i str { __text_s })(), __pos))
         }
     }
 }
 /// Parses the whole input with the rule `raw_body`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn raw_body<'i>(
     input: &'i str,
 ) -> ::core::result::Result<&'i str, __prpr_runtime::ParseError> {
@@ -6828,18 +8294,23 @@ fn __rule_char_lit<'i>(
 ) -> __prpr_runtime::PResult<Lit> {
     '__l164: {
         let __pos = match __cx.lit(__pos, "'") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l164 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l164 ::core::result::Result::Err(__f);
+            }
         };
         let (c, __pos) = match __rule_char_body(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l164 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l164 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(((|| -> Lit { Lit::Str(c.to_string()) })(), __pos))
+        ::core::result::Result::Ok(((|| -> Lit { Lit::Str(c.to_string()) })(), __pos))
     }
 }
 /// Parses the whole input with the rule `char_lit`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn char_lit<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
@@ -6852,30 +8323,38 @@ fn __rule_char_body<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<char> {
     '__l165: {
-        if let Ok(__r) = '__l167: {
+        if let ::core::result::Result::Ok(__r) = '__l167: {
             let __pos = match __cx.lit(__pos, "\\") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l167 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l167 ::core::result::Result::Err(__f);
+                }
             };
             let (c, __pos) = match __rule_escape(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l167 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l167 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match __cx.lit(__pos, "'") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l167 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l167 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { c })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { c })(), __pos))
         } {
-            break '__l165 Ok(__r);
+            break '__l165 ::core::result::Result::Ok(__r);
         }
         '__l166: {
             let (c, __pos) = match match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
-                ) if !::core::matches!(__c, '\'' | '\n') => Ok((__c, __p)),
+                ) if !::core::matches!(__c, '\'' | '\n') => {
+                    ::core::result::Result::Ok((__c, __p))
+                }
                 _ => {
-                    Err(
+                    ::core::result::Result::Err(
                         __cx
                             .fail(
                                 __pos,
@@ -6884,19 +8363,24 @@ fn __rule_char_body<'i>(
                     )
                 }
             } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l166 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l166 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match __cx.lit(__pos, "'") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l166 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l166 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { c })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { c })(), __pos))
         }
     }
 }
 /// Parses the whole input with the rule `char_body`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn char_body<'i>(
     input: &'i str,
 ) -> ::core::result::Result<char, __prpr_runtime::ParseError> {
@@ -6910,18 +8394,23 @@ fn __rule_byte_char<'i>(
 ) -> __prpr_runtime::PResult<Lit> {
     '__l168: {
         let __pos = match __cx.lit(__pos, "b'") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l168 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l168 ::core::result::Result::Err(__f);
+            }
         };
         let (c, __pos) = match __rule_byte_char_body(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l168 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l168 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(((|| -> Lit { Lit::Bytes(vec![c]) })(), __pos))
+        ::core::result::Result::Ok(((|| -> Lit { Lit::Bytes(vec![c]) })(), __pos))
     }
 }
 /// Parses the whole input with the rule `byte_char`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn byte_char<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Lit, __prpr_runtime::ParseError> {
@@ -6934,22 +8423,28 @@ fn __rule_byte_char_body<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<u8> {
     '__l169: {
-        if let Ok(__r) = '__l171: {
+        if let ::core::result::Result::Ok(__r) = '__l171: {
             let __pos = match __cx.lit(__pos, "\\") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l171 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l171 ::core::result::Result::Err(__f);
+                }
             };
             let (c, __pos) = match __rule_byte_escape(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l171 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l171 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match __cx.lit(__pos, "'") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l171 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l171 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> u8 { c })(), __pos))
+            ::core::result::Result::Ok(((|| -> u8 { c })(), __pos))
         } {
-            break '__l169 Ok(__r);
+            break '__l169 ::core::result::Result::Ok(__r);
         }
         {
             let __start = __pos;
@@ -6958,9 +8453,11 @@ fn __rule_byte_char_body<'i>(
                 let (c, __pos) = match match __cx.peek_char(__pos) {
                     ::core::option::Option::Some(
                         (__c, __p),
-                    ) if !::core::matches!(__c, '\'' | '\n') => Ok((__c, __p)),
+                    ) if !::core::matches!(__c, '\'' | '\n') => {
+                        ::core::result::Result::Ok((__c, __p))
+                    }
                     _ => {
-                        Err(
+                        ::core::result::Result::Err(
                             __cx
                                 .fail(
                                     __pos,
@@ -6969,29 +8466,38 @@ fn __rule_byte_char_body<'i>(
                         )
                     }
                 } {
-                    Ok(__r) => __r,
-                    Err(__f) => break '__l170 Err(__f),
+                    ::core::result::Result::Ok(__r) => __r,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l170 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match __cx.lit(__pos, "'") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l170 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l170 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(((|| { c.is_ascii().then_some(c as u8) })(), __pos))
+                ::core::result::Result::Ok((
+                    (|| { c.is_ascii().then_some(c as u8) })(),
+                    __pos,
+                ))
             } {
-                Ok((__o, __pos)) => {
+                ::core::result::Result::Ok((__o, __pos)) => {
                     match __prpr_runtime::Predicate::into_outcome(__o) {
-                        Ok(__v) => {
+                        ::core::result::Result::Ok(__v) => {
                             __cx.commit(__mark);
-                            Ok((__v, __pos))
+                            ::core::result::Result::Ok((__v, __pos))
                         }
-                        Err(__message) => {
-                            Err(__cx.fail_predicate(__mark, __start, __message))
+                        ::core::result::Result::Err(__message) => {
+                            ::core::result::Result::Err(
+                                __cx.fail_predicate(__mark, __start, __message),
+                            )
                         }
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         }
@@ -6999,6 +8505,7 @@ fn __rule_byte_char_body<'i>(
 }
 /// Parses the whole input with the rule `byte_char_body`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn byte_char_body<'i>(
     input: &'i str,
 ) -> ::core::result::Result<u8, __prpr_runtime::ParseError> {
@@ -7011,100 +8518,130 @@ fn __rule_escape<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<char> {
     '__l172: {
-        if let Ok(__r) = '__l174: {
+        if let ::core::result::Result::Ok(__r) = '__l174: {
             let __pos = match __cx.lit(__pos, "n") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l174 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l174 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { '\n' })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { '\n' })(), __pos))
         } {
-            break '__l172 Ok(__r);
+            break '__l172 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l175: {
+        if let ::core::result::Result::Ok(__r) = '__l175: {
             let __pos = match __cx.lit(__pos, "r") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l175 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l175 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { '\r' })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { '\r' })(), __pos))
         } {
-            break '__l172 Ok(__r);
+            break '__l172 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l176: {
+        if let ::core::result::Result::Ok(__r) = '__l176: {
             let __pos = match __cx.lit(__pos, "t") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l176 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l176 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { '\t' })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { '\t' })(), __pos))
         } {
-            break '__l172 Ok(__r);
+            break '__l172 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l177: {
+        if let ::core::result::Result::Ok(__r) = '__l177: {
             let __pos = match __cx.lit(__pos, "\\") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l177 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l177 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { '\\' })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { '\\' })(), __pos))
         } {
-            break '__l172 Ok(__r);
+            break '__l172 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l178: {
+        if let ::core::result::Result::Ok(__r) = '__l178: {
             let __pos = match __cx.lit(__pos, "0") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l178 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l178 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { '\0' })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { '\0' })(), __pos))
         } {
-            break '__l172 Ok(__r);
+            break '__l172 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l179: {
+        if let ::core::result::Result::Ok(__r) = '__l179: {
             let __pos = match __cx.lit(__pos, "'") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l179 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l179 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { '\'' })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { '\'' })(), __pos))
         } {
-            break '__l172 Ok(__r);
+            break '__l172 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l180: {
+        if let ::core::result::Result::Ok(__r) = '__l180: {
             let __pos = match __cx.lit(__pos, "\"") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l180 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l180 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { '"' })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { '"' })(), __pos))
         } {
-            break '__l172 Ok(__r);
+            break '__l172 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = {
+        if let ::core::result::Result::Ok(__r) = {
             let __start = __pos;
             let __mark = __cx.mark();
             match '__l181: {
                 let __pos = match __cx.lit(__pos, "x") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l181 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l181 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __start_h = __pos;
                 let __pos = match '__l182: {
                     let __pos = match match __rule_hex(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l182 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l182 ::core::result::Result::Err(__f);
+                        }
                     };
                     let __pos = match match __rule_hex(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l182 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l182 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(__pos)
+                    ::core::result::Result::Ok(__pos)
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l181 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l181 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __text_h = __cx.slice(__start_h, __pos);
-                Ok((
+                ::core::result::Result::Ok((
                     (|| {
                         let v = u8::from_str_radix(__text_h, 16).unwrap();
                         if v <= 0x7f {
@@ -7116,32 +8653,36 @@ fn __rule_escape<'i>(
                     __pos,
                 ))
             } {
-                Ok((__o, __pos)) => {
+                ::core::result::Result::Ok((__o, __pos)) => {
                     match __prpr_runtime::Predicate::into_outcome(__o) {
-                        Ok(__v) => {
+                        ::core::result::Result::Ok(__v) => {
                             __cx.commit(__mark);
-                            Ok((__v, __pos))
+                            ::core::result::Result::Ok((__v, __pos))
                         }
-                        Err(__message) => {
-                            Err(__cx.fail_predicate(__mark, __start, __message))
+                        ::core::result::Result::Err(__message) => {
+                            ::core::result::Result::Err(
+                                __cx.fail_predicate(__mark, __start, __message),
+                            )
                         }
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         } {
-            break '__l172 Ok(__r);
+            break '__l172 ::core::result::Result::Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
             match '__l173: {
                 let __pos = match __cx.lit(__pos, "u{") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l173 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l173 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __start_h = __pos;
                 let __pos = match {
@@ -7150,10 +8691,14 @@ fn __rule_escape<'i>(
                     loop {
                         let __pos = __p;
                         match match __rule_hex(__cx, __m, __pos) {
-                            Ok((_, __p)) => Ok(__p),
-                            Err(__f) => Err(__f),
+                            ::core::result::Result::Ok((_, __p)) => {
+                                ::core::result::Result::Ok(__p)
+                            }
+                            ::core::result::Result::Err(__f) => {
+                                ::core::result::Result::Err(__f)
+                            }
                         } {
-                            Ok(__q) => {
+                            ::core::result::Result::Ok(__q) => {
                                 let __progress = __q != __p;
                                 __first = false;
                                 __p = __q;
@@ -7161,20 +8706,28 @@ fn __rule_escape<'i>(
                                     break;
                                 }
                             }
-                            Err(_) => break,
+                            ::core::result::Result::Err(_) => break,
                         }
                     }
-                    if __first { Err(__prpr_runtime::Fail) } else { Ok(__p) }
+                    if __first {
+                        ::core::result::Result::Err(__prpr_runtime::Fail)
+                    } else {
+                        ::core::result::Result::Ok(__p)
+                    }
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l173 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l173 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __text_h = __cx.slice(__start_h, __pos);
                 let __pos = match __cx.lit(__pos, "}") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l173 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l173 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok((
+                ::core::result::Result::Ok((
                     (|| {
                         u32::from_str_radix(__text_h, 16)
                             .ok()
@@ -7184,20 +8737,22 @@ fn __rule_escape<'i>(
                     __pos,
                 ))
             } {
-                Ok((__o, __pos)) => {
+                ::core::result::Result::Ok((__o, __pos)) => {
                     match __prpr_runtime::Predicate::into_outcome(__o) {
-                        Ok(__v) => {
+                        ::core::result::Result::Ok(__v) => {
                             __cx.commit(__mark);
-                            Ok((__v, __pos))
+                            ::core::result::Result::Ok((__v, __pos))
                         }
-                        Err(__message) => {
-                            Err(__cx.fail_predicate(__mark, __start, __message))
+                        ::core::result::Result::Err(__message) => {
+                            ::core::result::Result::Err(
+                                __cx.fail_predicate(__mark, __start, __message),
+                            )
                         }
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         }
@@ -7205,6 +8760,7 @@ fn __rule_escape<'i>(
 }
 /// Parses the whole input with the rule `escape`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn escape<'i>(
     input: &'i str,
 ) -> ::core::result::Result<char, __prpr_runtime::ParseError> {
@@ -7217,102 +8773,132 @@ fn __rule_byte_escape<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<u8> {
     '__l183: {
-        if let Ok(__r) = '__l186: {
+        if let ::core::result::Result::Ok(__r) = '__l186: {
             let __pos = match __cx.lit(__pos, "n") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l186 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l186 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> u8 { b'\n' })(), __pos))
+            ::core::result::Result::Ok(((|| -> u8 { b'\n' })(), __pos))
         } {
-            break '__l183 Ok(__r);
+            break '__l183 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l187: {
+        if let ::core::result::Result::Ok(__r) = '__l187: {
             let __pos = match __cx.lit(__pos, "r") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l187 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l187 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> u8 { b'\r' })(), __pos))
+            ::core::result::Result::Ok(((|| -> u8 { b'\r' })(), __pos))
         } {
-            break '__l183 Ok(__r);
+            break '__l183 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l188: {
+        if let ::core::result::Result::Ok(__r) = '__l188: {
             let __pos = match __cx.lit(__pos, "t") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l188 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l188 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> u8 { b'\t' })(), __pos))
+            ::core::result::Result::Ok(((|| -> u8 { b'\t' })(), __pos))
         } {
-            break '__l183 Ok(__r);
+            break '__l183 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l189: {
+        if let ::core::result::Result::Ok(__r) = '__l189: {
             let __pos = match __cx.lit(__pos, "\\") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l189 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l189 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> u8 { b'\\' })(), __pos))
+            ::core::result::Result::Ok(((|| -> u8 { b'\\' })(), __pos))
         } {
-            break '__l183 Ok(__r);
+            break '__l183 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l190: {
+        if let ::core::result::Result::Ok(__r) = '__l190: {
             let __pos = match __cx.lit(__pos, "0") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l190 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l190 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> u8 { b'\0' })(), __pos))
+            ::core::result::Result::Ok(((|| -> u8 { b'\0' })(), __pos))
         } {
-            break '__l183 Ok(__r);
+            break '__l183 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l191: {
+        if let ::core::result::Result::Ok(__r) = '__l191: {
             let __pos = match __cx.lit(__pos, "'") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l191 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l191 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> u8 { b'\'' })(), __pos))
+            ::core::result::Result::Ok(((|| -> u8 { b'\'' })(), __pos))
         } {
-            break '__l183 Ok(__r);
+            break '__l183 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l192: {
+        if let ::core::result::Result::Ok(__r) = '__l192: {
             let __pos = match __cx.lit(__pos, "\"") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l192 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l192 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> u8 { b'"' })(), __pos))
+            ::core::result::Result::Ok(((|| -> u8 { b'"' })(), __pos))
         } {
-            break '__l183 Ok(__r);
+            break '__l183 ::core::result::Result::Ok(__r);
         }
         '__l184: {
             let __pos = match __cx.lit(__pos, "x") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l184 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l184 ::core::result::Result::Err(__f);
+                }
             };
             let __start_h = __pos;
             let __pos = match '__l185: {
                 let __pos = match match __rule_hex(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l185 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l185 ::core::result::Result::Err(__f);
+                    }
                 };
                 let __pos = match match __rule_hex(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok((_, __p)) => {
+                        ::core::result::Result::Ok(__p)
+                    }
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l185 Err(__f),
+                    ::core::result::Result::Ok(__p) => __p,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l185 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(__pos)
+                ::core::result::Result::Ok(__pos)
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l184 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l184 ::core::result::Result::Err(__f);
+                }
             };
             let __text_h = __cx.slice(__start_h, __pos);
-            Ok(((|| -> u8 { u8::from_str_radix(__text_h, 16).unwrap() })(), __pos))
+            ::core::result::Result::Ok((
+                (|| -> u8 { u8::from_str_radix(__text_h, 16).unwrap() })(),
+                __pos,
+            ))
         }
     }
 }
 /// Parses the whole input with the rule `byte_escape`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn byte_escape<'i>(
     input: &'i str,
 ) -> ::core::result::Result<u8, __prpr_runtime::ParseError> {
@@ -7327,15 +8913,22 @@ fn __rule_hex<'i>(
     match match __cx.peek_char(__pos) {
         ::core::option::Option::Some(
             (__c, __p),
-        ) if ::core::matches!(__c, '0'..= '9' | 'a'..= 'f' | 'A'..= 'F') => Ok(__p),
-        _ => Err(__cx.fail(__pos, __prpr_runtime::Expected::Class("[0-9a-fA-F]"))),
+        ) if ::core::matches!(__c, '0'..= '9' | 'a'..= 'f' | 'A'..= 'F') => {
+            ::core::result::Result::Ok(__p)
+        }
+        _ => {
+            ::core::result::Result::Err(
+                __cx.fail(__pos, __prpr_runtime::Expected::Class("[0-9a-fA-F]")),
+            )
+        }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// Parses the whole input with the rule `hex`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn hex<'i>(input: &'i str) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
     __prpr_runtime::parse_full(input, __rule_hex, __prpr_runtime::no_skip)
 }
@@ -7348,18 +8941,26 @@ fn __rule_class<'i>(
     '__l193: {
         let __start = __pos;
         let __pos = match __cx.lit(__pos, "[") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l193 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l193 ::core::result::Result::Err(__f);
+            }
         };
         let (neg, __pos) = match match match __cx.lit(__pos, "^") {
-            Ok(__p) => Ok(("^", __p)),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(("^", __p)),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-            Err(_) => Ok((::core::option::Option::None, __pos)),
+            ::core::result::Result::Ok((__v, __p)) => {
+                ::core::result::Result::Ok((::core::option::Option::Some(__v), __p))
+            }
+            ::core::result::Result::Err(_) => {
+                ::core::result::Result::Ok((::core::option::Option::None, __pos))
+            }
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l193 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l193 ::core::result::Result::Err(__f);
+            }
         };
         let (ranges, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -7369,19 +8970,27 @@ fn __rule_class<'i>(
                 let __pos = __p;
                 match '__l194: {
                     let __pos = match match __rule_spaces(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        Ok(__p) => __p,
-                        Err(__f) => break '__l194 Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l194 ::core::result::Result::Err(__f);
+                        }
                     };
                     let (r, __pos) = match __rule_class_item(__cx, __m, __pos) {
-                        Ok(__r) => __r,
-                        Err(__f) => break '__l194 Err(__f),
+                        ::core::result::Result::Ok(__r) => __r,
+                        ::core::result::Result::Err(__f) => {
+                            break '__l194 ::core::result::Result::Err(__f);
+                        }
                     };
-                    Ok(((|| { r })(), __pos))
+                    ::core::result::Result::Ok(((|| { r })(), __pos))
                 } {
-                    Ok((__v, __q)) => {
+                    ::core::result::Result::Ok((__v, __q)) => {
                         __vs.push(__v);
                         let __progress = __q != __p;
                         __first = false;
@@ -7390,27 +8999,33 @@ fn __rule_class<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok((__vs, __p))
+            ::core::result::Result::Ok((__vs, __p))
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l193 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l193 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match match __rule_spaces(__cx, __m, __pos) {
-            Ok((_, __p)) => Ok(__p),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l193 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l193 ::core::result::Result::Err(__f);
+            }
         };
         let __pos = match __cx.lit(__pos, "]") {
-            Ok(__p) => __p,
-            Err(__f) => break '__l193 Err(__f),
+            ::core::result::Result::Ok(__p) => __p,
+            ::core::result::Result::Err(__f) => {
+                break '__l193 ::core::result::Result::Err(__f);
+            }
         };
         let __text__ = __cx.slice(__start, __pos);
-        Ok((
+        ::core::result::Result::Ok((
             (|| -> Class {
                 Class {
                     negated: neg.is_some(),
@@ -7424,6 +9039,7 @@ fn __rule_class<'i>(
 }
 /// Parses the whole input with the rule `class`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn class<'i>(
     input: &'i str,
 ) -> ::core::result::Result<Class, __prpr_runtime::ParseError> {
@@ -7437,45 +9053,65 @@ fn __rule_class_item<'i>(
 ) -> __prpr_runtime::PResult<(char, char)> {
     '__l195: {
         let (lo, __pos) = match __rule_class_char(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l195 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l195 ::core::result::Result::Err(__f);
+            }
         };
         let (hi, __pos) = match match '__l196: {
             let __pos = match match __rule_spaces(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l196 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l196 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match __cx.lit(__pos, "-") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l196 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l196 ::core::result::Result::Err(__f);
+                }
             };
             let __pos = match match __rule_spaces(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
+                ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+                ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
             } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l196 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l196 ::core::result::Result::Err(__f);
+                }
             };
             let (c, __pos) = match __rule_class_char(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l196 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l196 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| { c })(), __pos))
+            ::core::result::Result::Ok(((|| { c })(), __pos))
         } {
-            Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-            Err(_) => Ok((::core::option::Option::None, __pos)),
+            ::core::result::Result::Ok((__v, __p)) => {
+                ::core::result::Result::Ok((::core::option::Option::Some(__v), __p))
+            }
+            ::core::result::Result::Err(_) => {
+                ::core::result::Result::Ok((::core::option::Option::None, __pos))
+            }
         } {
-            Ok(__r) => __r,
-            Err(__f) => break '__l195 Err(__f),
+            ::core::result::Result::Ok(__r) => __r,
+            ::core::result::Result::Err(__f) => {
+                break '__l195 ::core::result::Result::Err(__f);
+            }
         };
-        Ok(((|| -> (char, char) { (lo, hi.unwrap_or(lo)) })(), __pos))
+        ::core::result::Result::Ok((
+            (|| -> (char, char) { (lo, hi.unwrap_or(lo)) })(),
+            __pos,
+        ))
     }
 }
 /// Parses the whole input with the rule `class_item`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn class_item<'i>(
     input: &'i str,
 ) -> ::core::result::Result<(char, char), __prpr_runtime::ParseError> {
@@ -7490,31 +9126,39 @@ fn __rule_class_char<'i>(
     let __at = __pos;
     let __saved = __cx.push_label(__at, "character");
     let __r = '__l197: {
-        if let Ok(__r) = '__l199: {
+        if let ::core::result::Result::Ok(__r) = '__l199: {
             let __pos = match __cx.lit(__pos, "b'") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l199 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l199 ::core::result::Result::Err(__f);
+                }
             };
             let (c, __pos) = match __rule_byte_char_body(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l199 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l199 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { c as char })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { c as char })(), __pos))
         } {
-            break '__l197 Ok(__r);
+            break '__l197 ::core::result::Result::Ok(__r);
         }
-        if let Ok(__r) = '__l200: {
+        if let ::core::result::Result::Ok(__r) = '__l200: {
             let __pos = match __cx.lit(__pos, "'") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l200 Err(__f),
+                ::core::result::Result::Ok(__p) => __p,
+                ::core::result::Result::Err(__f) => {
+                    break '__l200 ::core::result::Result::Err(__f);
+                }
             };
             let (c, __pos) = match __rule_char_body(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l200 Err(__f),
+                ::core::result::Result::Ok(__r) => __r,
+                ::core::result::Result::Err(__f) => {
+                    break '__l200 ::core::result::Result::Err(__f);
+                }
             };
-            Ok(((|| -> char { c })(), __pos))
+            ::core::result::Result::Ok(((|| -> char { c })(), __pos))
         } {
-            break '__l197 Ok(__r);
+            break '__l197 ::core::result::Result::Ok(__r);
         }
         {
             let __start = __pos;
@@ -7524,10 +9168,10 @@ fn __rule_class_char<'i>(
                     ::core::option::Option::Some(
                         (__c, __p),
                     ) if !::core::matches!(__c, '[' | ']' | '\'' | '"' | '\\') => {
-                        Ok((__c, __p))
+                        ::core::result::Result::Ok((__c, __p))
                     }
                     _ => {
-                        Err(
+                        ::core::result::Result::Err(
                             __cx
                                 .fail(
                                     __pos,
@@ -7538,25 +9182,32 @@ fn __rule_class_char<'i>(
                         )
                     }
                 } {
-                    Ok(__r) => __r,
-                    Err(__f) => break '__l198 Err(__f),
+                    ::core::result::Result::Ok(__r) => __r,
+                    ::core::result::Result::Err(__f) => {
+                        break '__l198 ::core::result::Result::Err(__f);
+                    }
                 };
-                Ok(((|| { (!c.is_whitespace()).then_some(c) })(), __pos))
+                ::core::result::Result::Ok((
+                    (|| { (!c.is_whitespace()).then_some(c) })(),
+                    __pos,
+                ))
             } {
-                Ok((__o, __pos)) => {
+                ::core::result::Result::Ok((__o, __pos)) => {
                     match __prpr_runtime::Predicate::into_outcome(__o) {
-                        Ok(__v) => {
+                        ::core::result::Result::Ok(__v) => {
                             __cx.commit(__mark);
-                            Ok((__v, __pos))
+                            ::core::result::Result::Ok((__v, __pos))
                         }
-                        Err(__message) => {
-                            Err(__cx.fail_predicate(__mark, __start, __message))
+                        ::core::result::Result::Err(__message) => {
+                            ::core::result::Result::Err(
+                                __cx.fail_predicate(__mark, __start, __message),
+                            )
                         }
                     }
                 }
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         }
@@ -7566,6 +9217,7 @@ fn __rule_class_char<'i>(
 }
 /// Parses the whole input with the rule `class_char`.
 #[allow(dead_code)]
+#[allow(clippy::needless_lifetimes)]
 fn class_char<'i>(
     input: &'i str,
 ) -> ::core::result::Result<char, __prpr_runtime::ParseError> {
@@ -7585,18 +9237,30 @@ fn __rule_spaces<'i>(
             loop {
                 let __pos = __p;
                 match '__l201: {
-                    if let Ok(__r) = match __rule_whitespace(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                    if let ::core::result::Result::Ok(__r) = match __rule_whitespace(
+                        __cx,
+                        __m,
+                        __pos,
+                    ) {
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     } {
-                        break '__l201 Ok(__r);
+                        break '__l201 ::core::result::Result::Ok(__r);
                     }
                     match __rule_comment(__cx, __m, __pos) {
-                        Ok((_, __p)) => Ok(__p),
-                        Err(__f) => Err(__f),
+                        ::core::result::Result::Ok((_, __p)) => {
+                            ::core::result::Result::Ok(__p)
+                        }
+                        ::core::result::Result::Err(__f) => {
+                            ::core::result::Result::Err(__f)
+                        }
                     }
                 } {
-                    Ok(__q) => {
+                    ::core::result::Result::Ok(__q) => {
                         let __progress = __q != __p;
                         __first = false;
                         __p = __q;
@@ -7604,13 +9268,13 @@ fn __rule_spaces<'i>(
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
-            Ok(__p)
+            ::core::result::Result::Ok(__p)
         } {
-            Ok(__p) => Ok(((), __p)),
-            Err(__f) => Err(__f),
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
         }
     };
     __cx.pop_quiet(__saved);
@@ -7625,22 +9289,26 @@ fn __rule_eof<'i>(
     match {
         let __saved = __cx.push_quiet();
         let __r = match __cx.peek_char(__pos) {
-            ::core::option::Option::Some((__c, __p)) => Ok(__p),
+            ::core::option::Option::Some((__c, __p)) => ::core::result::Result::Ok(__p),
             ::core::option::Option::None => {
-                Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
+                ::core::result::Result::Err(
+                    __cx.fail(__pos, __prpr_runtime::Expected::Any),
+                )
             }
         };
         __cx.pop_quiet(__saved);
         match __r {
-            Ok(_) => {
+            ::core::result::Result::Ok(_) => {
                 let __at = __pos;
-                Err(__cx.fail(__at, __prpr_runtime::Expected::Eof))
+                ::core::result::Result::Err(
+                    __cx.fail(__at, __prpr_runtime::Expected::Eof),
+                )
             }
-            Err(_) => Ok(__pos),
+            ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
         }
     } {
-        Ok(__p) => Ok(((), __p)),
-        Err(__f) => Err(__f),
+        ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+        ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
     }
 }
 /// The rules of the grammar, as functions that parse from a position of the input, for
@@ -8584,18 +10252,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_whitespace {
         }
         let __mark = __cx.mark();
         match __rule_whitespace(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8619,18 +10289,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_comment {
         }
         let __mark = __cx.mark();
         match __rule_comment(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8654,18 +10326,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_block_comment {
         }
         let __mark = __cx.mark();
         match __rule_block_comment(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8689,18 +10363,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_word_char {
         }
         let __mark = __cx.mark();
         match __rule_word_char(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8724,18 +10400,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_ident_start {
         }
         let __mark = __cx.mark();
         match __rule_ident_start(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8759,18 +10437,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_ident_continue {
         }
         let __mark = __cx.mark();
         match __rule_ident_continue(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8794,18 +10474,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Ident> for __Rule_ident_raw {
         }
         let __mark = __cx.mark();
         match __rule_ident_raw(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8829,18 +10511,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Ident> for __Rule_ident {
         }
         let __mark = __cx.mark();
         match __rule_ident(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8864,18 +10548,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Grammar> for __Rule_grammar {
         }
         let __mark = __cx.mark();
         match __rule_grammar(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8899,18 +10585,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Attr> for __Rule_inner_attr {
         }
         let __mark = __cx.mark();
         match __rule_inner_attr(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8934,18 +10622,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Attr> for __Rule_outer_attr {
         }
         let __mark = __cx.mark();
         match __rule_outer_attr(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -8969,18 +10659,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Attr> for __Rule_doc_comment {
         }
         let __mark = __cx.mark();
         match __rule_doc_comment(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9004,18 +10696,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, (Ident, AttrArg)> for __Rule_attr_
         }
         let __mark = __cx.mark();
         match __rule_attr_body(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9039,18 +10733,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, AttrArg> for __Rule_attr_value {
         }
         let __mark = __cx.mark();
         match __rule_attr_value(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9074,18 +10770,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_attr_tokens {
         }
         let __mark = __cx.mark();
         match __rule_attr_tokens(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9109,18 +10807,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Item> for __Rule_item {
         }
         let __mark = __cx.mark();
         match __rule_item(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9144,18 +10844,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Span> for __Rule_rust_item {
         }
         let __mark = __cx.mark();
         match __rule_rust_item(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9179,18 +10881,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_attr {
         }
         let __mark = __cx.mark();
         match __rule_rust_attr(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9214,18 +10918,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_doc_comment {
         }
         let __mark = __cx.mark();
         match __rule_rust_doc_comment(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9249,18 +10955,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_semi_item {
         }
         let __mark = __cx.mark();
         match __rule_semi_item(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9284,18 +10992,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_brace_item {
         }
         let __mark = __cx.mark();
         match __rule_brace_item(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9319,18 +11029,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_to_semi {
         }
         let __mark = __cx.mark();
         match __rule_rust_to_semi(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9354,18 +11066,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_to_brace {
         }
         let __mark = __cx.mark();
         match __rule_rust_to_brace(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9389,18 +11103,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Span> for __Rule_vis {
         }
         let __mark = __cx.mark();
         match __rule_vis(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9424,18 +11140,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_paren {
         }
         let __mark = __cx.mark();
         match __rule_rust_paren(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9459,18 +11177,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_tt {
         }
         let __mark = __cx.mark();
         match __rule_rust_tt(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9494,18 +11214,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_group {
         }
         let __mark = __cx.mark();
         match __rule_rust_group(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9529,18 +11251,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_string {
         }
         let __mark = __cx.mark();
         match __rule_rust_string(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9564,18 +11288,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_char_or_lifeti
         }
         let __mark = __cx.mark();
         match __rule_rust_char_or_lifetime(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9599,18 +11325,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Rule> for __Rule_rule {
         }
         let __mark = __cx.mark();
         match __rule_rule(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9634,18 +11362,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rule_header {
         }
         let __mark = __cx.mark();
         match __rule_rule_header(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9669,18 +11399,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_item_start {
         }
         let __mark = __cx.mark();
         match __rule_item_start(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9704,18 +11436,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Span> for __Rule_ty_span {
         }
         let __mark = __cx.mark();
         match __rule_ty_span(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9739,18 +11473,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_ty {
         }
         let __mark = __cx.mark();
         match __rule_ty(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9774,18 +11510,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_ty_list {
         }
         let __mark = __cx.mark();
         match __rule_ty_list(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9809,18 +11547,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_array_len {
         }
         let __mark = __cx.mark();
         match __rule_array_len(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9844,18 +11584,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_type_path {
         }
         let __mark = __cx.mark();
         match __rule_type_path(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9879,18 +11621,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_path_segment {
         }
         let __mark = __cx.mark();
         match __rule_path_segment(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9914,18 +11658,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_generic_arg {
         }
         let __mark = __cx.mark();
         match __rule_generic_arg(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9949,18 +11695,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_number {
         }
         let __mark = __cx.mark();
         match __rule_number(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -9984,18 +11732,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_bounds {
         }
         let __mark = __cx.mark();
         match __rule_bounds(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10019,18 +11769,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_bound {
         }
         let __mark = __cx.mark();
         match __rule_bound(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10054,18 +11806,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_lifetime {
         }
         let __mark = __cx.mark();
         match __rule_lifetime(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10089,18 +11843,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_expr {
         }
         let __mark = __cx.mark();
         match __rule_expr(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10124,18 +11880,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_choice {
         }
         let __mark = __cx.mark();
         match __rule_choice(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10159,18 +11917,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_choice_sep {
         }
         let __mark = __cx.mark();
         match __rule_choice_sep(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10194,18 +11954,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_sequence {
         }
         let __mark = __cx.mark();
         match __rule_sequence(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10229,18 +11991,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, (Span, bool)> for __Rule_action {
         }
         let __mark = __cx.mark();
         match __rule_action(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10264,18 +12028,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Span> for __Rule_rust_brace {
         }
         let __mark = __cx.mark();
         match __rule_rust_brace(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10299,18 +12065,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_element {
         }
         let __mark = __cx.mark();
         match __rule_element(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10334,18 +12102,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_bind {
         }
         let __mark = __cx.mark();
         match __rule_bind(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10369,18 +12139,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_prefix {
         }
         let __mark = __cx.mark();
         match __rule_prefix(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10404,18 +12176,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_postfix {
         }
         let __mark = __cx.mark();
         match __rule_postfix(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10439,18 +12213,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, char> for __Rule_postfix_op {
         }
         let __mark = __cx.mark();
         match __rule_postfix_op(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10474,18 +12250,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Primary> for __Rule_primary {
         }
         let __mark = __cx.mark();
         match __rule_primary(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10509,18 +12287,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Path> for __Rule_path {
         }
         let __mark = __cx.mark();
         match __rule_path(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10544,18 +12324,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Ident> for __Rule_path_start {
         }
         let __mark = __cx.mark();
         match __rule_path_start(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if true {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10579,18 +12361,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_literal {
         }
         let __mark = __cx.mark();
         match __rule_literal(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10614,18 +12398,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_string {
         }
         let __mark = __cx.mark();
         match __rule_string(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10649,18 +12435,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Option<char>> for __Rule_string_ch
         }
         let __mark = __cx.mark();
         match __rule_string_char(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10684,18 +12472,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_line_continuation {
         }
         let __mark = __cx.mark();
         match __rule_line_continuation(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10719,18 +12509,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_byte_string {
         }
         let __mark = __cx.mark();
         match __rule_byte_string(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10754,18 +12546,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Option<u8>> for __Rule_byte_string
         }
         let __mark = __cx.mark();
         match __rule_byte_string_char(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10789,18 +12583,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_raw_string {
         }
         let __mark = __cx.mark();
         match __rule_raw_string(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10824,18 +12620,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_raw_byte_string {
         }
         let __mark = __cx.mark();
         match __rule_raw_byte_string(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10859,18 +12657,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, &'i str> for __Rule_raw_body {
         }
         let __mark = __cx.mark();
         match __rule_raw_body(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10894,18 +12694,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_char_lit {
         }
         let __mark = __cx.mark();
         match __rule_char_lit(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10929,18 +12731,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, char> for __Rule_char_body {
         }
         let __mark = __cx.mark();
         match __rule_char_body(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10964,18 +12768,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_byte_char {
         }
         let __mark = __cx.mark();
         match __rule_byte_char(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -10999,18 +12805,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, u8> for __Rule_byte_char_body {
         }
         let __mark = __cx.mark();
         match __rule_byte_char_body(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -11034,18 +12842,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, char> for __Rule_escape {
         }
         let __mark = __cx.mark();
         match __rule_escape(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -11069,18 +12879,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, u8> for __Rule_byte_escape {
         }
         let __mark = __cx.mark();
         match __rule_byte_escape(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -11104,18 +12916,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_hex {
         }
         let __mark = __cx.mark();
         match __rule_hex(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -11139,18 +12953,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, Class> for __Rule_class {
         }
         let __mark = __cx.mark();
         match __rule_class(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -11174,18 +12990,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, (char, char)> for __Rule_class_ite
         }
         let __mark = __cx.mark();
         match __rule_class_item(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -11209,18 +13027,20 @@ impl<'i> __prpr_runtime::ForeignRule<'i, str, char> for __Rule_class_char {
         }
         let __mark = __cx.mark();
         match __rule_class_char(__cx, __m, __pos) {
-            Ok(__r) => {
+            ::core::result::Result::Ok(__r) => {
                 __cx.rollback(__mark);
                 let (__start, __end) = (__pos, __r.1);
                 if __delimited(__cx, __m, __start, __end) {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                    ::core::result::Result::Err(
+                        __cx.fail(__end, __prpr_runtime::Expected::Delimiter),
+                    )
                 }
             }
-            Err(__f) => {
+            ::core::result::Result::Err(__f) => {
                 __cx.commit(__mark);
-                Err(__f)
+                ::core::result::Result::Err(__f)
             }
         }
     }
@@ -11693,8 +13513,12 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
         // What a comment expected is reported only where nothing else was expected, i.e. for a
         // comment that cannot end; otherwise it is about a comment that matched before.
         let only_comments = here().all(|(_, _, in_comment)| *in_comment);
+        // A message of a predicate is about input that matched but is invalid, which says more
+        // than what else could have been there.
+        let messages = here().any(|(_, e, _)| matches!(e, Expected::Message(_)));
         let expected: Vec<Expected> = here()
             .filter(|(_, _, in_comment)| only_comments || !in_comment)
+            .filter(|(_, e, _)| !messages || matches!(e, Expected::Message(_)))
             .map(|(_, e, _)| e.clone())
             .collect();
         ParseError::new(self.err_pos, expected, self.input.found_at(self.err_pos))

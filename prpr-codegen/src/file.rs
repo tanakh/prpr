@@ -1,6 +1,7 @@
 //! Standalone Rust files generated from grammar files.
 
-use crate::{Diagnostic, Options, Source, TextSource};
+use crate::source::SourceImpl;
+use crate::{Diagnostic, Options, TextSource};
 
 /// Where generated code finds the runtime.
 #[derive(Clone, Debug)]
@@ -9,6 +10,15 @@ pub enum Runtime {
     Path(String),
     /// A module included in the generated file.
     Inline,
+}
+
+impl Runtime {
+    /// The runtime at `path`, if it is a Rust path, such as `::prpr_runtime` or `crate::rt`.
+    pub fn path(path: &str) -> Option<Runtime> {
+        syn::parse_str::<syn::Path>(path)
+            .ok()
+            .map(|_| Runtime::Path(path.to_string()))
+    }
 }
 
 /// The name of the inlined runtime module.
@@ -25,8 +35,7 @@ pub fn generate(text: &str, runtime: &Runtime) -> Result<String, Vec<Diagnostic>
         Runtime::Inline => INLINE_RUNTIME,
     };
     let opts = Options {
-        runtime: syn::parse_str::<syn::Path>(path)
-            .ok()
+        runtime: Runtime::path(path)
             .and_then(|_| path.parse().ok())
             .ok_or_else(|| {
                 vec![Diagnostic::error(
@@ -39,7 +48,7 @@ pub fn generate(text: &str, runtime: &Runtime) -> Result<String, Vec<Diagnostic>
         // An inlined runtime always matches.
         check_version: matches!(runtime, Runtime::Path(_)),
     };
-    let src = TextSource(text);
+    let src = TextSource::new(text);
     let tokens = crate::compile(&src, &opts)?;
     // The compiler of a proc-macro would report invalid Rust code in the grammar; here, `syn`
     // does, at the token where it found the error.

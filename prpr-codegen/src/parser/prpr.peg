@@ -82,11 +82,12 @@ atom word_char = ident_continue
 
 // Identifiers
 
-atom ident_start = [a-zA-Z_] / c:. &{ c.is_alphabetic() }
+atom ident_start = [a-zA-Z_] / c:. &{ unicode_ident::is_xid_start(c) }
 
-atom ident_continue = [a-zA-Z0-9_] / c:. &{ c.is_alphanumeric() }
+atom ident_continue = [a-zA-Z0-9_] / c:. &{ unicode_ident::is_xid_continue(c) }
 
 // An identifier, possibly a keyword.
+#[label = "identifier"]
 atom ident_raw: Ident = s:(ident_start ident_continue*) &{
     (#s != "_").then(|| Ident { name: #s.to_string(), span: @s })
 }
@@ -155,6 +156,7 @@ vis: Span = "pub" rust_paren? { @_ }
 atom rust_paren = &"(" rust_group
 
 // One Rust token tree, roughly: enough to find where groups and items end.
+#[label = "Rust token"]
 atom rust_tt
     = "//" (!"\n" .)*
     / block_comment
@@ -249,6 +251,7 @@ bind: Expr = name:ident ":" !":" e:prefix {
     Expr::new(ExprKind::Bind { name, expr: Box::new(e) }, @_)
 }
 
+#[label = "expression"]
 prefix: Expr
     = "&" !"{" e:prefix { Expr::new(ExprKind::And(Box::new(e)), @_) }
     / "!" e:prefix { Expr::new(ExprKind::Not(Box::new(e)), @_) }
@@ -262,6 +265,10 @@ primary: Primary
     = "(" e:expr sep:("," s:expr { s })? ")" {
         match sep {
             Some(sep) => Primary::SepBy(e, sep),
+            // A binding in a group is local to it.
+            None if matches!(e.kind, ExprKind::Bind { .. }) => {
+                Primary::Expr(Expr::new(ExprKind::Seq(vec![e]), @_))
+            }
             None => Primary::Expr(e),
         }
     }
@@ -287,12 +294,14 @@ atom literal: Lit = l:(byte_string / raw_byte_string / string / raw_string / byt
 
 atom string: Lit = '"' cs:string_char* '"' { Lit::Str(cs.into_iter().flatten().collect()) }
 
+#[label = "character"]
 atom string_char: Option<char> = line_continuation { None } / "\\" c:escape { Some(c) } / c:[^ '"' '\\'] { Some(c) }
 
 atom line_continuation = "\\\n" (c:. &{ c.is_whitespace() })*
 
 atom byte_string: Lit = "b\"" cs:byte_string_char* '"' { Lit::Bytes(cs.into_iter().flatten().collect()) }
 
+#[label = "character"]
 atom byte_string_char: Option<u8>
     = line_continuation { None }
     / "\\" c:byte_escape { Some(c) }

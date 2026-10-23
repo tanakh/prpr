@@ -1,18 +1,19 @@
 //! Diagnostics about grammars.
 
 use crate::ast::Span;
+use std::fmt;
 
 /// How serious a diagnostic is.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Level {
     /// No code can be generated.
     Error,
-    /// Code can be generated, but the grammar is likely wrong.
-    Warning,
 }
 
 /// A problem with a grammar, at a byte range of its text.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct Diagnostic {
     /// How serious the problem is.
     pub level: Level,
@@ -26,6 +27,7 @@ pub struct Diagnostic {
 
 /// Additional information, possibly about another part of the grammar.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct Note {
     /// The part of the grammar that the note is about, if any.
     pub span: Option<Span>,
@@ -41,14 +43,6 @@ impl Diagnostic {
             span,
             message: message.into(),
             notes: Vec::new(),
-        }
-    }
-
-    /// A warning at `span`.
-    pub fn warning(span: Span, message: impl Into<String>) -> Self {
-        Self {
-            level: Level::Warning,
-            ..Self::error(span, message)
         }
     }
 
@@ -79,7 +73,6 @@ impl Diagnostic {
     pub fn render(&self, src: &str, origin: &str) -> String {
         let level = match self.level {
             Level::Error => "error",
-            Level::Warning => "warning",
         };
         let snippet = |level, message: &String, span| {
             prpr_runtime::Snippet {
@@ -122,3 +115,16 @@ impl Diagnostic {
         out
     }
 }
+
+/// The message followed by the notes, without the lines of the grammar that they are about.
+impl fmt::Display for Diagnostic {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.message)?;
+        for note in &self.notes {
+            write!(f, "\n= note: {}", note.message)?;
+        }
+        Ok(())
+    }
+}
+
+impl std::error::Error for Diagnostic {}

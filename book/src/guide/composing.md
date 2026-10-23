@@ -55,6 +55,7 @@ A rule of another grammar behaves as it does in its own grammar:
 * If its grammar memoizes rules, their tables are part of the `Memo` of the grammar that uses it.
 
 The rule must be visible from where it is used, and both grammars must parse the same kind of input.
+Since the `Memo` of a grammar contains those of the grammars it uses, grammars cannot use each other's rules in a cycle.
 Since its type is not known when the code is generated, its value is never [silent](values-and-actions.md#the-values-of-expressions), even if it is `()`.
 
 ## Calling rules from Rust

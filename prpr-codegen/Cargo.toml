@@ -23,6 +23,8 @@ build = ["dep:prettyplease", "dep:syn"]
 prpr-runtime = { workspace = true, features = ["proc-macro2"] }
 proc-macro2.workspace = true
 quote.workspace = true
+# Identifiers of grammar files are Rust identifiers.
+unicode-ident = "1.0.27"
 prettyplease = { version = "0.3.0", optional = true }
 syn = { version = "3.0.9", optional = true, default-features = false, features = ["full", "parsing"] }
 

@@ -4,8 +4,17 @@ use crate::ast::Span;
 use crate::diag::Diagnostic;
 use proc_macro2::{Span as TokenSpan, TokenStream};
 
-/// The text of a grammar, and the Rust tokens of its parts.
-pub trait Source {
+/// The text of a grammar, and the Rust tokens of its parts: a
+/// [`SourceText`](prpr_runtime::SourceText) for the input of a proc-macro, or a [`TextSource`]
+/// for the text of a file.
+pub trait Source: SourceImpl {}
+
+impl Source for prpr_runtime::SourceText {}
+
+impl Source for TextSource<'_> {}
+
+/// What the code generator needs from a [`Source`], which only this crate implements.
+pub trait SourceImpl {
     /// The text of the grammar.
     fn text(&self) -> &str;
 
@@ -16,13 +25,17 @@ pub trait Source {
     /// problems with them at the grammar.
     fn token_span(&self, span: Span) -> TokenSpan;
 
-    /// Where a token from [`Source::tokens`] is in the text, if that is known. Problems with
-    /// tokens that cannot be located are reported by `compile_error!` at the tokens instead.
+    /// Where a token from [`SourceImpl::tokens`] is in the text, if that is known.
     fn locate(&self, span: TokenSpan) -> Option<Span>;
+
+    /// Whether the tokens from [`SourceImpl::tokens`] are where the grammar is in Rust code, so
+    /// that problems with tokens that cannot be located are reported by `compile_error!` at the
+    /// tokens rather than at the part of the grammar that they come from.
+    fn tokens_in_code(&self) -> bool;
 }
 
 /// The input of a proc-macro: the original tokens are used for Rust code.
-impl Source for prpr_runtime::SourceText {
+impl SourceImpl for prpr_runtime::SourceText {
     fn text(&self) -> &str {
         self.text()
     }
@@ -38,26 +51,51 @@ impl Source for prpr_runtime::SourceText {
     fn locate(&self, _span: TokenSpan) -> Option<Span> {
         None
     }
+
+    fn tokens_in_code(&self) -> bool {
+        true
+    }
 }
 
-/// A grammar file: Rust code is tokenized from the text.
-pub struct TextSource<'a>(pub &'a str);
+/// The text of a grammar file, whose Rust code is tokenized from the text.
+#[derive(Clone, Copy, Debug)]
+pub struct TextSource<'a> {
+    text: &'a str,
+    span: TokenSpan,
+}
 
-impl Source for TextSource<'_> {
+impl<'a> TextSource<'a> {
+    /// The text of a grammar file.
+    pub fn new(text: &'a str) -> Self {
+        TextSource {
+            text,
+            span: TokenSpan::call_site(),
+        }
+    }
+
+    /// Gives the names generated for the rules `span`, e.g. that of the path of the file in a
+    /// proc-macro: a place written by the user, so that the compiler reports problems with them
+    /// there and lints them, e.g. reports unused rules with `#![lint]`.
+    pub fn with_span(self, span: TokenSpan) -> Self {
+        TextSource { span, ..self }
+    }
+}
+
+impl SourceImpl for TextSource<'_> {
     fn text(&self) -> &str {
-        self.0
+        self.text
     }
 
     fn tokens(&self, span: Span) -> Result<TokenStream, Diagnostic> {
         // Padding puts the tokens at their lines and columns in the grammar, so that they can be
         // located (see `locate`).
-        let before = &self.0[..span.start];
+        let before = &self.text[..span.start];
         let line_start = before.rfind('\n').map_or(0, |i| i + 1);
         let padded = format!(
             "{}{}{}",
             "\n".repeat(before.matches('\n').count()),
             " ".repeat(before[line_start..].chars().count()),
-            &self.0[span]
+            &self.text[span]
         );
         padded
             .parse()
@@ -65,7 +103,7 @@ impl Source for TextSource<'_> {
     }
 
     fn token_span(&self, _span: Span) -> TokenSpan {
-        TokenSpan::call_site()
+        self.span
     }
 
     fn locate(&self, span: TokenSpan) -> Option<Span> {
@@ -77,13 +115,17 @@ impl Source for TextSource<'_> {
         let pos = span.start();
         let line_start = match pos.line {
             1 => 0,
-            n => self.0.match_indices('\n').nth(n - 2)?.0 + 1,
+            n => self.text.match_indices('\n').nth(n - 2)?.0 + 1,
         };
-        let column = self.0[line_start..].char_indices().nth(pos.column)?.0;
+        let column = self.text[line_start..].char_indices().nth(pos.column)?.0;
         let start = line_start + column;
         Some(Span {
             start,
             end: start + len,
         })
+    }
+
+    fn tokens_in_code(&self) -> bool {
+        false
     }
 }

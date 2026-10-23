@@ -4,7 +4,7 @@
 //! evaluates to `Result<(T, usize), Fail>`, in recognition mode to `Result<usize, Fail>`.
 //! Generated local names start with `__` and use mixed-site hygiene.
 
-use crate::analysis::{Analysis, Boundary, InputKind, RuleInfo, is_literal_choice};
+use crate::analysis::{Analysis, Boundary, InputKind, RuleInfo, first_calls, is_literal_choice};
 use crate::ast::*;
 use crate::diag::Diagnostic;
 use crate::source::Source;
@@ -23,11 +23,23 @@ macro_rules! q {
 
 /// Options of code generation.
 #[derive(Clone, Debug)]
+#[non_exhaustive]
 pub struct Options {
     /// The path of the runtime in generated code, e.g. `::prpr::runtime`.
     pub runtime: TokenStream,
-    /// Whether generated code checks at compile time that the runtime is compatible.
+    /// Whether generated code checks at compile time that the runtime is compatible. Off by
+    /// default.
     pub check_version: bool,
+}
+
+impl Options {
+    /// The default options, for code that finds the runtime at the path `runtime`.
+    pub fn new(runtime: TokenStream) -> Self {
+        Options {
+            runtime,
+            check_version: false,
+        }
+    }
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -60,6 +72,8 @@ struct Gen<'a> {
     input: TokenStream,
     labels: Cell<usize>,
     diags: RefCell<Vec<Diagnostic>>,
+    // `compile_error!` items for problems with tokens that are not emitted.
+    errors: RefCell<TokenStream>,
 }
 
 pub fn generate(
@@ -78,6 +92,7 @@ pub fn generate(
         input,
         labels: Cell::new(0),
         diags: RefCell::new(Vec::new()),
+        errors: RefCell::new(TokenStream::new()),
     };
     let mut out = TokenStream::new();
     if opts.check_version {
@@ -90,6 +105,7 @@ pub fn generate(
         out.extend(q!(const _: () = #rt::require_version(#major, #minor);));
     }
     out.extend(generator.grammar());
+    out.extend(generator.errors.into_inner());
     let diags = generator.diags.into_inner();
     if diags.iter().any(Diagnostic::is_error) {
         Err(diags)
@@ -151,15 +167,6 @@ fn grammar_field(module: &Path) -> Ident {
         &format!("__g_{root}{}", names.join("__")),
         TokenSpan::call_site(),
     )
-}
-
-fn same_path(a: &Path, b: &Path) -> bool {
-    a.leading_colon == b.leading_colon
-        && a.segments.len() == b.segments.len()
-        && a.segments
-            .iter()
-            .zip(&b.segments)
-            .all(|(x, y)| x.name == y.name)
 }
 
 impl Gen<'_> {
@@ -251,7 +258,7 @@ impl Gen<'_> {
         let clones: Vec<TokenStream> = clones.collect();
         let clones = (!clones.is_empty()).then(|| {
             q! {
-                #[allow(dead_code, non_snake_case)]
+                #[allow(dead_code, non_snake_case, clippy::clone_on_copy)]
                 impl<'i> Memo<'i> {
                     #(#clones)*
                 }
@@ -260,7 +267,7 @@ impl Gen<'_> {
         q! {
             /// The state of a parse with this grammar besides the input.
             #[allow(dead_code, non_snake_case)]
-            #[derive(Default)]
+            #[derive(::core::default::Default)]
             pub struct Memo<'i> {
                 __skip: #rt::SkipCache,
                 #(#tables)*
@@ -281,7 +288,7 @@ impl Gen<'_> {
                 && path.as_local().is_none()
             {
                 let module = module_of(path);
-                if !out.iter().any(|m| same_path(m, &module)) {
+                if !out.iter().any(|m| m.same(&module)) {
                     out.push(module);
                 }
             }
@@ -325,8 +332,8 @@ impl Gen<'_> {
                 }
                 let __saved = __cx.push_quiet();
                 let __end = match #spaces(__cx, __m, __pos) {
-                    Ok((_, __p)) => __p,
-                    Err(_) => __pos,
+                    ::core::result::Result::Ok((_, __p)) => __p,
+                    ::core::result::Result::Err(_) => __pos,
                 };
                 __cx.pop_quiet(__saved);
                 __m.__skip.set(__pos, __end);
@@ -345,8 +352,8 @@ impl Gen<'_> {
                 let __r = #word_char(__cx, __m, __pos);
                 __cx.pop_quiet(__saved);
                 match __r {
-                    Ok((_, __p)) => ::core::option::Option::Some(__p),
-                    Err(_) => ::core::option::Option::None,
+                    ::core::result::Result::Ok((_, __p)) => ::core::option::Option::Some(__p),
+                    ::core::result::Result::Err(_) => ::core::option::Option::None,
                 }
             }
 
@@ -400,15 +407,11 @@ impl Gen<'_> {
             self.expr(&rule.body, cx, Mode::Value, Some(&ty))
         } else {
             let body = self.expr(&rule.body, cx, Mode::Recognize, None);
-            q!(match #body { Ok(__p) => Ok(((), __p)), Err(__f) => Err(__f) })
+            unit_value(body)
         };
         let body = match &info.label {
             Some(label) => {
-                let at = if cx.skipping {
-                    q!(__skip(__cx, __m, __pos))
-                } else {
-                    q!(__pos)
-                };
+                let at = self.after_skip(cx);
                 q! {
                     let __at = #at;
                     let __saved = __cx.push_label(__at, #label);
@@ -503,8 +506,10 @@ impl Gen<'_> {
         // code use. It only does so for code that looks written at the rule.
         let unused_check = self.an.lint && rule.vis.is_none() && !info.referenced;
         let dead_code = if unused_check { q!(deny) } else { q!(allow) };
+        // `'i` is needed where the type of the rule refers to it.
         let entry = q! {
             #[#dead_code(dead_code)]
+            #[allow(clippy::needless_lifetimes)]
             #vis fn #name<'i>(input: &'i #input) -> ::core::result::Result<#ty, #rt::ParseError> {
                 #rt::parse_full(input, #raw, #trailing)
             }
@@ -588,18 +593,18 @@ impl Gen<'_> {
                         }
                         let __mark = __cx.mark();
                         match #raw(__cx, __m, __pos) {
-                            Ok(__r) => {
+                            ::core::result::Result::Ok(__r) => {
                                 __cx.rollback(__mark);
                                 let (__start, __end) = (__pos, __r.1);
                                 if #check {
-                                    Ok(__r)
+                                    ::core::result::Result::Ok(__r)
                                 } else {
-                                    Err(__cx.fail(__end, #rt::Expected::Delimiter))
+                                    ::core::result::Result::Err(__cx.fail(__end, #rt::Expected::Delimiter))
                                 }
                             }
-                            Err(__f) => {
+                            ::core::result::Result::Err(__f) => {
                                 __cx.commit(__mark);
-                                Err(__f)
+                                ::core::result::Result::Err(__f)
                             }
                         }
                     }
@@ -663,13 +668,13 @@ impl Gen<'_> {
             }
             ExprKind::And(inner) => {
                 let code = self.expr(inner, cx, Mode::Recognize, None);
-                let ok = unit_ok(mode);
-                q!(match #code { Ok(_) => #ok, Err(__f) => Err(__f) })
+                let ok = ok(mode, q!(()), q!(__pos));
+                q!(match #code { ::core::result::Result::Ok(_) => #ok, ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f) })
             }
             ExprKind::Not(inner) => {
                 let rt = &self.rt;
                 let code = self.expr(inner, cx, Mode::Recognize, None);
-                let ok = unit_ok(mode);
+                let ok = ok(mode, q!(()), q!(__pos));
                 let at = self.after_skip(cx);
                 let fail = if matches!(inner.kind, ExprKind::Any) {
                     q!(__cx.fail(__at, #rt::Expected::Eof))
@@ -681,11 +686,11 @@ impl Gen<'_> {
                     let __r = #code;
                     __cx.pop_quiet(__saved);
                     match __r {
-                        Ok(_) => {
+                        ::core::result::Result::Ok(_) => {
                             let __at = #at;
-                            Err(#fail)
+                            ::core::result::Result::Err(#fail)
                         }
-                        Err(_) => #ok,
+                        ::core::result::Result::Err(_) => #ok,
                     }
                 }}
             }
@@ -694,14 +699,14 @@ impl Gen<'_> {
                 match mode {
                     Mode::Value => q! {
                         match #code {
-                            Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-                            Err(_) => Ok((::core::option::Option::None, __pos)),
+                            ::core::result::Result::Ok((__v, __p)) => ::core::result::Result::Ok((::core::option::Option::Some(__v), __p)),
+                            ::core::result::Result::Err(_) => ::core::result::Result::Ok((::core::option::Option::None, __pos)),
                         }
                     },
                     Mode::Recognize => q! {
                         match #code {
-                            Ok(__p) => Ok(__p),
-                            Err(_) => Ok(__pos),
+                            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(__p),
+                            ::core::result::Result::Err(_) => ::core::result::Result::Ok(__pos),
                         }
                     },
                 }
@@ -718,6 +723,25 @@ impl Gen<'_> {
         } else {
             q!(__pos)
         }
+    }
+
+    // Where the text of `elems` starts, without the whitespace before it: after whitespace where
+    // tokens skip it, and also where `elems` may start with a syntactic rule, which skips it
+    // even in an atom.
+    fn text_start(&self, elems: &[Expr], cx: Ctx) -> TokenStream {
+        let mut calls = Vec::new();
+        if !cx.skipping {
+            for e in elems {
+                first_calls(self.an, e, false, &mut calls);
+                if !self.an.nullable(e) {
+                    break;
+                }
+            }
+        }
+        let syntactic = calls.iter().any(|&i| !self.an.rules[i].rule.atom);
+        self.after_skip(Ctx {
+            skipping: cx.skipping || syntactic,
+        })
     }
 
     // Skips whitespace before a token and checks the delimiter after it.
@@ -750,25 +774,31 @@ impl Gen<'_> {
         let matched = match delimited {
             Some(delimited) => q! {
                 if #delimited {
-                    Ok(__r)
+                    ::core::result::Result::Ok(__r)
                 } else {
-                    Err(__cx.fail(#end, #rt::Expected::Delimiter))
+                    ::core::result::Result::Err(__cx.fail(#end, #rt::Expected::Delimiter))
                 }
             },
-            None => q!(Ok(__r)),
+            None if !opaque => {
+                return q! {{
+                    let __pos = __skip(__cx, __m, __pos);
+                    #code
+                }};
+            }
+            None => q!(::core::result::Result::Ok(__r)),
         };
         if opaque {
             q! {{
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
                 match #code {
-                    Ok(__r) => {
+                    ::core::result::Result::Ok(__r) => {
                         __cx.rollback(__mark);
                         #matched
                     }
-                    Err(__f) => {
+                    ::core::result::Result::Err(__f) => {
                         __cx.commit(__mark);
-                        Err(__f)
+                        ::core::result::Result::Err(__f)
                     }
                 }
             }}
@@ -776,8 +806,8 @@ impl Gen<'_> {
             q! {{
                 let __pos = __skip(__cx, __m, __pos);
                 match #code {
-                    Ok(__r) => #matched,
-                    Err(__f) => Err(__f),
+                    ::core::result::Result::Ok(__r) => #matched,
+                    ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
                 }
             }}
         }
@@ -789,17 +819,20 @@ impl Gen<'_> {
                 let l = Literal::string(s);
                 (q!(__cx.lit(__pos, #l)), q!(#l), s.chars().last())
             }
+            // A slice rather than an array, so that literals of different lengths have the same type.
             Lit::Bytes(b) => {
                 let l = Literal::byte_string(b);
                 (
                     q!(__cx.lit_bytes(__pos, #l)),
-                    q!(#l),
+                    q!((#l as &'static [u8])),
                     b.last().map(|&b| char::from(b)),
                 )
             }
         };
         let code = match mode {
-            Mode::Value => q!(match #code { Ok(__p) => Ok((#value, __p)), Err(__f) => Err(__f) }),
+            Mode::Value => {
+                q!(match #code { ::core::result::Result::Ok(__p) => ::core::result::Result::Ok((#value, __p)), ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f) })
+            }
             Mode::Recognize => code,
         };
         let check = match (last, &self.an.word_class) {
@@ -820,14 +853,11 @@ impl Gen<'_> {
         });
         let test = if class.negated { q!(!#test) } else { test };
         let peek = self.peek();
-        let ok = match mode {
-            Mode::Value => q!(Ok((__c, __p))),
-            Mode::Recognize => q!(Ok(__p)),
-        };
+        let ok = ok(mode, q!(__c), q!(__p));
         q! {
             match __cx.#peek(__pos) {
                 ::core::option::Option::Some((__c, __p)) if #test => #ok,
-                _ => Err(__cx.fail(__pos, #rt::Expected::Class(#text))),
+                _ => ::core::result::Result::Err(__cx.fail(__pos, #rt::Expected::Class(#text))),
             }
         }
     }
@@ -855,16 +885,16 @@ impl Gen<'_> {
         let finish = if min1 {
             q! {
                 if __p == __pos {
-                    Err(__cx.fail(__pos, #rt::Expected::Class(#text)))
+                    ::core::result::Result::Err(__cx.fail(__pos, #rt::Expected::Class(#text)))
                 } else {
                     __cx.expect(__p, #rt::Expected::Class(#text));
-                    Ok(__p)
+                    ::core::result::Result::Ok(__p)
                 }
             }
         } else {
             q! {
                 __cx.expect(__p, #rt::Expected::Class(#text));
-                Ok(__p)
+                ::core::result::Result::Ok(__p)
             }
         };
         q! {{
@@ -883,14 +913,11 @@ impl Gen<'_> {
     fn any(&self, mode: Mode) -> TokenStream {
         let rt = &self.rt;
         let peek = self.peek();
-        let ok = match mode {
-            Mode::Value => q!(Ok((__c, __p))),
-            Mode::Recognize => q!(Ok(__p)),
-        };
+        let ok = ok(mode, q!(__c), q!(__p));
         q! {
             match __cx.#peek(__pos) {
                 ::core::option::Option::Some((__c, __p)) => #ok,
-                ::core::option::Option::None => Err(__cx.fail(__pos, #rt::Expected::Any)),
+                ::core::option::Option::None => ::core::result::Result::Err(__cx.fail(__pos, #rt::Expected::Any)),
             }
         }
     }
@@ -910,7 +937,7 @@ impl Gen<'_> {
         let call = q!(#raw(__cx, __m, __pos));
         let code = match mode {
             Mode::Value => call,
-            Mode::Recognize => q!(match #call { Ok((_, __p)) => Ok(__p), Err(__f) => Err(__f) }),
+            Mode::Recognize => recognized(call),
         };
         if !info.rule.atom {
             return code;
@@ -941,7 +968,7 @@ impl Gen<'_> {
         };
         let call = match mode {
             Mode::Value => call,
-            Mode::Recognize => q!(match #call { Ok((_, __p)) => Ok(__p), Err(__f) => Err(__f) }),
+            Mode::Recognize => recognized(call),
         };
         // In a rule that skips whitespace, an atom is a token, with whitespace before it.
         let token = if cx.skipping {
@@ -964,13 +991,13 @@ impl Gen<'_> {
         if mode == Mode::Value && !is_literal_choice(alts) && alts.iter().all(|e| self.an.silent(e))
         {
             let code = self.choice(alts, cx, Mode::Recognize, None);
-            return q!(match #code { Ok(__p) => Ok(((), __p)), Err(__f) => Err(__f) });
+            return unit_value(code);
         }
         let label = self.label();
         let (last, init) = alts.split_last().expect("a choice has alternatives");
         let init = init.iter().map(|alt| {
             let code = self.expr(alt, cx, mode, ret);
-            q!(if let Ok(__r) = #code { break #label Ok(__r); })
+            q!(if let ::core::result::Result::Ok(__r) = #code { break #label ::core::result::Result::Ok(__r); })
         });
         let last = self.expr(last, cx, mode, ret);
         q!(#label: { #(#init)* #last })
@@ -990,14 +1017,11 @@ impl Gen<'_> {
             Mode::Value => (
                 q!(let mut __vs = #rt::Vec::new();),
                 q!(__vs.push(__v);),
-                q!(Ok((__vs, __p))),
+                q!(::core::result::Result::Ok((__vs, __p))),
             ),
-            Mode::Recognize => (q!(), q!(), q!(Ok(__p))),
+            Mode::Recognize => (q!(), q!(), q!(::core::result::Result::Ok(__p))),
         };
-        let matched = match mode {
-            Mode::Value => q!(Ok((__v, __q))),
-            Mode::Recognize => q!(Ok(__q)),
-        };
+        let matched = ok(mode, q!(__v), q!(__q));
         let sep = match sep {
             Some(sep) => {
                 let sep = self.expr(sep, cx, Mode::Recognize, None);
@@ -1006,8 +1030,8 @@ impl Gen<'_> {
                         __pos
                     } else {
                         match #sep {
-                            Ok(__q) => __q,
-                            Err(_) => break,
+                            ::core::result::Result::Ok(__q) => __q,
+                            ::core::result::Result::Err(_) => break,
                         }
                     };
                 }
@@ -1015,7 +1039,7 @@ impl Gen<'_> {
             None => q!(),
         };
         let finish = if min1 {
-            q!(if __first { Err(#rt::Fail) } else { #result })
+            q!(if __first { ::core::result::Result::Err(#rt::Fail) } else { #result })
         } else {
             result
         };
@@ -1036,7 +1060,7 @@ impl Gen<'_> {
                             break;
                         }
                     }
-                    Err(_) => break,
+                    ::core::result::Result::Err(_) => break,
                 }
             }
             #finish
@@ -1061,25 +1085,30 @@ impl Gen<'_> {
             })
             .collect();
         let pred = action.is_some_and(|(_, pred)| pred);
-        // Plain actions only run when the value is needed; predicates always run.
+        // Plain actions only run when the value is needed; predicates always run. The bindings
+        // that an action refers to are checked even if it never runs.
         let code = match action {
-            Some((code, _)) if mode == Mode::Value || pred => Some(self.tokens(code)),
-            _ => None,
+            Some((span, _)) if mode == Mode::Value || pred => Some((self.tokens(span), span)),
+            Some((span, _)) => {
+                self.check_action(self.tokens(span), span, &names);
+                None
+            }
+            None => None,
         };
         let usage = match &code {
-            Some(code) => {
+            Some((code, _)) => {
                 let mut usage = Usage::default();
                 scan_action(code.clone(), &names, false, &mut usage);
                 usage
             }
             None => Usage::default(),
         };
-        let at = self.after_skip(cx);
+        let start = self.text_start(elems, cx);
 
         let mut stmts = Vec::new();
         // A predicate needs `__start` outside the block.
         if code.is_some() && (usage.whole_text || usage.whole_span) && !pred {
-            stmts.push(q!(let __start = #at;));
+            stmts.push(q!(let __start = #start;));
         }
         let mut tuple = Vec::new();
         for (i, el) in elems.iter().enumerate() {
@@ -1105,8 +1134,9 @@ impl Gen<'_> {
             };
             let el_code = self.expr(inner, cx, el_mode, None);
             if need_text || need_span {
-                let start = start_var(&name.unwrap().name);
-                stmts.push(q!(let #start = #at;));
+                let var = start_var(&name.unwrap().name);
+                let start = self.text_start(std::slice::from_ref(inner), cx);
+                stmts.push(q!(let #var = #start;));
             }
             if need_value {
                 let var = match name {
@@ -1119,15 +1149,15 @@ impl Gen<'_> {
                 };
                 stmts.push(q! {
                     let (#var, __pos) = match #el_code {
-                        Ok(__r) => __r,
-                        Err(__f) => break #label Err(__f),
+                        ::core::result::Result::Ok(__r) => __r,
+                        ::core::result::Result::Err(__f) => break #label ::core::result::Result::Err(__f),
                     };
                 });
             } else {
                 stmts.push(q! {
                     let __pos = match #el_code {
-                        Ok(__p) => __p,
-                        Err(__f) => break #label Err(__f),
+                        ::core::result::Result::Ok(__p) => __p,
+                        ::core::result::Result::Err(__f) => break #label ::core::result::Result::Err(__f),
                     };
                 });
             }
@@ -1145,7 +1175,7 @@ impl Gen<'_> {
         }
 
         let result = match code {
-            Some(code) => {
+            Some((code, span)) => {
                 if usage.whole_text {
                     let var = text_var("_");
                     stmts.push(q!(let #var = __cx.slice(__start, __pos);));
@@ -1154,16 +1184,16 @@ impl Gen<'_> {
                     let var = span_var("_");
                     stmts.push(q!(let #var = #rt::span(__start, __pos);));
                 }
-                let code = self.rewrite_action(code, &names);
+                let code = self.rewrite_action(code, span, &names);
                 // The value of a predicate is not the value of the sequence.
                 let ret = ret.filter(|_| !pred).map(|ty| q!(-> #ty));
-                q!(Ok(((|| #ret #code)(), __pos)))
+                q!(::core::result::Result::Ok(((|| #ret #code)(), __pos)))
             }
             None => match (mode, tuple.as_slice()) {
-                (Mode::Recognize, _) => q!(Ok(__pos)),
-                (Mode::Value, []) => q!(Ok(((), __pos))),
-                (Mode::Value, [v]) => q!(Ok((#v, __pos))),
-                (Mode::Value, vs) => q!(Ok(((#(#vs),*), __pos))),
+                (Mode::Recognize, _) => q!(::core::result::Result::Ok(__pos)),
+                (Mode::Value, []) => q!(::core::result::Result::Ok(((), __pos))),
+                (Mode::Value, [v]) => q!(::core::result::Result::Ok((#v, __pos))),
+                (Mode::Value, vs) => q!(::core::result::Result::Ok(((#(#vs),*), __pos))),
             },
         };
         let block = q!(#label: { #(#stmts)* #result });
@@ -1171,24 +1201,21 @@ impl Gen<'_> {
             return block;
         }
         // See `Cx::fail_predicate` for the errors of a sequence that fails its predicate.
-        let ok = match mode {
-            Mode::Value => q!(Ok((__v, __pos))),
-            Mode::Recognize => q!(Ok(__pos)),
-        };
+        let ok = ok(mode, q!(__v), q!(__pos));
         q! {{
-            let __start = #at;
+            let __start = #start;
             let __mark = __cx.mark();
             match #block {
-                Ok((__o, __pos)) => match #rt::Predicate::into_outcome(__o) {
-                    Ok(__v) => {
+                ::core::result::Result::Ok((__o, __pos)) => match #rt::Predicate::into_outcome(__o) {
+                    ::core::result::Result::Ok(__v) => {
                         __cx.commit(__mark);
                         #ok
                     }
-                    Err(__message) => Err(__cx.fail_predicate(__mark, __start, __message)),
+                    ::core::result::Result::Err(__message) => ::core::result::Result::Err(__cx.fail_predicate(__mark, __start, __message)),
                 },
-                Err(__f) => {
+                ::core::result::Result::Err(__f) => {
                     __cx.commit(__mark);
-                    Err(__f)
+                    ::core::result::Result::Err(__f)
                 }
             }
         }}
@@ -1207,10 +1234,31 @@ fn class_test(class: &Class, value: TokenStream, lit: impl Fn(char) -> Literal) 
     q!(::core::matches!(#value, #(#pats)|*))
 }
 
-fn unit_ok(mode: Mode) -> TokenStream {
+// `Ok((value, pos))` in value mode, and `Ok(pos)` in recognition mode.
+fn ok(mode: Mode, value: TokenStream, pos: TokenStream) -> TokenStream {
     match mode {
-        Mode::Value => q!(Ok(((), __pos))),
-        Mode::Recognize => q!(Ok(__pos)),
+        Mode::Value => q!(::core::result::Result::Ok((#value, #pos))),
+        Mode::Recognize => q!(::core::result::Result::Ok(#pos)),
+    }
+}
+
+// The result of `code` in value mode, as in recognition mode.
+fn recognized(code: TokenStream) -> TokenStream {
+    q! {
+        match #code {
+            ::core::result::Result::Ok((_, __p)) => ::core::result::Result::Ok(__p),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
+        }
+    }
+}
+
+// The result of `code` in recognition mode, with the value `()`.
+fn unit_value(code: TokenStream) -> TokenStream {
+    q! {
+        match #code {
+            ::core::result::Result::Ok(__p) => ::core::result::Result::Ok(((), __p)),
+            ::core::result::Result::Err(__f) => ::core::result::Result::Err(__f),
+        }
     }
 }
 
@@ -1233,7 +1281,7 @@ const QUOTE_MACROS: &[&str] = &[
 ];
 
 // `#x` or `@x` at `tts[i]`: the sigil and the name. A sigil after an operand is not one, as in
-// the pattern `n @ x`.
+// the pattern `n @ x`, but one after a keyword is, as in `if #x == "a"`.
 fn sigil_at(tts: &[TokenTree], i: usize) -> Option<(char, &Ident)> {
     let sigil = match &tts[i] {
         TokenTree::Punct(p) if matches!(p.as_char(), '#' | '@') => p.as_char(),
@@ -1242,9 +1290,18 @@ fn sigil_at(tts: &[TokenTree], i: usize) -> Option<(char, &Ident)> {
     let Some(TokenTree::Ident(id)) = tts.get(i + 1) else {
         return None;
     };
-    let after_operand = i
-        .checked_sub(1)
-        .is_some_and(|j| matches!(tts[j], TokenTree::Ident(_) | TokenTree::Literal(_)));
+    let after_operand = i.checked_sub(1).is_some_and(|j| match &tts[j] {
+        TokenTree::Literal(_) => true,
+        TokenTree::Ident(id) => {
+            let id = id.to_string();
+            !KEYWORDS.contains(&id.as_str())
+                || matches!(
+                    id.as_str(),
+                    "true" | "false" | "self" | "Self" | "crate" | "super"
+                )
+        }
+        _ => false,
+    });
     (!after_operand).then_some((sigil, id))
 }
 
@@ -1283,6 +1340,17 @@ fn scan_action(tokens: TokenStream, names: &[&str], in_quote: bool, usage: &mut 
                 let quote = in_quote || is_quote_invocation(&tts[..i]);
                 scan_action(g.stream(), names, quote, usage);
             }
+            // Arguments captured by format strings, as in `format!("{x}")`. Other literals that
+            // look like one only make the value computed for nothing.
+            TokenTree::Literal(lit) => {
+                let text = lit.to_string();
+                for name in names {
+                    if text.contains(&format!("{{{name}}}")) || text.contains(&format!("{{{name}:"))
+                    {
+                        usage.value.insert(name.to_string());
+                    }
+                }
+            }
             _ => {}
         }
         i += 1;
@@ -1290,8 +1358,25 @@ fn scan_action(tokens: TokenStream, names: &[&str], in_quote: bool, usage: &mut 
 }
 
 impl Gen<'_> {
-    // Replaces `#x`, `@x`, `#_` and `@_` with the variables that hold them.
-    fn rewrite_action(&self, tokens: TokenStream, names: &[&str]) -> TokenStream {
+    // Replaces `#x`, `@x`, `#_` and `@_` with the variables that hold them in the action at
+    // `span` of the text.
+    fn rewrite_action(&self, tokens: TokenStream, span: Span, names: &[&str]) -> TokenStream {
+        self.rewrite_sigils(tokens, span, names, true)
+    }
+
+    // Reports `#x` and `@x` that refer to no binding in an action that is not emitted.
+    fn check_action(&self, tokens: TokenStream, span: Span, names: &[&str]) {
+        self.rewrite_sigils(tokens, span, names, false);
+    }
+
+    // Problems are reported in the result if it is `emitted`.
+    fn rewrite_sigils(
+        &self,
+        tokens: TokenStream,
+        action: Span,
+        names: &[&str],
+        emitted: bool,
+    ) -> TokenStream {
         let tts: Vec<TokenTree> = tokens.into_iter().collect();
         let mut out = Vec::new();
         let mut i = 0;
@@ -1317,9 +1402,17 @@ impl Gen<'_> {
                             },
                             message,
                         )),
-                        _ => {
+                        // Where tokens cannot be located, at the action.
+                        _ if !self.src.tokens_in_code() => {
+                            self.error(Diagnostic::error(action, message))
+                        }
+                        _ if emitted => {
                             out.extend(quote_spanned!(id.span()=> ::core::compile_error!(#message)))
                         }
+                        _ => self
+                            .errors
+                            .borrow_mut()
+                            .extend(quote_spanned!(id.span()=> ::core::compile_error!(#message);)),
                     }
                 }
                 i += 2;
@@ -1330,7 +1423,7 @@ impl Gen<'_> {
                     let stream = if is_quote_invocation(&tts[..i]) {
                         g.stream()
                     } else {
-                        self.rewrite_action(g.stream(), names)
+                        self.rewrite_sigils(g.stream(), action, names, emitted)
                     };
                     let mut group = Group::new(g.delimiter(), stream);
                     group.set_span(g.span());

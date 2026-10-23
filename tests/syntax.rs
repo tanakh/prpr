@@ -19,6 +19,9 @@ prpr::grammar! {
     p_atomic = <"foo" "bar">
     p_action: u8 = c:[0-9] { c as u8 - b'0' }
     p_empty_action: i32 = { 42 }
+    p_keyword: u8 = s:([a-z]+) { if #s == "a" { 1 } else { match #s { "b" => 2, _ => 3 } } }
+    p_format: String = c:[a-z] { format!("<{c}>") }
+    p_group: char = c:[a-z] (c:[0-9]) { c }
     p_tuple: (char, char) = "(" [a-z] "," [a-z] ")"
     p_nested: Vec<(char, Option<char>)> = ([a-z] [0-9]?)*
 
@@ -118,4 +121,12 @@ fn actions() {
     assert_eq!(p_empty_action(""), Ok(42));
     assert_eq!(p_empty_action("  "), Ok(42));
     assert_eq!(p_tuple("(a, b)"), Ok(('a', 'b')));
+    // `#x` and `@x` after keywords.
+    assert_eq!(p_keyword("a"), Ok(1));
+    assert_eq!(p_keyword("b"), Ok(2));
+    assert_eq!(p_keyword("c"), Ok(3));
+    // A binding used by a format string.
+    assert_eq!(p_format("x"), Ok("<x>".into()));
+    // A binding in a group is local to it.
+    assert_eq!(p_group("a1"), Ok('a'));
 }

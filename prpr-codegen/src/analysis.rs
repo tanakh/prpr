@@ -218,6 +218,9 @@ pub fn analyze(g: &Grammar, text: &str) -> Result<Analysis, Vec<Diagnostic>> {
     compute_references(&mut an);
     for info in &an.rules {
         check_repetitions(&an, &info.rule.body, &mut diags);
+        if let Boundary::Custom(e) = &info.boundary {
+            check_repetitions(&an, e, &mut diags);
+        }
     }
     check_left_recursion(&an, &mut diags);
     // The lints rely on the absence of left recursion.
@@ -238,8 +241,20 @@ fn grammar_attrs(g: &Grammar, diags: &mut Vec<Diagnostic>) -> GrammarAttrs {
         lint: false,
         profile: false,
     };
+    let mut seen = Vec::new();
     for attr in &g.attrs {
-        match (attr.name.name.as_str(), &attr.arg) {
+        let name = attr.name.name.as_str();
+        if matches!(name, "input" | "lint" | "profile") {
+            if seen.contains(&name) {
+                diags.push(Diagnostic::error(
+                    attr.span,
+                    format!("a grammar cannot have more than one `#![{name}]`"),
+                ));
+                continue;
+            }
+            seen.push(name);
+        }
+        match (name, &attr.arg) {
             ("doc", _) => {}
             ("input", AttrArg::Ident(id)) if id.name == "str" => attrs.input = InputKind::Str,
             ("input", AttrArg::Ident(id)) if id.name == "bytes" => attrs.input = InputKind::Bytes,
@@ -268,8 +283,23 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
     let mut label = None;
     let mut boundary = Boundary::Default;
     let mut docs = Vec::new();
+    let mut seen = Vec::new();
     for attr in &rule.attrs {
-        match (attr.name.name.as_str(), &attr.arg) {
+        let name = attr.name.name.as_str();
+        if matches!(
+            name,
+            "memo" | "no_memo" | "label" | "boundary" | "no_boundary"
+        ) {
+            if seen.contains(&name) {
+                diags.push(Diagnostic::error(
+                    attr.span,
+                    format!("a rule cannot have more than one `#[{name}]`"),
+                ));
+                continue;
+            }
+            seen.push(name);
+        }
+        match (name, &attr.arg) {
             ("doc", AttrArg::Lit(Lit::Str(s))) => docs.push(s.clone()),
             ("memo", AttrArg::None) => memo = true,
             ("no_memo", AttrArg::None) => no_memo = true,
@@ -294,11 +324,13 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
             )),
         }
     }
-    if memo && no_memo {
-        diags.push(Diagnostic::error(
-            rule.name.span,
-            "a rule cannot have both `#[memo]` and `#[no_memo]`",
-        ));
+    for (a, b) in [("memo", "no_memo"), ("boundary", "no_boundary")] {
+        if seen.contains(&a) && seen.contains(&b) {
+            diags.push(Diagnostic::error(
+                rule.name.span,
+                format!("a rule cannot have both `#[{a}]` and `#[{b}]`"),
+            ));
+        }
     }
     // A rule of type `()` is the same as a rule without a type.
     let typed = rule.ty.is_some_and(|ty| {
@@ -404,6 +436,12 @@ fn check_expr(an: &Analysis, e: &Expr, diags: &mut Vec<Diagnostic>) {
                 diags.push(d);
             }
             Some(_) => {}
+            None if !path.leading_colon && path.segments[0].name == "self" => {
+                diags.push(Diagnostic::error(
+                    path.span,
+                    "a rule of this grammar is referred to by its name, without `self::`",
+                ))
+            }
             // A rule of another grammar, which the compiler checks.
             None if path.segments.len() >= 2 => {}
             None => diags.push(Diagnostic::error(
@@ -532,6 +570,8 @@ fn compute_references(an: &mut Analysis) {
             walk(an, e, i, &mut referenced);
         }
     }
+    // Implicit whitespace and delimiter checks use these.
+    referenced.extend([an.index[SPACES], an.index[WORD_CHAR]]);
     for i in referenced {
         an.rules[i].referenced = true;
     }

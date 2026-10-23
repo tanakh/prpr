@@ -35,6 +35,7 @@ dependencies = [
  "proc-macro2",
  "prpr-runtime",
  "quote",
+ "unicode-ident",
 ]
 
 [[package]]

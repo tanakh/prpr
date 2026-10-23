@@ -71,5 +71,23 @@ error: unknown grammar attribute `inputs`
 49 |         #![inputs = str]
    |            ^^^^^^
 
-error: aborting due to 12 previous errors
+error: a grammar cannot have more than one `#![profile]`
+  --> tests/ui/attributes.rs:58:9
+   |
+58 |         #![profile]
+   |         ^^^^^^^^^^^
+
+error: a rule cannot have more than one `#[label]`
+  --> tests/ui/attributes.rs:61:9
+   |
+61 |         #[label = "y"]
+   |         ^^^^^^^^^^^^^^
+
+error: a rule cannot have both `#[boundary]` and `#[no_boundary]`
+  --> tests/ui/attributes.rs:67:14
+   |
+67 |         atom b = "x"
+   |              ^
+
+error: aborting due to 15 previous errors
 

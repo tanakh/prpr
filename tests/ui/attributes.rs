@@ -51,3 +51,20 @@ mod grammar_attributes {
         a = "x"
     }
 }
+
+mod duplicates {
+    prpr::grammar! {
+        #![profile]
+        #![profile]
+        //~^ ERROR: a grammar cannot have more than one `#![profile]`
+        #[label = "x"]
+        #[label = "y"]
+        //~^ ERROR: a rule cannot have more than one `#[label]`
+        a = "x"
+
+        #[boundary(!"a")]
+        #[no_boundary]
+        atom b = "x"
+        //~^ ERROR: a rule cannot have both `#[boundary]` and `#[no_boundary]`
+    }
+}

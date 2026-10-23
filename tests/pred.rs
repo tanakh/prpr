@@ -11,6 +11,8 @@ prpr::grammar! {
 
     #[label = "number"]
     labeled_even: i64 = d:decimal &{ if d % 2 == 0 { Ok(d) } else { Err("an even number") } }
+
+    even_or_x: i64 = even / "x" { 0 }
 }
 
 #[test]
@@ -36,6 +38,9 @@ fn result() {
         labeled_even("x").unwrap_err().to_string(),
         "expected number, found `x`"
     );
+    // The message says more than what other alternatives expected.
+    let e = even_or_x("41").unwrap_err();
+    assert_eq!(e.to_string(), "expected an even number, found `4`");
 }
 
 #[test]

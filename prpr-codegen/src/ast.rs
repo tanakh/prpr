@@ -134,6 +134,17 @@ impl Path {
             _ => None,
         }
     }
+
+    /// Whether two paths are written the same, wherever they are.
+    pub fn same(&self, other: &Path) -> bool {
+        self.leading_colon == other.leading_colon
+            && self.segments.len() == other.segments.len()
+            && self
+                .segments
+                .iter()
+                .zip(&other.segments)
+                .all(|(a, b)| a.name == b.name)
+    }
 }
 
 impl Expr {

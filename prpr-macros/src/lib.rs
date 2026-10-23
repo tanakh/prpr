@@ -1,18 +1,14 @@
 #![doc = include_str!("../README.md")]
 
-use core::range::Range;
 use proc_macro::TokenStream;
 use proc_macro2::{Delimiter, Literal, Span, TokenTree};
-use prpr_codegen::{Diagnostic, Options, Source, TextSource};
+use prpr_codegen::{Diagnostic, Options, TextSource};
 use prpr_runtime::SourceText;
 use quote::{quote, quote_spanned};
 use std::path::{Path, PathBuf};
 
 fn options() -> Options {
-    Options {
-        runtime: quote!(::prpr::runtime),
-        check_version: false,
-    }
+    Options::new(quote!(::prpr::runtime))
 }
 
 /// Generates a parser from a grammar: for each rule, a function that parses a whole input with
@@ -52,10 +48,10 @@ pub fn include_grammar(input: TokenStream) -> TokenStream {
         Ok(text) => text,
         Err(e) => return error(lit.span(), &format!("cannot read {}: {e}", shown.display())),
     };
-    let src = Included {
-        text: TextSource(&text),
-        path: lit.span(),
-    };
+    // The names generated for the rules are located at the path, the only place in the source
+    // that a macro can point at, so that the compiler lints them, e.g. reports unused rules with
+    // `#![lint]`.
+    let src = TextSource::new(&text).with_span(lit.span());
     match prpr_codegen::compile(&src, &options()) {
         Ok(tokens) => {
             // Makes the compiler build the crate again when the file changes.
@@ -168,30 +164,4 @@ fn rendered(d: &Diagnostic, text: &str, shown: &Path) -> String {
 
 fn error(span: Span, message: &str) -> TokenStream {
     quote_spanned!(span=> ::core::compile_error!(#message);).into()
-}
-
-// A grammar file. The names generated for its rules are located at the path, the only place in
-// the source that a macro can point at, and a place written by the user, so that the compiler
-// lints them, e.g. reports unused rules with `#![lint]`.
-struct Included<'a> {
-    text: TextSource<'a>,
-    path: Span,
-}
-
-impl Source for Included<'_> {
-    fn text(&self) -> &str {
-        self.text.text()
-    }
-
-    fn tokens(&self, span: Range<usize>) -> Result<proc_macro2::TokenStream, Diagnostic> {
-        self.text.tokens(span)
-    }
-
-    fn token_span(&self, _span: Range<usize>) -> Span {
-        self.path
-    }
-
-    fn locate(&self, span: Span) -> Option<Range<usize>> {
-        self.text.locate(span)
-    }
 }
