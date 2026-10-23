@@ -1,0 +1,308 @@
+// GraphQL documents, as defined by the GraphQL specification (October 2021):
+// https://spec.graphql.org/October2021/
+//
+// `prpr_graphql.rs` includes this file with `include_grammar!`; the syntax tree is in
+// `graphql.rs`.
+
+#![lint]
+
+use crate::graphql::*;
+use crate::unescape;
+
+// Ignored tokens: whitespace, line terminators, commas, the byte order mark and comments.
+atom whitespace = [' ' '\t' '\n' '\r' ',' '\u{feff}']
+atom comment = "#" [^ '\n' '\r']*
+
+// Documents
+
+/// Parses a document of executable and type system definitions.
+pub document: Document<'i> = definitions:definition+ { Document { definitions } }
+
+/// Parses a document of operations and fragments.
+pub executable_document: Document<'i> = definitions:executable_definition+ {
+    Document { definitions }
+}
+
+/// Parses a document of type system definitions and extensions, such as a schema.
+pub type_system_document: Document<'i> = definitions:type_system_definition+ {
+    Document { definitions }
+}
+
+#[label = "definition"]
+definition: Definition<'i> = executable_definition / type_system_definition
+
+// Operations and fragments
+
+#[label = "definition"]
+executable_definition: Definition<'i>
+    = o:operation_definition { Definition::Operation(o) }
+    / f:fragment_definition { Definition::Fragment(f) }
+
+operation_definition: OperationDefinition<'i>
+    = kind:operation_type name:name? variables:variable_definitions? directives:directives selection_set:selection_set {
+        OperationDefinition {
+            span: @_,
+            kind,
+            name,
+            variables: variables.unwrap_or_default(),
+            directives,
+            selection_set,
+        }
+    }
+    / selection_set:selection_set {
+        OperationDefinition {
+            span: @_,
+            kind: OperationKind::Query,
+            name: None,
+            variables: Vec::new(),
+            directives: Vec::new(),
+            selection_set,
+        }
+    }
+
+operation_type: OperationKind
+    = "query" { OperationKind::Query }
+    / "mutation" { OperationKind::Mutation }
+    / "subscription" { OperationKind::Subscription }
+
+selection_set: Vec<Selection<'i>> = "{" selections:selection+ "}" { selections }
+
+#[label = "selection"]
+selection: Selection<'i> = f:field { Selection::Field(f) } / fragment_spread / inline_fragment
+
+field: Field<'i> = alias:(a:name ":" { a })? name:name arguments:arguments? directives:directives selection_set:selection_set? {
+    Field {
+        span: @_,
+        alias,
+        name,
+        arguments: arguments.unwrap_or_default(),
+        directives,
+        selection_set: selection_set.unwrap_or_default(),
+    }
+}
+
+arguments: Vec<(&'i str, Value<'i>)> = "(" args:argument+ ")" { args }
+
+argument: (&'i str, Value<'i>) = name:name ":" value:value { (name, value) }
+
+fragment_spread: Selection<'i> = "..." name:fragment_name directives:directives {
+    Selection::FragmentSpread(FragmentSpread { span: @_, name, directives })
+}
+
+inline_fragment: Selection<'i> = "..." type_condition:type_condition? directives:directives selection_set:selection_set {
+    Selection::InlineFragment(InlineFragment {
+        span: @_,
+        type_condition,
+        directives,
+        selection_set,
+    })
+}
+
+fragment_definition: FragmentDefinition<'i> = "fragment" name:fragment_name type_condition:type_condition directives:directives selection_set:selection_set {
+    FragmentDefinition {
+        span: @_,
+        name,
+        type_condition,
+        directives,
+        selection_set,
+    }
+}
+
+#[label = "fragment name"]
+fragment_name: &'i str = !"on" name:name { name }
+
+type_condition: &'i str = "on" name:name { name }
+
+variable_definitions: Vec<VariableDefinition<'i>> = "(" vs:variable_definition+ ")" { vs }
+
+variable_definition: VariableDefinition<'i> = name:variable ":" ty:ty default:default_value? directives:directives {
+    VariableDefinition { span: @_, name, ty, default, directives }
+}
+
+variable: &'i str = "$" name:name { name }
+
+default_value: Value<'i> = "=" value:value { value }
+
+// Values
+
+#[label = "value"]
+value: Value<'i>
+    = name:variable { Value::Variable(name) }
+    / number
+    / s:string { Value::String(s) }
+    / "true" { Value::Boolean(true) }
+    / "false" { Value::Boolean(false) }
+    / "null" { Value::Null }
+    / name:name { Value::Enum(name) }
+    / "[" values:value* "]" { Value::List(values) }
+    / "{" fields:object_field* "}" { Value::Object(fields) }
+
+object_field: (&'i str, Value<'i>) = name:name ":" value:value { (name, value) }
+
+// An integer or a floating point number, which may not be followed by `.` or a name either.
+#[boundary(!['.' '_' a-z A-Z 0-9])]
+atom number: Value<'i> = integer_part f:fraction? e:exponent? &{
+    if f.is_none() && e.is_none() {
+        #_.parse().map(Value::Int).map_err(|_| "an integer that fits in 64 bits")
+    } else {
+        Ok(Value::Float(#_.parse().unwrap()))
+    }
+}
+
+atom integer_part = "-"? ("0" / [1-9] [0-9]*)
+
+atom fraction = "." [0-9]+
+
+atom exponent = [eE] [+-]? [0-9]+
+
+#[label = "string"]
+atom string: String = block_string / quoted_string
+
+// A string that does not end is reported at its start, rather than by what could continue it at
+// the end of the line. `"""` always starts a block string.
+atom quoted_string: String = !"\"\"\"" '"' s:string_character* end:string_end &{
+    end.map(|()| unescape(#s))
+}
+
+atom string_character = [^ '"' '\\' '\n' '\r']+ / "\\" escape
+
+#[label = "escape sequence"]
+atom escape = ['"' '\\' '/' b f n r t] / "u" hex hex hex hex
+
+// An invalid escape sequence is reported where it is.
+atom string_end: Result<(), &'static str>
+    = '"' { Ok(()) }
+    / !"\\" { Err("a string that ends on the same line") }
+
+atom hex = [0-9a-fA-F]
+
+atom block_string: String = "\"\"\"" s:block_string_character* end:block_string_end &{
+    end.map(|()| block_string_value(#s))
+}
+
+atom block_string_character = [^ '"' '\\']+ / "\\\"\"\"" / !"\"\"\"" .
+
+atom block_string_end: Result<(), &'static str> = "\"\"\"" { Ok(()) } / { Err("a block string that ends") }
+
+// Directives and types
+
+directives: Vec<Directive<'i>> = directive*
+
+directive: Directive<'i> = "@" name:name arguments:arguments? {
+    Directive { span: @_, name, arguments: arguments.unwrap_or_default() }
+}
+
+#[label = "type"]
+ty: Type<'i> = t:list_or_named_type non_null:"!"? {
+    if non_null.is_some() { Type::NonNull(Box::new(t)) } else { t }
+}
+
+list_or_named_type: Type<'i> = name:name { Type::Named(name) } / "[" t:ty "]" { Type::List(Box::new(t)) }
+
+#[label = "name"]
+atom name: &'i str = s:([_A-Za-z] [_0-9A-Za-z]*) { #s }
+
+// Type system definitions
+
+#[label = "definition"]
+type_system_definition: Definition<'i>
+    = description:string? d:described_definition { d.described(description, @_) }
+    / "extend" e:extension { e.described(None, @_) }
+
+described_definition: Definition<'i>
+    = s:schema_definition { Definition::Schema(s) }
+    / t:type_definition { Definition::Type(t) }
+    / d:directive_definition { Definition::Directive(d) }
+
+extension: Definition<'i>
+    = s:schema_extension { Definition::SchemaExtension(s) }
+    / t:type_definition { Definition::TypeExtension(t) }
+
+schema_definition: SchemaDefinition<'i> = "schema" directives:directives operation_types:root_operation_types {
+    SchemaDefinition { span: @_, description: None, directives, operation_types }
+}
+
+schema_extension: SchemaDefinition<'i> = "schema" directives:directives operation_types:root_operation_types? {
+    SchemaDefinition {
+        span: @_,
+        description: None,
+        directives,
+        operation_types: operation_types.unwrap_or_default(),
+    }
+}
+
+root_operation_types: Vec<(OperationKind, &'i str)> = "{" ts:root_operation_type+ "}" { ts }
+
+root_operation_type: (OperationKind, &'i str) = kind:operation_type ":" name:name { (kind, name) }
+
+type_definition: TypeDefinition<'i>
+    = "scalar" name:name directives:directives {
+        TypeDefinition::new(@_, name, directives, TypeKind::Scalar)
+    }
+    / "type" name:name implements:implements_interfaces? directives:directives fields:fields_definition? {
+        let kind = TypeKind::Object {
+            implements: implements.unwrap_or_default(),
+            fields: fields.unwrap_or_default(),
+        };
+        TypeDefinition::new(@_, name, directives, kind)
+    }
+    / "interface" name:name implements:implements_interfaces? directives:directives fields:fields_definition? {
+        let kind = TypeKind::Interface {
+            implements: implements.unwrap_or_default(),
+            fields: fields.unwrap_or_default(),
+        };
+        TypeDefinition::new(@_, name, directives, kind)
+    }
+    / "union" name:name directives:directives members:union_members? {
+        TypeDefinition::new(@_, name, directives, TypeKind::Union { members: members.unwrap_or_default() })
+    }
+    / "enum" name:name directives:directives values:enum_values? {
+        TypeDefinition::new(@_, name, directives, TypeKind::Enum { values: values.unwrap_or_default() })
+    }
+    / "input" name:name directives:directives fields:input_fields? {
+        TypeDefinition::new(@_, name, directives, TypeKind::InputObject { fields: fields.unwrap_or_default() })
+    }
+
+implements_interfaces: Vec<&'i str> = "implements" "&"? names:(name, "&")+ { names }
+
+fields_definition: Vec<FieldDefinition<'i>> = "{" fields:field_definition+ "}" { fields }
+
+field_definition: FieldDefinition<'i> = description:string? name:name arguments:arguments_definition? ":" ty:ty directives:directives {
+    FieldDefinition {
+        span: @_,
+        description,
+        name,
+        arguments: arguments.unwrap_or_default(),
+        ty,
+        directives,
+    }
+}
+
+arguments_definition: Vec<InputValueDefinition<'i>> = "(" args:input_value_definition+ ")" { args }
+
+input_value_definition: InputValueDefinition<'i> = description:string? name:name ":" ty:ty default:default_value? directives:directives {
+    InputValueDefinition { span: @_, description, name, ty, default, directives }
+}
+
+union_members: Vec<&'i str> = "=" "|"? names:(name, "|")+ { names }
+
+enum_values: Vec<EnumValueDefinition<'i>> = "{" values:enum_value_definition+ "}" { values }
+
+enum_value_definition: EnumValueDefinition<'i> = description:string? name:enum_value directives:directives {
+    EnumValueDefinition { span: @_, description, name, directives }
+}
+
+enum_value: &'i str = !("true" / "false" / "null") name:name { name }
+
+input_fields: Vec<InputValueDefinition<'i>> = "{" fields:input_value_definition+ "}" { fields }
+
+directive_definition: DirectiveDefinition<'i> = "directive" "@" name:name arguments:arguments_definition? repeatable:"repeatable"? "on" "|"? locations:(name, "|")+ {
+    DirectiveDefinition {
+        span: @_,
+        description: None,
+        name,
+        arguments: arguments.unwrap_or_default(),
+        repeatable: repeatable.is_some(),
+        locations,
+    }
+}

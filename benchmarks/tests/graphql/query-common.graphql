@@ -1,0 +1,28 @@
+# Executable definitions that all the parsers support.
+query Hero($episode: Episode = JEDI, $withFriends: Boolean!) {
+  hero(episode: $episode) {
+    name
+    friends @include(if: $withFriends) {
+      name
+      ... on Droid { primaryFunction }
+      ...humanFields
+    }
+  }
+  droid(id: "2001") { name }
+}
+
+mutation CreateReview($review: ReviewInput!) {
+  createReview(episode: JEDI, review: $review) {
+    stars
+    commentary
+  }
+}
+
+subscription OnReview {
+  reviewAdded { stars }
+}
+
+fragment humanFields on Human {
+  homePlanet
+  height(unit: METER)
+}

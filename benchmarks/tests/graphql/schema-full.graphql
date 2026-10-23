@@ -1,0 +1,20 @@
+# Type system definitions that graphql-parser or async-graphql-parser do not support: a description
+# of the schema (neither), schema extensions (graphql-parser), and an escaped `"""` in a block
+# string, which async-graphql-parser leaves escaped.
+"""
+The schema.
+"""
+schema {
+  query: QueryType
+}
+
+extend schema @onSchema {
+  subscription: SubscriptionType
+}
+
+extend schema @onSchema
+
+"""
+A scalar, with \""" in its description.
+"""
+scalar Escaped

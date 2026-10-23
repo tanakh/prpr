@@ -1,0 +1,57 @@
+# Every kind of executable definition, selection and value, including directives of variables,
+# which graphql-parser does not support and async-graphql-parser only before default values, and
+# an anonymous operation with other operations, which async-graphql-parser rejects as validation
+# would.
+query queryName($foo: ComplexType, $site: Site = MOBILE, $list: [Int!]! = [1, 2] @onVariable) @onQuery {
+  whoever123is: node(id: [123, 456]) {
+    id ,
+    ... on User @onInlineFragment {
+      field2 {
+        id ,
+        alias: field1(first: 10, after: $foo,) @include(if: $foo) {
+          id,
+          ...frag @onFragmentSpread
+          ...onFrag
+        }
+      }
+    }
+    ... @skip(unless: $foo) {
+      id
+    }
+    ... {
+      id
+    }
+  }
+}
+
+mutation likeStory @onMutation {
+  like(story: 123) @onField {
+    story {
+      id @onField
+    }
+  }
+}
+
+subscription StoryLikeSubscription($input: StoryLikeSubscribeInput @onVariableDefinition) @onSubscription {
+  storyLikeSubscribe(input: $input) {
+    story {
+      likers { count }
+      likeSentence { text }
+    }
+  }
+}
+
+fragment frag on Friend @onFragmentDefinition {
+  foo(size: $size, bar: $b, obj: {key: "value", block: """
+      block string uses \"""
+  """})
+}
+
+{
+  unnamed(truthy: true, falsy: false, nullish: null),
+  query
+  onField: on
+  numbers(zero: -0, float: 1.5e-3, exp: 2E10, negative: -1.25)
+  enums(value: ENUM_VALUE, prefixed: trueish)
+  strings(escapes: "\" \\ \/ \b \f \n \r \t \u00e9")
+}

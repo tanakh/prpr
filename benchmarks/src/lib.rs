@@ -1,8 +1,11 @@
-//! JSON parsers written with prpr and with other libraries, all building the same [`Value`].
+//! JSON parsers written with prpr and with other libraries, all building the same [`Value`], and
+//! a GraphQL parser written with prpr, compared with GraphQL parsers of other crates.
 
+pub mod graphql;
 pub mod nom_json;
 pub mod peg_json;
 pub mod pest_json;
+pub mod prpr_graphql;
 pub mod prpr_json;
 pub mod winnow_json;
 
