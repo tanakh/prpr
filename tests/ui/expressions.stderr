@@ -1,0 +1,33 @@
+error: the range `z-a` is reversed
+       = note: a range goes from the lower character to the higher, as in `a-z`
+ --> tests/ui/expressions.rs:5:13
+  |
+5 |         a = [z-a]
+  |             ^^^^^
+
+error: a reference to a rule of another grammar needs the path of its module
+  --> tests/ui/expressions.rs:12:13
+   |
+12 |         a = ::b
+   |             ^^^
+
+error: `x` is bound more than once in this sequence
+  --> tests/ui/expressions.rs:19:35
+   |
+19 |         a: (char, char) = x:[a-z] x:[0-9] { (x, x) }
+   |                                   ^
+
+error: byte literals require `#![input = bytes]`
+  --> tests/ui/expressions.rs:26:13
+   |
+26 |         a = b"x"
+   |             ^^^^
+
+error: a character class for byte input can only contain characters up to `\u{ff}`
+  --> tests/ui/expressions.rs:34:13
+   |
+34 |         a = [a-'\u{100}']
+   |             ^^^^^^^^^^^^^
+
+error: aborting due to 5 previous errors
+

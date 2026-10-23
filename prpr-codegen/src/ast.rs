@@ -51,6 +51,8 @@ pub enum AttrArg {
     Ident(Ident),
     /// `#[boundary(expr)]`
     Expr(Expr),
+    /// An argument of another form, which no attribute takes.
+    Other,
 }
 
 #[derive(Clone, Debug)]

@@ -413,8 +413,18 @@ fn check_expr(an: &Analysis, e: &Expr, diags: &mut Vec<Diagnostic>) {
         ExprKind::Lit(Lit::Bytes(_)) if an.input == InputKind::Str => diags.push(
             Diagnostic::error(e.span, "byte literals require `#![input = bytes]`"),
         ),
-        ExprKind::Class(c) if an.input == InputKind::Bytes => {
-            if c.ranges.iter().any(|&(_, hi)| hi > '\u{ff}') {
+        ExprKind::Class(c) => {
+            if let Some(&(lo, hi)) = c.ranges.iter().find(|&&(lo, hi)| lo > hi) {
+                let (lo, hi) = (lo.escape_debug(), hi.escape_debug());
+                diags.push(
+                    Diagnostic::error(e.span, format!("the range `{lo}-{hi}` is reversed")).note(
+                        format!(
+                            "a range goes from the lower character to the higher, as in `{hi}-{lo}`"
+                        ),
+                    ),
+                );
+            }
+            if an.input == InputKind::Bytes && c.ranges.iter().any(|&(_, hi)| hi > '\u{ff}') {
                 diags.push(Diagnostic::error(
                     e.span,
                     "a character class for byte input can only contain characters up to `\\u{ff}`",

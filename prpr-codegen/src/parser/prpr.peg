@@ -110,12 +110,20 @@ atom doc_comment: Attr = "///" !"/" text:(!"\n" .)* {
     }
 }
 
+// Arguments of other forms are accepted here, so that the analysis can say which form the
+// attribute takes.
 attr_body: (Ident, AttrArg)
     = name:ident_raw "=" arg:attr_value { (name, arg) }
-    / name:ident_raw "(" e:expr ")" { (name, AttrArg::Expr(e)) }
+    / name:ident_raw "(" e:expr ")" &"]" { (name, AttrArg::Expr(e)) }
+    / name:ident_raw rust_group { (name, AttrArg::Other) }
     / name:ident_raw { (name, AttrArg::None) }
 
-attr_value: AttrArg = l:literal { AttrArg::Lit(l) } / id:ident_raw { AttrArg::Ident(id) }
+attr_value: AttrArg
+    = l:literal &"]" { AttrArg::Lit(l) }
+    / id:ident_raw &"]" { AttrArg::Ident(id) }
+    / attr_tokens { AttrArg::Other }
+
+atom attr_tokens = (!"]" rust_tt)+
 
 #[label = "rule"]
 item: Item = s:rust_item { Item::Rust(s) } / r:rule { Item::Rule(r) }
@@ -343,12 +351,9 @@ atom class: Class = "[" neg:"^"? ranges:(spaces r:class_item { r })* spaces "]" 
     Class { negated: neg.is_some(), ranges, text: #_.to_string() }
 }
 
-atom class_item: (char, char) = lo:class_char hi:(spaces "-" spaces c:class_char { c })? &{
-    match hi {
-        None => Ok((lo, lo)),
-        Some(hi) if lo <= hi => Ok((lo, hi)),
-        Some(_) => Err("range in ascending order"),
-    }
+// Reversed ranges are reported by the analysis.
+atom class_item: (char, char) = lo:class_char hi:(spaces "-" spaces c:class_char { c })? {
+    (lo, hi.unwrap_or(lo))
 }
 
 #[label = "character"]

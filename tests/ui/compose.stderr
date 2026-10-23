@@ -1,0 +1,52 @@
+error[E0599]: no variant, associated function, or constant named `nmber` found for enum `lexical::__Rules` in the current scope
+  --> tests/ui/compose.rs:19:49
+   |
+ 4 | /     prpr::grammar! {
+ 5 | |         pub atom number: i64 = s:([0-9]+) { #s.parse().unwrap() }
+ 6 | |         atom word = [a-z]+
+ 7 | |     }
+   | |_____- variant, associated function, or constant `nmber` not found for this enum
+...
+19 |           pub misspelled: i64 = n:super::lexical::nmber { n }
+   |                                                   ^^^^^ variant, associated function, or constant not found in `lexical::__Rules`
+   |
+help: there is an associated constant `number` with a similar name
+   |
+19 |         pub misspelled: i64 = n:super::lexical::number { n }
+   |                                                  +
+
+error[E0624]: associated constant `word` is private
+  --> tests/ui/compose.rs:21:39
+   |
+ 4 | /     prpr::grammar! {
+ 5 | |         pub atom number: i64 = s:([0-9]+) { #s.parse().unwrap() }
+ 6 | |         atom word = [a-z]+
+ 7 | |     }
+   | |_____- private associated constant defined here
+...
+21 |           pub private = super::lexical::word
+   |                                         ^^^^ private associated constant
+
+error[E0277]: this rule of another grammar parses another kind of input than this grammar
+  --> tests/ui/compose.rs:23:42
+   |
+23 |         pub other_input = super::binary::byte
+   |                                          ^^^^ unsatisfied trait bound
+   |
+   = note: grammars that use each other's rules must parse the same kind of input, `str` or `bytes`
+help: the trait `ForeignRule<'_, str, _>` is not implemented for `__Rule_byte`
+      but trait `ForeignRule<'_, [u8], ()>` is implemented for it
+  --> tests/ui/compose.rs:11:5
+   |
+11 | /     prpr::grammar! {
+12 | |         #![input = bytes]
+13 | |         pub atom byte = .
+14 | |     }
+   | |_____^
+   = help: for that trait implementation, expected `[u8]`, found `str`
+   = note: this error originates in the macro `prpr::grammar` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: aborting due to 3 previous errors
+
+Some errors have detailed explanations: E0277, E0599, E0624.
+For more information about an error, try `rustc --explain E0277`.

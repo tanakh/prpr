@@ -216,7 +216,9 @@ Entry functions and raw rules have the visibility of their rules; rules without 
   Associated functions cannot be imported with `use`; they are called by their paths.
 * A rule of another grammar is referenced by path, e.g. `json::value`.
   The caller's `Memo` embeds the callee grammar's `Memo` automatically, and errors are tracked in the shared `Cx`.
-  Whether the callee is an atom is read from a constant emitted by the callee grammar (`Rules::__atom_value`), so whitespace is handled at compile time, and the boundary check of the callee's grammar is used (`Rules::__delimited_value`).
+  For each rule, a grammar emits a constant named after it in a hidden `__Rules`, of a type that implements `ForeignRule`: whether the rule is an atom (a constant, so that whitespace is handled at compile time), and a method that parses it, as a token with the boundary check of its own grammar if it is one.
+  A reference looks the constant up once and calls the method once, with the kind of input fixed, so that a misspelled or private rule, or one of a grammar of another kind of input, is reported once, at the reference.
+  (A generic runtime function doing the same changed what LLVM inlined, and executed 8% more instructions on a benchmark of references; a trait object was devirtualized, but too late to be inlined.)
   Both grammars must use the same runtime and input kind; the compiler checks this.
 * Rule bodies are compiled to straight-line code with labeled blocks and `let`-`else`; no closure chains.
   Actions are wrapped in immediately invoked closures so that `return` and `?` stay local to the action.
@@ -291,7 +293,7 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 3. `#[memo]` and benchmarks, `#![lint]` and `#![profile]` (done).
 4. Byte input, public `SourceText`, cross-grammar references (done); more diagnostics tests.
 
-Later: cut operator (which would also sharpen errors such as `[z-a]`), left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data, and for closing delimiters that repeat the opening one, as in raw strings and heredocs, if a parameter can be matched as a literal), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
+Later: cut operator (which would also sharpen syntax errors), left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data, and for closing delimiters that repeat the opening one, as in raw strings and heredocs, if a parameter can be matched as a literal), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
 
 When a need arises: tokens written in Rust, for what grammars cannot express (closing delimiters that repeat the opening one, as in raw strings and heredocs; indentation) or for speed (e.g. `memchr`).
 They would be atoms, which need neither memoization nor implicit whitespace, written with the documented part of `Cx`; grammars could refer to them as they refer to the rules of other grammars, through a type like `Rules`.

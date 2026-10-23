@@ -4,8 +4,8 @@ prpr::grammar! {
 }
 
 prpr::grammar! {
-    b = [z-a]
-    //~^ ERROR: range in ascending order
+    b = "x" @ "y"
+    //~^ ERROR: syntax error
 }
 
 fn main() {}

@@ -178,6 +178,24 @@ With `grammar!`, it reports errors at the grammar; for grammar files, it reports
     |           ^^^^ the trait `Clone` is not implemented for `Tree`
   ```
 
-* **Rules of other grammars** that do not exist or are not visible are reported at their names, as errors that their grammar's `Rules` has no associated function of that name, or that it is private.
-  The compiler may report several errors for one mistake, about helpers whose names start with `__`.
-  A rule of a grammar of a different kind of input, text or binary, is reported as mismatched types between `Cx<'_, str>` and `Cx<'_, [u8]>`.
+* **Rules of other grammars** that do not exist or are not visible are reported once, at their names, as errors about a constant of that name in the hidden `__Rules` of their grammar, which does not exist or is private:
+
+  ```text
+  error[E0599]: no variant, associated function, or constant named `nmber` found for enum `lexical::__Rules` in the current scope
+   --> src/main.rs:9:47
+    |
+  9 |         pub list: i64 = "[" n:super::lexical::nmber "]" { n }
+    |                                               ^^^^^ variant, associated function, or constant not found in `lexical::__Rules`
+    |
+  help: there is an associated constant `number` with a similar name
+    |
+  9 |         pub list: i64 = "[" n:super::lexical::number "]" { n }
+    |                                                +
+  ```
+
+  A rule of a grammar of the other kind of input, text or binary, is reported as such:
+
+  ```text
+  error[E0277]: this rule of another grammar parses another kind of input than this grammar
+     = note: grammars that use each other's rules must parse the same kind of input, `str` or `bytes`
+  ```

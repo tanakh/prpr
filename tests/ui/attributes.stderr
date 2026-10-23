@@ -23,11 +23,53 @@ error: `comment` must be an `atom` rule
 10 |     comment = "//" (!"\n" .)*
    |     ^^^^^^^
 
-error: expected `#![lint]` without arguments
+error: expected `#[memo]` without arguments
   --> tests/ui/attributes.rs:21:9
    |
-21 |         #![lint(memo)]
+21 |         #[memo = 1]
+   |         ^^^^^^^^^^^
+
+error: expected `#[memo]` without arguments
+  --> tests/ui/attributes.rs:25:9
+   |
+25 |         #[memo(a)]
+   |         ^^^^^^^^^^
+
+error: expected `#[label = "..."]`
+  --> tests/ui/attributes.rs:29:9
+   |
+29 |         #[label]
+   |         ^^^^^^^^
+
+error: expected `#[label = "..."]`
+  --> tests/ui/attributes.rs:33:9
+   |
+33 |         #[label = some words]
+   |         ^^^^^^^^^^^^^^^^^^^^^
+
+error: expected `#[boundary(expression)]`
+  --> tests/ui/attributes.rs:37:9
+   |
+37 |         #[boundary(1)]
    |         ^^^^^^^^^^^^^^
 
-error: aborting due to 5 previous errors
+error: expected `#![lint]` without arguments
+  --> tests/ui/attributes.rs:45:9
+   |
+45 |         #![lint(memo)]
+   |         ^^^^^^^^^^^^^^
+
+error: expected `#![input = str]` or `#![input = bytes]`
+  --> tests/ui/attributes.rs:47:9
+   |
+47 |         #![input = string]
+   |         ^^^^^^^^^^^^^^^^^^
+
+error: unknown grammar attribute `inputs`
+  --> tests/ui/attributes.rs:49:12
+   |
+49 |         #![inputs = str]
+   |            ^^^^^^
+
+error: aborting due to 12 previous errors
 

@@ -118,12 +118,8 @@ fn clone_fn(name: &str) -> Ident {
     Ident::new(&format!("__clone_{name}"), TokenSpan::call_site())
 }
 
-fn atom_const(name: &str) -> Ident {
-    Ident::new(&format!("__atom_{name}"), TokenSpan::call_site())
-}
-
-fn delimited_fn(name: &str) -> Ident {
-    Ident::new(&format!("__delimited_{name}"), TokenSpan::call_site())
+fn rule_type_name(name: &str) -> Ident {
+    Ident::new(&format!("__Rule_{name}"), TokenSpan::call_site())
 }
 
 fn text_var(name: &str) -> Ident {
@@ -530,8 +526,7 @@ impl Gen<'_> {
                 info.docs.clone()
             };
             let atom = rule.atom;
-            let atom_const = atom_const(&rule.name.name);
-            let delimited = delimited_fn(&rule.name.name);
+            let rule_type = rule_type_name(&rule.name.name);
             let check = match (&info.boundary, atom) {
                 (_, false) | (Boundary::None, _) => q!(true),
                 (Boundary::Default, true) => q!(__delimited(__cx, __m, __start, __end)),
@@ -540,7 +535,7 @@ impl Gen<'_> {
                     q!(#f(__cx, __m, __end))
                 }
             };
-            q! {
+            let function = q! {
                 #(#[doc = #docs])*
                 #[inline]
                 #[allow(dead_code)]
@@ -551,30 +546,74 @@ impl Gen<'_> {
                 ) -> #rt::PResult<#ty> {
                     #raw(cx, memo, pos)
                 }
-
+            };
+            // What other grammars need, behind one name, so that a mistake in a reference to the
+            // rule is reported once.
+            let foreign = q! {
                 #[doc(hidden)]
-                #[allow(dead_code, non_upper_case_globals)]
-                #vis const #atom_const: bool = #atom;
+                #[allow(dead_code, non_camel_case_types)]
+                #vis struct #rule_type;
 
-                #[doc(hidden)]
-                #[allow(unused, non_snake_case)]
-                #vis fn #delimited<'i>(
-                    __cx: &mut #rt::Cx<'i, #input>,
-                    __m: &mut Memo<'i>,
-                    __start: usize,
-                    __end: usize,
-                ) -> bool {
-                    #check
+                impl<'i> #rt::ForeignRule<'i, #input, #ty> for #rule_type {
+                    type Memo = Memo<'i>;
+
+                    const ATOM: bool = #atom;
+
+                    #[inline]
+                    fn parse(
+                        &self,
+                        __cx: &mut #rt::Cx<'i, #input>,
+                        __m: &mut Memo<'i>,
+                        __pos: usize,
+                        __token: bool,
+                    ) -> #rt::PResult<#ty> {
+                        if !__token {
+                            return #raw(__cx, __m, __pos);
+                        }
+                        let __mark = __cx.mark();
+                        match #raw(__cx, __m, __pos) {
+                            Ok(__r) => {
+                                __cx.rollback(__mark);
+                                let (__start, __end) = (__pos, __r.1);
+                                if #check {
+                                    Ok(__r)
+                                } else {
+                                    Err(__cx.fail(__end, #rt::Expected::Delimiter))
+                                }
+                            }
+                            Err(__f) => {
+                                __cx.commit(__mark);
+                                Err(__f)
+                            }
+                        }
+                    }
                 }
-            }
+            };
+            let constant = q! {
+                #[allow(dead_code, non_upper_case_globals)]
+                #vis const #name: #rule_type = #rule_type;
+            };
+            (function, foreign, constant)
         });
+        let (functions, (foreigns, constants)): (Vec<_>, (Vec<_>, Vec<_>)) =
+            items.map(|(f, r, c)| (f, (r, c))).unzip();
         q! {
             /// The rules of the grammar, as functions that other grammars and Rust code can call.
             pub enum Rules {}
 
             impl Rules {
-                #(#items)*
+                #(#functions)*
             }
+
+            /// The rules as other grammars use them.
+            #[doc(hidden)]
+            pub enum __Rules {}
+
+            impl __Rules {
+                #(#constants)*
+            }
+
+            #(#foreigns)*
         }
     }
 
@@ -870,50 +909,36 @@ impl Gen<'_> {
     // A rule of another grammar. Whether it is a token is known from constants of that grammar.
     fn other_reference(&self, path: &Path, cx: Ctx, mode: Mode) -> TokenStream {
         let rt = &self.rt;
+        let input = &self.input;
         let name = path.segments.last().unwrap();
         let module = module_of(path);
         let field = grammar_field(&module);
         let module = self.path_tokens(&module);
         let rule = self.user_ident(name);
-        // Located at the name, where the compiler reports them if the rule does not exist.
-        let mut atom = atom_const(&name.name);
-        atom.set_span(rule.span());
-        let mut delimited = delimited_fn(&name.name);
-        delimited.set_span(rule.span());
-        let call = q!(#module::Rules::#rule(__cx, &mut __m.#field, __pos));
-        let code = match mode {
+        // The rule is looked up once, and the kind of input is required once, so that a mistake
+        // is reported once, at the reference.
+        let span = TokenSpan::mixed_site().located_at(rule.span());
+        let lookup = quote_spanned!(span=> let __rule = #module::__Rules::#rule;);
+        let call = quote_spanned! {span=>
+            <_ as #rt::ForeignRule<'_, #input, _>>::parse(&__rule, __cx, &mut __m.#field, __pos, __token)
+        };
+        let call = match mode {
             Mode::Value => call,
             Mode::Recognize => q!(match #call { Ok((_, __p)) => Ok(__p), Err(__f) => Err(__f) }),
         };
-        if !cx.skipping {
-            return code;
-        }
-        let end = match mode {
-            Mode::Value => q!(__r.1),
-            Mode::Recognize => q!(__r),
+        // In a rule that skips whitespace, an atom is a token, with whitespace before it.
+        let token = if cx.skipping {
+            q! {
+                let __token = #rt::foreign_atom(&__rule);
+                let __pos = if __token { __skip(__cx, __m, __pos) } else { __pos };
+            }
+        } else {
+            q!(let __token = false;)
         };
         q! {{
-            const __ATOM: bool = #module::Rules::#atom;
-            let __pos = if __ATOM { __skip(__cx, __m, __pos) } else { __pos };
-            let __mark = if __ATOM { ::core::option::Option::Some(__cx.mark()) } else { ::core::option::Option::None };
-            match #code {
-                Ok(__r) => {
-                    if let ::core::option::Option::Some(__mark) = __mark {
-                        __cx.rollback(__mark);
-                    }
-                    if !__ATOM || #module::Rules::#delimited(__cx, &mut __m.#field, __pos, #end) {
-                        Ok(__r)
-                    } else {
-                        Err(__cx.fail(#end, #rt::Expected::Delimiter))
-                    }
-                }
-                Err(__f) => {
-                    if let ::core::option::Option::Some(__mark) = __mark {
-                        __cx.commit(__mark);
-                    }
-                    Err(__f)
-                }
-            }
+            #lookup
+            #token
+            #call
         }}
     }
 

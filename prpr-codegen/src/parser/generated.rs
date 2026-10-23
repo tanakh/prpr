@@ -1099,7 +1099,76 @@ fn __rule_attr_body<'i>(
                 Ok(__p) => __p,
                 Err(__f) => break '__l23 Err(__f),
             };
+            let __pos = match match {
+                let __pos = __skip(__cx, __m, __pos);
+                match __cx.lit(__pos, "]") {
+                    Ok(__r) => {
+                        if __delimited(__cx, __m, __pos, __r) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => Err(__f),
+                }
+            } {
+                Ok(_) => Ok(__pos),
+                Err(__f) => Err(__f),
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l23 Err(__f),
+            };
             Ok(((|| -> (Ident, AttrArg) { (name, AttrArg::Expr(e)) })(), __pos))
+        } {
+            break '__l20 Ok(__r);
+        }
+        if let Ok(__r) = '__l24: {
+            let (name, __pos) = match {
+                let __pos = __skip(__cx, __m, __pos);
+                let __mark = __cx.mark();
+                match __rule_ident_raw(__cx, __m, __pos) {
+                    Ok(__r) => {
+                        __cx.rollback(__mark);
+                        if __delimited(__cx, __m, __pos, __r.1) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r.1, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => {
+                        __cx.commit(__mark);
+                        Err(__f)
+                    }
+                }
+            } {
+                Ok(__r) => __r,
+                Err(__f) => break '__l24 Err(__f),
+            };
+            let __pos = match {
+                let __pos = __skip(__cx, __m, __pos);
+                let __mark = __cx.mark();
+                match match __rule_rust_group(__cx, __m, __pos) {
+                    Ok((_, __p)) => Ok(__p),
+                    Err(__f) => Err(__f),
+                } {
+                    Ok(__r) => {
+                        __cx.rollback(__mark);
+                        if __delimited(__cx, __m, __pos, __r) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => {
+                        __cx.commit(__mark);
+                        Err(__f)
+                    }
+                }
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l24 Err(__f),
+            };
+            Ok(((|| -> (Ident, AttrArg) { (name, AttrArg::Other) })(), __pos))
         } {
             break '__l20 Ok(__r);
         }
@@ -1142,8 +1211,8 @@ fn __rule_attr_value<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<AttrArg> {
-    '__l24: {
-        if let Ok(__r) = '__l26: {
+    '__l25: {
+        if let Ok(__r) = '__l27: {
             let (l, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
@@ -1163,13 +1232,32 @@ fn __rule_attr_value<'i>(
                 }
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l26 Err(__f),
+                Err(__f) => break '__l27 Err(__f),
+            };
+            let __pos = match match {
+                let __pos = __skip(__cx, __m, __pos);
+                match __cx.lit(__pos, "]") {
+                    Ok(__r) => {
+                        if __delimited(__cx, __m, __pos, __r) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => Err(__f),
+                }
+            } {
+                Ok(_) => Ok(__pos),
+                Err(__f) => Err(__f),
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l27 Err(__f),
             };
             Ok(((|| -> AttrArg { AttrArg::Lit(l) })(), __pos))
         } {
-            break '__l24 Ok(__r);
+            break '__l25 Ok(__r);
         }
-        '__l25: {
+        if let Ok(__r) = '__l28: {
             let (id, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
@@ -1189,9 +1277,57 @@ fn __rule_attr_value<'i>(
                 }
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l25 Err(__f),
+                Err(__f) => break '__l28 Err(__f),
+            };
+            let __pos = match match {
+                let __pos = __skip(__cx, __m, __pos);
+                match __cx.lit(__pos, "]") {
+                    Ok(__r) => {
+                        if __delimited(__cx, __m, __pos, __r) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => Err(__f),
+                }
+            } {
+                Ok(_) => Ok(__pos),
+                Err(__f) => Err(__f),
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l28 Err(__f),
             };
             Ok(((|| -> AttrArg { AttrArg::Ident(id) })(), __pos))
+        } {
+            break '__l25 Ok(__r);
+        }
+        '__l26: {
+            let __pos = match {
+                let __pos = __skip(__cx, __m, __pos);
+                let __mark = __cx.mark();
+                match match __rule_attr_tokens(__cx, __m, __pos) {
+                    Ok((_, __p)) => Ok(__p),
+                    Err(__f) => Err(__f),
+                } {
+                    Ok(__r) => {
+                        __cx.rollback(__mark);
+                        if __delimited(__cx, __m, __pos, __r) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => {
+                        __cx.commit(__mark);
+                        Err(__f)
+                    }
+                }
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l26 Err(__f),
+            };
+            Ok(((|| -> AttrArg { AttrArg::Other })(), __pos))
         }
     }
 }
@@ -1203,6 +1339,66 @@ fn attr_value<'i>(
     __prpr_runtime::parse_full(input, __rule_attr_value, __skip)
 }
 #[allow(unused, non_snake_case, clippy::all)]
+fn __rule_attr_tokens<'i>(
+    __cx: &mut __prpr_runtime::Cx<'i, str>,
+    __m: &mut Memo<'i>,
+    __pos: usize,
+) -> __prpr_runtime::PResult<()> {
+    match {
+        let mut __p = __pos;
+        let mut __first = true;
+        loop {
+            let __pos = __p;
+            match '__l29: {
+                let __pos = match {
+                    __cx.push_quiet();
+                    let __r = __cx.lit(__pos, "]");
+                    __cx.pop_quiet();
+                    match __r {
+                        Ok(_) => {
+                            let __at = __pos;
+                            Err(__cx.fail_unexpected(__at))
+                        }
+                        Err(_) => Ok(__pos),
+                    }
+                } {
+                    Ok(__p) => __p,
+                    Err(__f) => break '__l29 Err(__f),
+                };
+                let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
+                    Ok((_, __p)) => Ok(__p),
+                    Err(__f) => Err(__f),
+                } {
+                    Ok(__p) => __p,
+                    Err(__f) => break '__l29 Err(__f),
+                };
+                Ok(__pos)
+            } {
+                Ok(__q) => {
+                    let __progress = __q != __p;
+                    __first = false;
+                    __p = __q;
+                    if !__progress {
+                        break;
+                    }
+                }
+                Err(_) => break,
+            }
+        }
+        if __first { Err(__prpr_runtime::Fail) } else { Ok(__p) }
+    } {
+        Ok(__p) => Ok(((), __p)),
+        Err(__f) => Err(__f),
+    }
+}
+/// Parses the whole input with the rule `attr_tokens`.
+#[allow(dead_code)]
+fn attr_tokens<'i>(
+    input: &'i str,
+) -> ::core::result::Result<(), __prpr_runtime::ParseError> {
+    __prpr_runtime::parse_full(input, __rule_attr_tokens, __prpr_runtime::no_skip)
+}
+#[allow(unused, non_snake_case, clippy::all)]
 fn __rule_item<'i>(
     __cx: &mut __prpr_runtime::Cx<'i, str>,
     __m: &mut Memo<'i>,
@@ -1210,20 +1406,20 @@ fn __rule_item<'i>(
 ) -> __prpr_runtime::PResult<Item> {
     let __at = __skip(__cx, __m, __pos);
     let __saved = __cx.push_label(__at, "rule");
-    let __r = '__l27: {
-        if let Ok(__r) = '__l29: {
+    let __r = '__l30: {
+        if let Ok(__r) = '__l32: {
             let (s, __pos) = match __rule_rust_item(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l29 Err(__f),
+                Err(__f) => break '__l32 Err(__f),
             };
             Ok(((|| -> Item { Item::Rust(s) })(), __pos))
         } {
-            break '__l27 Ok(__r);
+            break '__l30 Ok(__r);
         }
-        '__l28: {
+        '__l31: {
             let (r, __pos) = match __rule_rule(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l28 Err(__f),
+                Err(__f) => break '__l31 Err(__f),
             };
             Ok(((|| -> Item { Item::Rule(r) })(), __pos))
         }
@@ -1242,14 +1438,14 @@ fn __rule_rust_item<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Span> {
-    '__l30: {
+    '__l33: {
         let __start = __skip(__cx, __m, __pos);
         let __pos = match {
             let mut __p = __pos;
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l31: {
+                match '__l34: {
                     if let Ok(__r) = {
                         let __pos = __skip(__cx, __m, __pos);
                         let __mark = __cx.mark();
@@ -1271,7 +1467,7 @@ fn __rule_rust_item<'i>(
                             }
                         }
                     } {
-                        break '__l31 Ok(__r);
+                        break '__l34 Ok(__r);
                     }
                     {
                         let __pos = __skip(__cx, __m, __pos);
@@ -1309,7 +1505,7 @@ fn __rule_rust_item<'i>(
             Ok(__p)
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l30 Err(__f),
+            Err(__f) => break '__l33 Err(__f),
         };
         let __pos = match match match __rule_vis(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
@@ -1319,10 +1515,10 @@ fn __rule_rust_item<'i>(
             Err(_) => Ok(__pos),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l30 Err(__f),
+            Err(__f) => break '__l33 Err(__f),
         };
-        let __pos = match '__l32: {
-            if let Ok(__r) = '__l34: {
+        let __pos = match '__l35: {
+            if let Ok(__r) = '__l37: {
                 let __pos = match match match __rule_semi_item(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
@@ -1331,7 +1527,7 @@ fn __rule_rust_item<'i>(
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l34 Err(__f),
+                    Err(__f) => break '__l37 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -1355,13 +1551,13 @@ fn __rule_rust_item<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l34 Err(__f),
+                    Err(__f) => break '__l37 Err(__f),
                 };
                 Ok(__pos)
             } {
-                break '__l32 Ok(__r);
+                break '__l35 Ok(__r);
             }
-            '__l33: {
+            '__l36: {
                 let __pos = match match match __rule_brace_item(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
@@ -1370,7 +1566,7 @@ fn __rule_rust_item<'i>(
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l33 Err(__f),
+                    Err(__f) => break '__l36 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -1394,13 +1590,13 @@ fn __rule_rust_item<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l33 Err(__f),
+                    Err(__f) => break '__l36 Err(__f),
                 };
                 Ok(__pos)
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l30 Err(__f),
+            Err(__f) => break '__l33 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok(((|| -> Span { __span__ })(), __pos))
@@ -1419,45 +1615,45 @@ fn __rule_rust_attr<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l35: {
+    match '__l38: {
         let __pos = match __cx.lit(__pos, "#") {
             Ok(__p) => __p,
-            Err(__f) => break '__l35 Err(__f),
+            Err(__f) => break '__l38 Err(__f),
         };
         let __pos = match match __rule_spaces(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l35 Err(__f),
+            Err(__f) => break '__l38 Err(__f),
         };
         let __pos = match match __cx.lit(__pos, "!") {
             Ok(__p) => Ok(__p),
             Err(_) => Ok(__pos),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l35 Err(__f),
+            Err(__f) => break '__l38 Err(__f),
         };
         let __pos = match match __rule_spaces(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l35 Err(__f),
+            Err(__f) => break '__l38 Err(__f),
         };
         let __pos = match match __cx.lit(__pos, "[") {
             Ok(_) => Ok(__pos),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l35 Err(__f),
+            Err(__f) => break '__l38 Err(__f),
         };
         let __pos = match match __rule_rust_group(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l35 Err(__f),
+            Err(__f) => break '__l38 Err(__f),
         };
         Ok(__pos)
     } {
@@ -1478,17 +1674,17 @@ fn __rule_rust_doc_comment<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l36: {
+    match '__l39: {
         let __pos = match __cx.lit(__pos, "///") {
             Ok(__p) => __p,
-            Err(__f) => break '__l36 Err(__f),
+            Err(__f) => break '__l39 Err(__f),
         };
         let __pos = match {
             let mut __p = __pos;
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l37: {
+                match '__l40: {
                     let __pos = match {
                         __cx.push_quiet();
                         let __r = __cx.lit(__pos, "\n");
@@ -1502,7 +1698,7 @@ fn __rule_rust_doc_comment<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l37 Err(__f),
+                        Err(__f) => break '__l40 Err(__f),
                     };
                     let __pos = match match __cx.peek_char(__pos) {
                         ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -1511,7 +1707,7 @@ fn __rule_rust_doc_comment<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l37 Err(__f),
+                        Err(__f) => break '__l40 Err(__f),
                     };
                     Ok(__pos)
                 } {
@@ -1529,7 +1725,7 @@ fn __rule_rust_doc_comment<'i>(
             Ok(__p)
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l36 Err(__f),
+            Err(__f) => break '__l39 Err(__f),
         };
         Ok(__pos)
     } {
@@ -1550,7 +1746,7 @@ fn __rule_semi_item<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l38: {
+    match '__l41: {
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "use") {
@@ -1564,7 +1760,7 @@ fn __rule_semi_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l38 Ok(__r);
+            break '__l41 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1579,7 +1775,7 @@ fn __rule_semi_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l38 Ok(__r);
+            break '__l41 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1594,9 +1790,9 @@ fn __rule_semi_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l38 Ok(__r);
+            break '__l41 Ok(__r);
         }
-        if let Ok(__r) = '__l40: {
+        if let Ok(__r) = '__l43: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "const") {
@@ -1611,11 +1807,11 @@ fn __rule_semi_item<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l40 Err(__f),
+                Err(__f) => break '__l43 Err(__f),
             };
             let __pos = match {
                 __cx.push_quiet();
-                let __r = '__l41: {
+                let __r = '__l44: {
                     if let Ok(__r) = {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "fn") {
@@ -1629,7 +1825,7 @@ fn __rule_semi_item<'i>(
                             Err(__f) => Err(__f),
                         }
                     } {
-                        break '__l41 Ok(__r);
+                        break '__l44 Ok(__r);
                     }
                     if let Ok(__r) = {
                         let __pos = __skip(__cx, __m, __pos);
@@ -1644,7 +1840,7 @@ fn __rule_semi_item<'i>(
                             Err(__f) => Err(__f),
                         }
                     } {
-                        break '__l41 Ok(__r);
+                        break '__l44 Ok(__r);
                     }
                     if let Ok(__r) = {
                         let __pos = __skip(__cx, __m, __pos);
@@ -1659,7 +1855,7 @@ fn __rule_semi_item<'i>(
                             Err(__f) => Err(__f),
                         }
                     } {
-                        break '__l41 Ok(__r);
+                        break '__l44 Ok(__r);
                     }
                     {
                         let __pos = __skip(__cx, __m, __pos);
@@ -1685,13 +1881,13 @@ fn __rule_semi_item<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l40 Err(__f),
+                Err(__f) => break '__l43 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l38 Ok(__r);
+            break '__l41 Ok(__r);
         }
-        '__l39: {
+        '__l42: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "extern") {
@@ -1706,7 +1902,7 @@ fn __rule_semi_item<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l39 Err(__f),
+                Err(__f) => break '__l42 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -1722,7 +1918,7 @@ fn __rule_semi_item<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l39 Err(__f),
+                Err(__f) => break '__l42 Err(__f),
             };
             Ok(__pos)
         }
@@ -1744,7 +1940,7 @@ fn __rule_brace_item<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l42: {
+    match '__l45: {
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "const") {
@@ -1758,7 +1954,7 @@ fn __rule_brace_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1773,7 +1969,7 @@ fn __rule_brace_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1788,7 +1984,7 @@ fn __rule_brace_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1803,7 +1999,7 @@ fn __rule_brace_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1818,7 +2014,7 @@ fn __rule_brace_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1833,7 +2029,7 @@ fn __rule_brace_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1848,7 +2044,7 @@ fn __rule_brace_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1863,7 +2059,7 @@ fn __rule_brace_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1878,7 +2074,7 @@ fn __rule_brace_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -1893,9 +2089,9 @@ fn __rule_brace_item<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
-        if let Ok(__r) = '__l44: {
+        if let Ok(__r) = '__l47: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "union") {
@@ -1910,7 +2106,7 @@ fn __rule_brace_item<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l44 Err(__f),
+                Err(__f) => break '__l47 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -1934,13 +2130,13 @@ fn __rule_brace_item<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l44 Err(__f),
+                Err(__f) => break '__l47 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l42 Ok(__r);
+            break '__l45 Ok(__r);
         }
-        '__l43: {
+        '__l46: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "macro_rules") {
@@ -1955,7 +2151,7 @@ fn __rule_brace_item<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l43 Err(__f),
+                Err(__f) => break '__l46 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -1971,7 +2167,7 @@ fn __rule_brace_item<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l43 Err(__f),
+                Err(__f) => break '__l46 Err(__f),
             };
             Ok(__pos)
         }
@@ -1993,13 +2189,13 @@ fn __rule_rust_to_semi<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l45: {
+    match '__l48: {
         let __pos = match {
             let mut __p = __pos;
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l46: {
+                match '__l49: {
                     let __pos = match {
                         __cx.push_quiet();
                         let __r = __cx.lit(__pos, ";");
@@ -2013,14 +2209,14 @@ fn __rule_rust_to_semi<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l46 Err(__f),
+                        Err(__f) => break '__l49 Err(__f),
                     };
                     let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l46 Err(__f),
+                        Err(__f) => break '__l49 Err(__f),
                     };
                     Ok(__pos)
                 } {
@@ -2038,11 +2234,11 @@ fn __rule_rust_to_semi<'i>(
             Ok(__p)
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l45 Err(__f),
+            Err(__f) => break '__l48 Err(__f),
         };
         let __pos = match __cx.lit(__pos, ";") {
             Ok(__p) => __p,
-            Err(__f) => break '__l45 Err(__f),
+            Err(__f) => break '__l48 Err(__f),
         };
         Ok(__pos)
     } {
@@ -2063,13 +2259,13 @@ fn __rule_rust_to_brace<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l47: {
+    match '__l50: {
         let __pos = match {
             let mut __p = __pos;
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l48: {
+                match '__l51: {
                     let __pos = match {
                         __cx.push_quiet();
                         let __r = __cx.lit(__pos, ";");
@@ -2083,7 +2279,7 @@ fn __rule_rust_to_brace<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l48 Err(__f),
+                        Err(__f) => break '__l51 Err(__f),
                     };
                     let __pos = match {
                         __cx.push_quiet();
@@ -2098,14 +2294,14 @@ fn __rule_rust_to_brace<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l48 Err(__f),
+                        Err(__f) => break '__l51 Err(__f),
                     };
                     let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l48 Err(__f),
+                        Err(__f) => break '__l51 Err(__f),
                     };
                     Ok(__pos)
                 } {
@@ -2123,11 +2319,11 @@ fn __rule_rust_to_brace<'i>(
             Ok(__p)
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l47 Err(__f),
+            Err(__f) => break '__l50 Err(__f),
         };
-        let __pos = match '__l49: {
+        let __pos = match '__l52: {
             if let Ok(__r) = __cx.lit(__pos, ";") {
-                break '__l49 Ok(__r);
+                break '__l52 Ok(__r);
             }
             match __rule_rust_group(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
@@ -2135,7 +2331,7 @@ fn __rule_rust_to_brace<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l47 Err(__f),
+            Err(__f) => break '__l50 Err(__f),
         };
         Ok(__pos)
     } {
@@ -2156,7 +2352,7 @@ fn __rule_vis<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Span> {
-    '__l50: {
+    '__l53: {
         let __start = __skip(__cx, __m, __pos);
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
@@ -2172,7 +2368,7 @@ fn __rule_vis<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l50 Err(__f),
+            Err(__f) => break '__l53 Err(__f),
         };
         let __pos = match match {
             let __pos = __skip(__cx, __m, __pos);
@@ -2199,7 +2395,7 @@ fn __rule_vis<'i>(
             Err(_) => Ok(__pos),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l50 Err(__f),
+            Err(__f) => break '__l53 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok(((|| -> Span { __span__ })(), __pos))
@@ -2216,20 +2412,20 @@ fn __rule_rust_paren<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l51: {
+    match '__l54: {
         let __pos = match match __cx.lit(__pos, "(") {
             Ok(_) => Ok(__pos),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l51 Err(__f),
+            Err(__f) => break '__l54 Err(__f),
         };
         let __pos = match match __rule_rust_group(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l51 Err(__f),
+            Err(__f) => break '__l54 Err(__f),
         };
         Ok(__pos)
     } {
@@ -2250,18 +2446,18 @@ fn __rule_rust_tt<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l52: {
-        if let Ok(__r) = '__l53: {
+    match '__l55: {
+        if let Ok(__r) = '__l56: {
             let __pos = match __cx.lit(__pos, "//") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l53 Err(__f),
+                Err(__f) => break '__l56 Err(__f),
             };
             let __pos = match {
                 let mut __p = __pos;
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l54: {
+                    match '__l57: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\n");
@@ -2275,7 +2471,7 @@ fn __rule_rust_tt<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l54 Err(__f),
+                            Err(__f) => break '__l57 Err(__f),
                         };
                         let __pos = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -2284,7 +2480,7 @@ fn __rule_rust_tt<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l54 Err(__f),
+                            Err(__f) => break '__l57 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -2302,35 +2498,35 @@ fn __rule_rust_tt<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l53 Err(__f),
+                Err(__f) => break '__l56 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l52 Ok(__r);
+            break '__l55 Ok(__r);
         }
         if let Ok(__r) = match __rule_block_comment(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l52 Ok(__r);
+            break '__l55 Ok(__r);
         }
         if let Ok(__r) = match __rule_rust_string(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l52 Ok(__r);
+            break '__l55 Ok(__r);
         }
         if let Ok(__r) = match __rule_rust_char_or_lifetime(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l52 Ok(__r);
+            break '__l55 Ok(__r);
         }
         if let Ok(__r) = match __rule_rust_group(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l52 Ok(__r);
+            break '__l55 Ok(__r);
         }
         match __cx.peek_char(__pos) {
             ::core::option::Option::Some(
@@ -2366,18 +2562,18 @@ fn __rule_rust_group<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l55: {
-        if let Ok(__r) = '__l58: {
+    match '__l58: {
+        if let Ok(__r) = '__l61: {
             let __pos = match __cx.lit(__pos, "(") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l58 Err(__f),
+                Err(__f) => break '__l61 Err(__f),
             };
             let __pos = match {
                 let mut __p = __pos;
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l59: {
+                    match '__l62: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, ")");
@@ -2391,14 +2587,14 @@ fn __rule_rust_group<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l59 Err(__f),
+                            Err(__f) => break '__l62 Err(__f),
                         };
                         let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
                             Ok((_, __p)) => Ok(__p),
                             Err(__f) => Err(__f),
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l59 Err(__f),
+                            Err(__f) => break '__l62 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -2416,27 +2612,27 @@ fn __rule_rust_group<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l58 Err(__f),
+                Err(__f) => break '__l61 Err(__f),
             };
             let __pos = match __cx.lit(__pos, ")") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l58 Err(__f),
+                Err(__f) => break '__l61 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l55 Ok(__r);
+            break '__l58 Ok(__r);
         }
-        if let Ok(__r) = '__l60: {
+        if let Ok(__r) = '__l63: {
             let __pos = match __cx.lit(__pos, "[") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l60 Err(__f),
+                Err(__f) => break '__l63 Err(__f),
             };
             let __pos = match {
                 let mut __p = __pos;
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l61: {
+                    match '__l64: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "]");
@@ -2450,14 +2646,14 @@ fn __rule_rust_group<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l61 Err(__f),
+                            Err(__f) => break '__l64 Err(__f),
                         };
                         let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
                             Ok((_, __p)) => Ok(__p),
                             Err(__f) => Err(__f),
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l61 Err(__f),
+                            Err(__f) => break '__l64 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -2475,27 +2671,27 @@ fn __rule_rust_group<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l60 Err(__f),
+                Err(__f) => break '__l63 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "]") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l60 Err(__f),
+                Err(__f) => break '__l63 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l55 Ok(__r);
+            break '__l58 Ok(__r);
         }
-        '__l56: {
+        '__l59: {
             let __pos = match __cx.lit(__pos, "{") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l56 Err(__f),
+                Err(__f) => break '__l59 Err(__f),
             };
             let __pos = match {
                 let mut __p = __pos;
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l57: {
+                    match '__l60: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "}");
@@ -2509,14 +2705,14 @@ fn __rule_rust_group<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l57 Err(__f),
+                            Err(__f) => break '__l60 Err(__f),
                         };
                         let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
                             Ok((_, __p)) => Ok(__p),
                             Err(__f) => Err(__f),
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l57 Err(__f),
+                            Err(__f) => break '__l60 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -2534,11 +2730,11 @@ fn __rule_rust_group<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l56 Err(__f),
+                Err(__f) => break '__l59 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "}") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l56 Err(__f),
+                Err(__f) => break '__l59 Err(__f),
             };
             Ok(__pos)
         }
@@ -2560,8 +2756,8 @@ fn __rule_rust_string<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l62: {
-        if let Ok(__r) = '__l64: {
+    match '__l65: {
+        if let Ok(__r) = '__l67: {
             let __pos = match match match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
@@ -2572,22 +2768,22 @@ fn __rule_rust_string<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l64 Err(__f),
+                Err(__f) => break '__l67 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l64 Err(__f),
+                Err(__f) => break '__l67 Err(__f),
             };
             let __pos = match {
                 let mut __p = __pos;
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l65: {
-                        if let Ok(__r) = '__l66: {
+                    match '__l68: {
+                        if let Ok(__r) = '__l69: {
                             let __pos = match __cx.lit(__pos, "\\") {
                                 Ok(__p) => __p,
-                                Err(__f) => break '__l66 Err(__f),
+                                Err(__f) => break '__l69 Err(__f),
                             };
                             let __pos = match match __cx.peek_char(__pos) {
                                 ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -2596,11 +2792,11 @@ fn __rule_rust_string<'i>(
                                 }
                             } {
                                 Ok(__p) => __p,
-                                Err(__f) => break '__l66 Err(__f),
+                                Err(__f) => break '__l69 Err(__f),
                             };
                             Ok(__pos)
                         } {
-                            break '__l65 Ok(__r);
+                            break '__l68 Ok(__r);
                         }
                         match __cx.peek_char(__pos) {
                             ::core::option::Option::Some(
@@ -2631,17 +2827,17 @@ fn __rule_rust_string<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l64 Err(__f),
+                Err(__f) => break '__l67 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l64 Err(__f),
+                Err(__f) => break '__l67 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l62 Ok(__r);
+            break '__l65 Ok(__r);
         }
-        '__l63: {
+        '__l66: {
             let __pos = match match match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
@@ -2652,18 +2848,18 @@ fn __rule_rust_string<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l63 Err(__f),
+                Err(__f) => break '__l66 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "r") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l63 Err(__f),
+                Err(__f) => break '__l66 Err(__f),
             };
             let __pos = match match __rule_raw_body(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l63 Err(__f),
+                Err(__f) => break '__l66 Err(__f),
             };
             Ok(__pos)
         }
@@ -2685,16 +2881,16 @@ fn __rule_rust_char_or_lifetime<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l67: {
+    match '__l70: {
         let __pos = match __cx.lit(__pos, "'") {
             Ok(__p) => __p,
-            Err(__f) => break '__l67 Err(__f),
+            Err(__f) => break '__l70 Err(__f),
         };
-        let __pos = match '__l68: {
-            if let Ok(__r) = '__l69: {
+        let __pos = match '__l71: {
+            if let Ok(__r) = '__l72: {
                 let __pos = match __cx.lit(__pos, "\\") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l69 Err(__f),
+                    Err(__f) => break '__l72 Err(__f),
                 };
                 let __pos = match match __cx.peek_char(__pos) {
                     ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -2703,14 +2899,14 @@ fn __rule_rust_char_or_lifetime<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l69 Err(__f),
+                    Err(__f) => break '__l72 Err(__f),
                 };
                 let __pos = match {
                     let mut __p = __pos;
                     let mut __first = true;
                     loop {
                         let __pos = __p;
-                        match '__l70: {
+                        match '__l73: {
                             let __pos = match {
                                 __cx.push_quiet();
                                 let __r = __cx.lit(__pos, "'");
@@ -2724,7 +2920,7 @@ fn __rule_rust_char_or_lifetime<'i>(
                                 }
                             } {
                                 Ok(__p) => __p,
-                                Err(__f) => break '__l70 Err(__f),
+                                Err(__f) => break '__l73 Err(__f),
                             };
                             let __pos = match match __cx.peek_char(__pos) {
                                 ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -2733,7 +2929,7 @@ fn __rule_rust_char_or_lifetime<'i>(
                                 }
                             } {
                                 Ok(__p) => __p,
-                                Err(__f) => break '__l70 Err(__f),
+                                Err(__f) => break '__l73 Err(__f),
                             };
                             Ok(__pos)
                         } {
@@ -2751,17 +2947,17 @@ fn __rule_rust_char_or_lifetime<'i>(
                     Ok(__p)
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l69 Err(__f),
+                    Err(__f) => break '__l72 Err(__f),
                 };
                 let __pos = match __cx.lit(__pos, "'") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l69 Err(__f),
+                    Err(__f) => break '__l72 Err(__f),
                 };
                 Ok(__pos)
             } {
-                break '__l68 Ok(__r);
+                break '__l71 Ok(__r);
             }
-            if let Ok(__r) = '__l71: {
+            if let Ok(__r) = '__l74: {
                 let __pos = match match __cx.peek_char(__pos) {
                     ::core::option::Option::Some((__c, __p)) => Ok(__p),
                     ::core::option::Option::None => {
@@ -2769,15 +2965,15 @@ fn __rule_rust_char_or_lifetime<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l71 Err(__f),
+                    Err(__f) => break '__l74 Err(__f),
                 };
                 let __pos = match __cx.lit(__pos, "'") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l71 Err(__f),
+                    Err(__f) => break '__l74 Err(__f),
                 };
                 Ok(__pos)
             } {
-                break '__l68 Ok(__r);
+                break '__l71 Ok(__r);
             }
             {
                 let mut __p = __pos;
@@ -2803,7 +2999,7 @@ fn __rule_rust_char_or_lifetime<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l67 Err(__f),
+            Err(__f) => break '__l70 Err(__f),
         };
         Ok(__pos)
     } {
@@ -2828,7 +3024,7 @@ fn __rule_rule<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Rule> {
-    '__l72: {
+    '__l75: {
         let (attrs, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
             let mut __p = __pos;
@@ -2851,14 +3047,14 @@ fn __rule_rule<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l72 Err(__f),
+            Err(__f) => break '__l75 Err(__f),
         };
         let (vis, __pos) = match match __rule_vis(__cx, __m, __pos) {
             Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
             Err(_) => Ok((::core::option::Option::None, __pos)),
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l72 Err(__f),
+            Err(__f) => break '__l75 Err(__f),
         };
         let (is_atom, __pos) = match match {
             let __pos = __skip(__cx, __m, __pos);
@@ -2880,7 +3076,7 @@ fn __rule_rule<'i>(
             Err(_) => Ok((::core::option::Option::None, __pos)),
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l72 Err(__f),
+            Err(__f) => break '__l75 Err(__f),
         };
         let (name, __pos) = match {
             let __pos = __skip(__cx, __m, __pos);
@@ -2901,9 +3097,9 @@ fn __rule_rule<'i>(
             }
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l72 Err(__f),
+            Err(__f) => break '__l75 Err(__f),
         };
-        let (ty, __pos) = match match '__l73: {
+        let (ty, __pos) = match match '__l76: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ":") {
@@ -2918,7 +3114,7 @@ fn __rule_rule<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l73 Err(__f),
+                Err(__f) => break '__l76 Err(__f),
             };
             let __pos = match {
                 __cx.push_quiet();
@@ -2945,11 +3141,11 @@ fn __rule_rule<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l73 Err(__f),
+                Err(__f) => break '__l76 Err(__f),
             };
             let (t, __pos) = match __rule_ty_span(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l73 Err(__f),
+                Err(__f) => break '__l76 Err(__f),
             };
             Ok(((|| { t })(), __pos))
         } {
@@ -2957,171 +3153,6 @@ fn __rule_rule<'i>(
             Err(_) => Ok((::core::option::Option::None, __pos)),
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l72 Err(__f),
-        };
-        let __pos = match {
-            let __pos = __skip(__cx, __m, __pos);
-            let __mark = __cx.mark();
-            match '__l74: {
-                let __pos = match __cx.lit(__pos, "=") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l74 Err(__f),
-                };
-                let __pos = match {
-                    __cx.push_quiet();
-                    let __r = match __cx.peek_char(__pos) {
-                        ::core::option::Option::Some(
-                            (__c, __p),
-                        ) if ::core::matches!(__c, '=' | '>') => Ok(__p),
-                        _ => {
-                            Err(
-                                __cx.fail(__pos, __prpr_runtime::Expected::Class("[=>]")),
-                            )
-                        }
-                    };
-                    __cx.pop_quiet();
-                    match __r {
-                        Ok(_) => {
-                            let __at = __pos;
-                            Err(__cx.fail_unexpected(__at))
-                        }
-                        Err(_) => Ok(__pos),
-                    }
-                } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l74 Err(__f),
-                };
-                Ok(__pos)
-            } {
-                Ok(__r) => {
-                    __cx.rollback(__mark);
-                    if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
-                    } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
-                    }
-                }
-                Err(__f) => {
-                    __cx.commit(__mark);
-                    Err(__f)
-                }
-            }
-        } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l72 Err(__f),
-        };
-        let (body, __pos) = match __rule_expr(__cx, __m, __pos) {
-            Ok(__r) => __r,
-            Err(__f) => break '__l72 Err(__f),
-        };
-        Ok((
-            (|| -> Rule {
-                Rule {
-                    attrs,
-                    vis,
-                    atom: is_atom.is_some(),
-                    name,
-                    ty,
-                    body,
-                }
-            })(),
-            __pos,
-        ))
-    }
-}
-/// Parses the whole input with the rule `rule`.
-#[allow(dead_code)]
-fn rule<'i>(input: &'i str) -> ::core::result::Result<Rule, __prpr_runtime::ParseError> {
-    __prpr_runtime::parse_full(input, __rule_rule, __skip)
-}
-#[allow(unused, non_snake_case, clippy::all)]
-fn __rule_rule_header<'i>(
-    __cx: &mut __prpr_runtime::Cx<'i, str>,
-    __m: &mut Memo<'i>,
-    __pos: usize,
-) -> __prpr_runtime::PResult<()> {
-    match '__l75: {
-        let __pos = match {
-            let __pos = __skip(__cx, __m, __pos);
-            let __mark = __cx.mark();
-            match match __rule_ident_raw(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
-            } {
-                Ok(__r) => {
-                    __cx.rollback(__mark);
-                    if __delimited(__cx, __m, __pos, __r) {
-                        Ok(__r)
-                    } else {
-                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
-                    }
-                }
-                Err(__f) => {
-                    __cx.commit(__mark);
-                    Err(__f)
-                }
-            }
-        } {
-            Ok(__p) => __p,
-            Err(__f) => break '__l75 Err(__f),
-        };
-        let __pos = match match '__l76: {
-            let __pos = match {
-                let __pos = __skip(__cx, __m, __pos);
-                match __cx.lit(__pos, ":") {
-                    Ok(__r) => {
-                        if __delimited(__cx, __m, __pos, __r) {
-                            Ok(__r)
-                        } else {
-                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
-                        }
-                    }
-                    Err(__f) => Err(__f),
-                }
-            } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l76 Err(__f),
-            };
-            let __pos = match {
-                __cx.push_quiet();
-                let __r = {
-                    let __pos = __skip(__cx, __m, __pos);
-                    match __cx.lit(__pos, ":") {
-                        Ok(__r) => {
-                            if __delimited(__cx, __m, __pos, __r) {
-                                Ok(__r)
-                            } else {
-                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
-                            }
-                        }
-                        Err(__f) => Err(__f),
-                    }
-                };
-                __cx.pop_quiet();
-                match __r {
-                    Ok(_) => {
-                        let __at = __skip(__cx, __m, __pos);
-                        Err(__cx.fail_unexpected(__at))
-                    }
-                    Err(_) => Ok(__pos),
-                }
-            } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l76 Err(__f),
-            };
-            let __pos = match match __rule_ty(__cx, __m, __pos) {
-                Ok((_, __p)) => Ok(__p),
-                Err(__f) => Err(__f),
-            } {
-                Ok(__p) => __p,
-                Err(__f) => break '__l76 Err(__f),
-            };
-            Ok(__pos)
-        } {
-            Ok(__p) => Ok(__p),
-            Err(_) => Ok(__pos),
-        } {
-            Ok(__p) => __p,
             Err(__f) => break '__l75 Err(__f),
         };
         let __pos = match {
@@ -3175,6 +3206,171 @@ fn __rule_rule_header<'i>(
             Ok(__p) => __p,
             Err(__f) => break '__l75 Err(__f),
         };
+        let (body, __pos) = match __rule_expr(__cx, __m, __pos) {
+            Ok(__r) => __r,
+            Err(__f) => break '__l75 Err(__f),
+        };
+        Ok((
+            (|| -> Rule {
+                Rule {
+                    attrs,
+                    vis,
+                    atom: is_atom.is_some(),
+                    name,
+                    ty,
+                    body,
+                }
+            })(),
+            __pos,
+        ))
+    }
+}
+/// Parses the whole input with the rule `rule`.
+#[allow(dead_code)]
+fn rule<'i>(input: &'i str) -> ::core::result::Result<Rule, __prpr_runtime::ParseError> {
+    __prpr_runtime::parse_full(input, __rule_rule, __skip)
+}
+#[allow(unused, non_snake_case, clippy::all)]
+fn __rule_rule_header<'i>(
+    __cx: &mut __prpr_runtime::Cx<'i, str>,
+    __m: &mut Memo<'i>,
+    __pos: usize,
+) -> __prpr_runtime::PResult<()> {
+    match '__l78: {
+        let __pos = match {
+            let __pos = __skip(__cx, __m, __pos);
+            let __mark = __cx.mark();
+            match match __rule_ident_raw(__cx, __m, __pos) {
+                Ok((_, __p)) => Ok(__p),
+                Err(__f) => Err(__f),
+            } {
+                Ok(__r) => {
+                    __cx.rollback(__mark);
+                    if __delimited(__cx, __m, __pos, __r) {
+                        Ok(__r)
+                    } else {
+                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                    }
+                }
+                Err(__f) => {
+                    __cx.commit(__mark);
+                    Err(__f)
+                }
+            }
+        } {
+            Ok(__p) => __p,
+            Err(__f) => break '__l78 Err(__f),
+        };
+        let __pos = match match '__l79: {
+            let __pos = match {
+                let __pos = __skip(__cx, __m, __pos);
+                match __cx.lit(__pos, ":") {
+                    Ok(__r) => {
+                        if __delimited(__cx, __m, __pos, __r) {
+                            Ok(__r)
+                        } else {
+                            Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                        }
+                    }
+                    Err(__f) => Err(__f),
+                }
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l79 Err(__f),
+            };
+            let __pos = match {
+                __cx.push_quiet();
+                let __r = {
+                    let __pos = __skip(__cx, __m, __pos);
+                    match __cx.lit(__pos, ":") {
+                        Ok(__r) => {
+                            if __delimited(__cx, __m, __pos, __r) {
+                                Ok(__r)
+                            } else {
+                                Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                            }
+                        }
+                        Err(__f) => Err(__f),
+                    }
+                };
+                __cx.pop_quiet();
+                match __r {
+                    Ok(_) => {
+                        let __at = __skip(__cx, __m, __pos);
+                        Err(__cx.fail_unexpected(__at))
+                    }
+                    Err(_) => Ok(__pos),
+                }
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l79 Err(__f),
+            };
+            let __pos = match match __rule_ty(__cx, __m, __pos) {
+                Ok((_, __p)) => Ok(__p),
+                Err(__f) => Err(__f),
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l79 Err(__f),
+            };
+            Ok(__pos)
+        } {
+            Ok(__p) => Ok(__p),
+            Err(_) => Ok(__pos),
+        } {
+            Ok(__p) => __p,
+            Err(__f) => break '__l78 Err(__f),
+        };
+        let __pos = match {
+            let __pos = __skip(__cx, __m, __pos);
+            let __mark = __cx.mark();
+            match '__l80: {
+                let __pos = match __cx.lit(__pos, "=") {
+                    Ok(__p) => __p,
+                    Err(__f) => break '__l80 Err(__f),
+                };
+                let __pos = match {
+                    __cx.push_quiet();
+                    let __r = match __cx.peek_char(__pos) {
+                        ::core::option::Option::Some(
+                            (__c, __p),
+                        ) if ::core::matches!(__c, '=' | '>') => Ok(__p),
+                        _ => {
+                            Err(
+                                __cx.fail(__pos, __prpr_runtime::Expected::Class("[=>]")),
+                            )
+                        }
+                    };
+                    __cx.pop_quiet();
+                    match __r {
+                        Ok(_) => {
+                            let __at = __pos;
+                            Err(__cx.fail_unexpected(__at))
+                        }
+                        Err(_) => Ok(__pos),
+                    }
+                } {
+                    Ok(__p) => __p,
+                    Err(__f) => break '__l80 Err(__f),
+                };
+                Ok(__pos)
+            } {
+                Ok(__r) => {
+                    __cx.rollback(__mark);
+                    if __delimited(__cx, __m, __pos, __r) {
+                        Ok(__r)
+                    } else {
+                        Err(__cx.fail(__r, __prpr_runtime::Expected::Delimiter))
+                    }
+                }
+                Err(__f) => {
+                    __cx.commit(__mark);
+                    Err(__f)
+                }
+            }
+        } {
+            Ok(__p) => __p,
+            Err(__f) => break '__l78 Err(__f),
+        };
         Ok(__pos)
     } {
         Ok(__p) => Ok(((), __p)),
@@ -3194,14 +3390,14 @@ fn __rule_item_start<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l78: {
+    match '__l81: {
         if let Ok(__r) = match __rule_rule_header(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l78 Ok(__r);
+            break '__l81 Ok(__r);
         }
-        if let Ok(__r) = '__l81: {
+        if let Ok(__r) = '__l84: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "macro_rules") {
@@ -3216,7 +3412,7 @@ fn __rule_item_start<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l81 Err(__f),
+                Err(__f) => break '__l84 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3232,13 +3428,13 @@ fn __rule_item_start<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l81 Err(__f),
+                Err(__f) => break '__l84 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l78 Ok(__r);
+            break '__l81 Ok(__r);
         }
-        '__l79: {
+        '__l82: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "union") {
@@ -3253,7 +3449,7 @@ fn __rule_item_start<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l79 Err(__f),
+                Err(__f) => break '__l82 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3277,9 +3473,9 @@ fn __rule_item_start<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l79 Err(__f),
+                Err(__f) => break '__l82 Err(__f),
             };
-            let __pos = match '__l80: {
+            let __pos = match '__l83: {
                 if let Ok(__r) = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "{") {
@@ -3293,7 +3489,7 @@ fn __rule_item_start<'i>(
                         Err(__f) => Err(__f),
                     }
                 } {
-                    break '__l80 Ok(__r);
+                    break '__l83 Ok(__r);
                 }
                 {
                     let __pos = __skip(__cx, __m, __pos);
@@ -3310,7 +3506,7 @@ fn __rule_item_start<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l79 Err(__f),
+                Err(__f) => break '__l82 Err(__f),
             };
             Ok(__pos)
         }
@@ -3332,14 +3528,14 @@ fn __rule_ty_span<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Span> {
-    '__l82: {
+    '__l85: {
         let __start = __skip(__cx, __m, __pos);
         let __pos = match match __rule_ty(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l82 Err(__f),
+            Err(__f) => break '__l85 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok(((|| -> Span { __span__ })(), __pos))
@@ -3360,8 +3556,8 @@ fn __rule_ty<'i>(
 ) -> __prpr_runtime::PResult<()> {
     let __at = __skip(__cx, __m, __pos);
     let __saved = __cx.push_label(__at, "type");
-    let __r = match '__l83: {
-        if let Ok(__r) = '__l84: {
+    let __r = match '__l86: {
+        if let Ok(__r) = '__l87: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "&") {
@@ -3376,7 +3572,7 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l84 Err(__f),
+                Err(__f) => break '__l87 Err(__f),
             };
             let __pos = match match match __rule_lifetime(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
@@ -3386,7 +3582,7 @@ fn __rule_ty<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l84 Err(__f),
+                Err(__f) => break '__l87 Err(__f),
             };
             let __pos = match match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3405,20 +3601,20 @@ fn __rule_ty<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l84 Err(__f),
+                Err(__f) => break '__l87 Err(__f),
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l84 Err(__f),
+                Err(__f) => break '__l87 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l83 Ok(__r);
+            break '__l86 Ok(__r);
         }
-        if let Ok(__r) = '__l85: {
+        if let Ok(__r) = '__l88: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "*") {
@@ -3433,9 +3629,9 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l85 Err(__f),
+                Err(__f) => break '__l88 Err(__f),
             };
-            let __pos = match '__l86: {
+            let __pos = match '__l89: {
                 if let Ok(__r) = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "const") {
@@ -3449,7 +3645,7 @@ fn __rule_ty<'i>(
                         Err(__f) => Err(__f),
                     }
                 } {
-                    break '__l86 Ok(__r);
+                    break '__l89 Ok(__r);
                 }
                 {
                     let __pos = __skip(__cx, __m, __pos);
@@ -3466,20 +3662,20 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l85 Err(__f),
+                Err(__f) => break '__l88 Err(__f),
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l85 Err(__f),
+                Err(__f) => break '__l88 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l83 Ok(__r);
+            break '__l86 Ok(__r);
         }
-        if let Ok(__r) = '__l87: {
+        if let Ok(__r) = '__l90: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
@@ -3494,14 +3690,14 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l87 Err(__f),
+                Err(__f) => break '__l90 Err(__f),
             };
             let __pos = match match __rule_ty_list(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l87 Err(__f),
+                Err(__f) => break '__l90 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3517,13 +3713,13 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l87 Err(__f),
+                Err(__f) => break '__l90 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l83 Ok(__r);
+            break '__l86 Ok(__r);
         }
-        if let Ok(__r) = '__l88: {
+        if let Ok(__r) = '__l91: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "[") {
@@ -3538,16 +3734,16 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                Err(__f) => break '__l91 Err(__f),
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                Err(__f) => break '__l91 Err(__f),
             };
-            let __pos = match match '__l89: {
+            let __pos = match match '__l92: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ";") {
@@ -3562,7 +3758,7 @@ fn __rule_ty<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l89 Err(__f),
+                    Err(__f) => break '__l92 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -3586,7 +3782,7 @@ fn __rule_ty<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l89 Err(__f),
+                    Err(__f) => break '__l92 Err(__f),
                 };
                 Ok(__pos)
             } {
@@ -3594,7 +3790,7 @@ fn __rule_ty<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                Err(__f) => break '__l91 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3610,14 +3806,14 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l88 Err(__f),
+                Err(__f) => break '__l91 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l83 Ok(__r);
+            break '__l86 Ok(__r);
         }
-        if let Ok(__r) = '__l90: {
-            let __pos = match '__l91: {
+        if let Ok(__r) = '__l93: {
+            let __pos = match '__l94: {
                 if let Ok(__r) = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "dyn") {
@@ -3631,7 +3827,7 @@ fn __rule_ty<'i>(
                         Err(__f) => Err(__f),
                     }
                 } {
-                    break '__l91 Ok(__r);
+                    break '__l94 Ok(__r);
                 }
                 {
                     let __pos = __skip(__cx, __m, __pos);
@@ -3648,20 +3844,20 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l90 Err(__f),
+                Err(__f) => break '__l93 Err(__f),
             };
             let __pos = match match __rule_bounds(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l90 Err(__f),
+                Err(__f) => break '__l93 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l83 Ok(__r);
+            break '__l86 Ok(__r);
         }
-        if let Ok(__r) = '__l92: {
+        if let Ok(__r) = '__l95: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "fn") {
@@ -3676,7 +3872,7 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l92 Err(__f),
+                Err(__f) => break '__l95 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3692,14 +3888,14 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l92 Err(__f),
+                Err(__f) => break '__l95 Err(__f),
             };
             let __pos = match match __rule_ty_list(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l92 Err(__f),
+                Err(__f) => break '__l95 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -3715,9 +3911,9 @@ fn __rule_ty<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l92 Err(__f),
+                Err(__f) => break '__l95 Err(__f),
             };
-            let __pos = match match '__l93: {
+            let __pos = match match '__l96: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "->") {
@@ -3732,14 +3928,14 @@ fn __rule_ty<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l93 Err(__f),
+                    Err(__f) => break '__l96 Err(__f),
                 };
                 let __pos = match match __rule_ty(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l93 Err(__f),
+                    Err(__f) => break '__l96 Err(__f),
                 };
                 Ok(__pos)
             } {
@@ -3747,11 +3943,11 @@ fn __rule_ty<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l92 Err(__f),
+                Err(__f) => break '__l95 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l83 Ok(__r);
+            break '__l86 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -3766,7 +3962,7 @@ fn __rule_ty<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l83 Ok(__r);
+            break '__l86 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -3781,7 +3977,7 @@ fn __rule_ty<'i>(
                 Err(__f) => Err(__f),
             }
         } {
-            break '__l83 Ok(__r);
+            break '__l86 Ok(__r);
         }
         match __rule_type_path(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
@@ -3805,7 +4001,7 @@ fn __rule_ty_list<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l94: {
+    match '__l97: {
         let __pos = match {
             let mut __p = __pos;
             let mut __first = true;
@@ -3849,7 +4045,7 @@ fn __rule_ty_list<'i>(
             Ok(__p)
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l94 Err(__f),
+            Err(__f) => break '__l97 Err(__f),
         };
         let __pos = match match {
             let __pos = __skip(__cx, __m, __pos);
@@ -3868,7 +4064,7 @@ fn __rule_ty_list<'i>(
             Err(_) => Ok(__pos),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l94 Err(__f),
+            Err(__f) => break '__l97 Err(__f),
         };
         Ok(__pos)
     } {
@@ -3894,7 +4090,7 @@ fn __rule_array_len<'i>(
         let mut __first = true;
         loop {
             let __pos = __p;
-            match '__l95: {
+            match '__l98: {
                 let __pos = match {
                     __cx.push_quiet();
                     let __r = __cx.lit(__pos, "]");
@@ -3908,14 +4104,14 @@ fn __rule_array_len<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l95 Err(__f),
+                    Err(__f) => break '__l98 Err(__f),
                 };
                 let __pos = match match __rule_rust_tt(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l95 Err(__f),
+                    Err(__f) => break '__l98 Err(__f),
                 };
                 Ok(__pos)
             } {
@@ -3949,7 +4145,7 @@ fn __rule_type_path<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l96: {
+    match '__l99: {
         let __pos = match match {
             let __pos = __skip(__cx, __m, __pos);
             match __cx.lit(__pos, "::") {
@@ -3967,21 +4163,21 @@ fn __rule_type_path<'i>(
             Err(_) => Ok(__pos),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l96 Err(__f),
+            Err(__f) => break '__l99 Err(__f),
         };
         let __pos = match match __rule_path_segment(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l96 Err(__f),
+            Err(__f) => break '__l99 Err(__f),
         };
         let __pos = match {
             let mut __p = __pos;
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l97: {
+                match '__l100: {
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "::") {
@@ -3996,14 +4192,14 @@ fn __rule_type_path<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l97 Err(__f),
+                        Err(__f) => break '__l100 Err(__f),
                     };
                     let __pos = match match __rule_path_segment(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l97 Err(__f),
+                        Err(__f) => break '__l100 Err(__f),
                     };
                     Ok(__pos)
                 } {
@@ -4021,7 +4217,7 @@ fn __rule_type_path<'i>(
             Ok(__p)
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l96 Err(__f),
+            Err(__f) => break '__l99 Err(__f),
         };
         Ok(__pos)
     } {
@@ -4042,7 +4238,7 @@ fn __rule_path_segment<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l98: {
+    match '__l101: {
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
@@ -4065,10 +4261,10 @@ fn __rule_path_segment<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l98 Err(__f),
+            Err(__f) => break '__l101 Err(__f),
         };
-        let __pos = match match '__l99: {
-            if let Ok(__r) = '__l102: {
+        let __pos = match match '__l102: {
+            if let Ok(__r) = '__l105: {
                 let __pos = match match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "::") {
@@ -4086,7 +4282,7 @@ fn __rule_path_segment<'i>(
                     Err(_) => Ok(__pos),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l102 Err(__f),
+                    Err(__f) => break '__l105 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4102,7 +4298,7 @@ fn __rule_path_segment<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l102 Err(__f),
+                    Err(__f) => break '__l105 Err(__f),
                 };
                 let __pos = match {
                     let mut __p = __pos;
@@ -4147,7 +4343,7 @@ fn __rule_path_segment<'i>(
                     Ok(__p)
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l102 Err(__f),
+                    Err(__f) => break '__l105 Err(__f),
                 };
                 let __pos = match match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4166,7 +4362,7 @@ fn __rule_path_segment<'i>(
                     Err(_) => Ok(__pos),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l102 Err(__f),
+                    Err(__f) => break '__l105 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4182,13 +4378,13 @@ fn __rule_path_segment<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l102 Err(__f),
+                    Err(__f) => break '__l105 Err(__f),
                 };
                 Ok(__pos)
             } {
-                break '__l99 Ok(__r);
+                break '__l102 Ok(__r);
             }
-            '__l100: {
+            '__l103: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "(") {
@@ -4203,14 +4399,14 @@ fn __rule_path_segment<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l100 Err(__f),
+                    Err(__f) => break '__l103 Err(__f),
                 };
                 let __pos = match match __rule_ty_list(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l100 Err(__f),
+                    Err(__f) => break '__l103 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4226,9 +4422,9 @@ fn __rule_path_segment<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l100 Err(__f),
+                    Err(__f) => break '__l103 Err(__f),
                 };
-                let __pos = match match '__l101: {
+                let __pos = match match '__l104: {
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "->") {
@@ -4243,14 +4439,14 @@ fn __rule_path_segment<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l101 Err(__f),
+                        Err(__f) => break '__l104 Err(__f),
                     };
                     let __pos = match match __rule_ty(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l101 Err(__f),
+                        Err(__f) => break '__l104 Err(__f),
                     };
                     Ok(__pos)
                 } {
@@ -4258,7 +4454,7 @@ fn __rule_path_segment<'i>(
                     Err(_) => Ok(__pos),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l100 Err(__f),
+                    Err(__f) => break '__l103 Err(__f),
                 };
                 Ok(__pos)
             }
@@ -4267,7 +4463,7 @@ fn __rule_path_segment<'i>(
             Err(_) => Ok(__pos),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l98 Err(__f),
+            Err(__f) => break '__l101 Err(__f),
         };
         Ok(__pos)
     } {
@@ -4288,14 +4484,14 @@ fn __rule_generic_arg<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l103: {
+    match '__l106: {
         if let Ok(__r) = match __rule_lifetime(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l103 Ok(__r);
+            break '__l106 Ok(__r);
         }
-        if let Ok(__r) = '__l104: {
+        if let Ok(__r) = '__l107: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
@@ -4318,7 +4514,7 @@ fn __rule_generic_arg<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l104 Err(__f),
+                Err(__f) => break '__l107 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -4334,7 +4530,7 @@ fn __rule_generic_arg<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l104 Err(__f),
+                Err(__f) => break '__l107 Err(__f),
             };
             let __pos = match {
                 __cx.push_quiet();
@@ -4361,24 +4557,24 @@ fn __rule_generic_arg<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l104 Err(__f),
+                Err(__f) => break '__l107 Err(__f),
             };
             let __pos = match match __rule_ty(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l104 Err(__f),
+                Err(__f) => break '__l107 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l103 Ok(__r);
+            break '__l106 Ok(__r);
         }
         if let Ok(__r) = match __rule_ty(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l103 Ok(__r);
+            break '__l106 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -4401,7 +4597,7 @@ fn __rule_generic_arg<'i>(
                 }
             }
         } {
-            break '__l103 Ok(__r);
+            break '__l106 Ok(__r);
         }
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
@@ -4424,7 +4620,7 @@ fn __rule_generic_arg<'i>(
                 }
             }
         } {
-            break '__l103 Ok(__r);
+            break '__l106 Ok(__r);
         }
         {
             let __pos = __skip(__cx, __m, __pos);
@@ -4553,14 +4749,14 @@ fn __rule_bound<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l105: {
+    match '__l108: {
         if let Ok(__r) = match __rule_lifetime(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
-            break '__l105 Ok(__r);
+            break '__l108 Ok(__r);
         }
-        if let Ok(__r) = '__l108: {
+        if let Ok(__r) = '__l111: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
@@ -4575,14 +4771,14 @@ fn __rule_bound<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l108 Err(__f),
+                Err(__f) => break '__l111 Err(__f),
             };
             let __pos = match match __rule_bound(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l108 Err(__f),
+                Err(__f) => break '__l111 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -4598,13 +4794,13 @@ fn __rule_bound<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l108 Err(__f),
+                Err(__f) => break '__l111 Err(__f),
             };
             Ok(__pos)
         } {
-            break '__l105 Ok(__r);
+            break '__l108 Ok(__r);
         }
-        '__l106: {
+        '__l109: {
             let __pos = match match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "?") {
@@ -4622,9 +4818,9 @@ fn __rule_bound<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l106 Err(__f),
+                Err(__f) => break '__l109 Err(__f),
             };
-            let __pos = match match '__l107: {
+            let __pos = match match '__l110: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "for") {
@@ -4639,7 +4835,7 @@ fn __rule_bound<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l107 Err(__f),
+                    Err(__f) => break '__l110 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4655,7 +4851,7 @@ fn __rule_bound<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l107 Err(__f),
+                    Err(__f) => break '__l110 Err(__f),
                 };
                 let __pos = match {
                     let mut __p = __pos;
@@ -4700,7 +4896,7 @@ fn __rule_bound<'i>(
                     Ok(__p)
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l107 Err(__f),
+                    Err(__f) => break '__l110 Err(__f),
                 };
                 let __pos = match match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4719,7 +4915,7 @@ fn __rule_bound<'i>(
                     Err(_) => Ok(__pos),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l107 Err(__f),
+                    Err(__f) => break '__l110 Err(__f),
                 };
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
@@ -4735,7 +4931,7 @@ fn __rule_bound<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l107 Err(__f),
+                    Err(__f) => break '__l110 Err(__f),
                 };
                 Ok(__pos)
             } {
@@ -4743,14 +4939,14 @@ fn __rule_bound<'i>(
                 Err(_) => Ok(__pos),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l106 Err(__f),
+                Err(__f) => break '__l109 Err(__f),
             };
             let __pos = match match __rule_type_path(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l106 Err(__f),
+                Err(__f) => break '__l109 Err(__f),
             };
             Ok(__pos)
         }
@@ -4773,10 +4969,10 @@ fn __rule_lifetime<'i>(
     match {
         let __pos = __skip(__cx, __m, __pos);
         let __mark = __cx.mark();
-        match '__l109: {
+        match '__l112: {
             let __pos = match __cx.lit(__pos, "'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l109 Err(__f),
+                Err(__f) => break '__l112 Err(__f),
             };
             let __pos = match {
                 let mut __p = __pos;
@@ -4801,7 +4997,7 @@ fn __rule_lifetime<'i>(
                 if __first { Err(__prpr_runtime::Fail) } else { Ok(__p) }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l109 Err(__f),
+                Err(__f) => break '__l112 Err(__f),
             };
             Ok(__pos)
         } {
@@ -4849,11 +5045,11 @@ fn __rule_choice<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Expr> {
-    '__l110: {
+    '__l113: {
         let __start = __skip(__cx, __m, __pos);
         let (first, __pos) = match __rule_sequence(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l110 Err(__f),
+            Err(__f) => break '__l113 Err(__f),
         };
         let (rest, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -4861,7 +5057,7 @@ fn __rule_choice<'i>(
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l111: {
+                match '__l114: {
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         let __mark = __cx.mark();
@@ -4884,11 +5080,11 @@ fn __rule_choice<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l111 Err(__f),
+                        Err(__f) => break '__l114 Err(__f),
                     };
                     let (s, __pos) = match __rule_sequence(__cx, __m, __pos) {
                         Ok(__r) => __r,
-                        Err(__f) => break '__l111 Err(__f),
+                        Err(__f) => break '__l114 Err(__f),
                     };
                     Ok(((|| { s })(), __pos))
                 } {
@@ -4907,7 +5103,7 @@ fn __rule_choice<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l110 Err(__f),
+            Err(__f) => break '__l113 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok(((|| -> Expr { make_choice(first, rest, __span__) })(), __pos))
@@ -4926,10 +5122,10 @@ fn __rule_choice_sep<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l112: {
+    match '__l115: {
         let __pos = match __cx.lit(__pos, "/") {
             Ok(__p) => __p,
-            Err(__f) => break '__l112 Err(__f),
+            Err(__f) => break '__l115 Err(__f),
         };
         let __pos = match {
             __cx.push_quiet();
@@ -4949,7 +5145,7 @@ fn __rule_choice_sep<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l112 Err(__f),
+            Err(__f) => break '__l115 Err(__f),
         };
         Ok(__pos)
     } {
@@ -4975,7 +5171,7 @@ fn __rule_sequence<'i>(
     let __r = {
         let __start = __skip(__cx, __m, __pos);
         let __mark = __cx.mark();
-        match '__l113: {
+        match '__l116: {
             let __start_elems = __skip(__cx, __m, __pos);
             let (elems, __pos) = match {
                 let mut __vs = __prpr_runtime::Vec::new();
@@ -4983,7 +5179,7 @@ fn __rule_sequence<'i>(
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l114: {
+                    match '__l117: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = match __rule_item_start(__cx, __m, __pos) {
@@ -5000,11 +5196,11 @@ fn __rule_sequence<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l114 Err(__f),
+                            Err(__f) => break '__l117 Err(__f),
                         };
                         let (e, __pos) = match __rule_element(__cx, __m, __pos) {
                             Ok(__r) => __r,
-                            Err(__f) => break '__l114 Err(__f),
+                            Err(__f) => break '__l117 Err(__f),
                         };
                         Ok(((|| { e })(), __pos))
                     } {
@@ -5023,7 +5219,7 @@ fn __rule_sequence<'i>(
                 Ok((__vs, __p))
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l113 Err(__f),
+                Err(__f) => break '__l116 Err(__f),
             };
             let __span_elems = __prpr_runtime::span(__start_elems, __pos);
             let (action, __pos) = match match __rule_action(__cx, __m, __pos) {
@@ -5031,7 +5227,7 @@ fn __rule_sequence<'i>(
                 Err(_) => Ok((::core::option::Option::None, __pos)),
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l113 Err(__f),
+                Err(__f) => break '__l116 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok(((|| { make_sequence(elems, __span_elems, action, __span__) })(), __pos))
@@ -5069,7 +5265,7 @@ fn __rule_action<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<(Span, bool)> {
-    '__l115: {
+    '__l118: {
         let (pred, __pos) = match match {
             let __pos = __skip(__cx, __m, __pos);
             match match __cx.lit(__pos, "&") {
@@ -5090,7 +5286,7 @@ fn __rule_action<'i>(
             Err(_) => Ok((::core::option::Option::None, __pos)),
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l115 Err(__f),
+            Err(__f) => break '__l118 Err(__f),
         };
         let (code, __pos) = match {
             let __pos = __skip(__cx, __m, __pos);
@@ -5111,7 +5307,7 @@ fn __rule_action<'i>(
             }
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l115 Err(__f),
+            Err(__f) => break '__l118 Err(__f),
         };
         Ok(((|| -> (Span, bool) { (code, pred.is_some()) })(), __pos))
     }
@@ -5129,21 +5325,21 @@ fn __rule_rust_brace<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Span> {
-    '__l116: {
+    '__l119: {
         let __start = __pos;
         let __pos = match match __cx.lit(__pos, "{") {
             Ok(_) => Ok(__pos),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l116 Err(__f),
+            Err(__f) => break '__l119 Err(__f),
         };
         let __pos = match match __rule_rust_group(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l116 Err(__f),
+            Err(__f) => break '__l119 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok(((|| -> Span { __span__ })(), __pos))
@@ -5164,9 +5360,9 @@ fn __rule_element<'i>(
 ) -> __prpr_runtime::PResult<Expr> {
     let __at = __skip(__cx, __m, __pos);
     let __saved = __cx.push_label(__at, "expression");
-    let __r = '__l117: {
+    let __r = '__l120: {
         if let Ok(__r) = __rule_bind(__cx, __m, __pos) {
-            break '__l117 Ok(__r);
+            break '__l120 Ok(__r);
         }
         __rule_prefix(__cx, __m, __pos)
     };
@@ -5186,7 +5382,7 @@ fn __rule_bind<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Expr> {
-    '__l118: {
+    '__l121: {
         let __start = __skip(__cx, __m, __pos);
         let (name, __pos) = match {
             let __pos = __skip(__cx, __m, __pos);
@@ -5207,7 +5403,7 @@ fn __rule_bind<'i>(
             }
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l118 Err(__f),
+            Err(__f) => break '__l121 Err(__f),
         };
         let __pos = match {
             let __pos = __skip(__cx, __m, __pos);
@@ -5223,7 +5419,7 @@ fn __rule_bind<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l118 Err(__f),
+            Err(__f) => break '__l121 Err(__f),
         };
         let __pos = match {
             __cx.push_quiet();
@@ -5250,11 +5446,11 @@ fn __rule_bind<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l118 Err(__f),
+            Err(__f) => break '__l121 Err(__f),
         };
         let (e, __pos) = match __rule_prefix(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l118 Err(__f),
+            Err(__f) => break '__l121 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok((
@@ -5282,8 +5478,8 @@ fn __rule_prefix<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Expr> {
-    '__l119: {
-        if let Ok(__r) = '__l120: {
+    '__l122: {
+        if let Ok(__r) = '__l123: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5299,7 +5495,7 @@ fn __rule_prefix<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l120 Err(__f),
+                Err(__f) => break '__l123 Err(__f),
             };
             let __pos = match {
                 __cx.push_quiet();
@@ -5326,11 +5522,11 @@ fn __rule_prefix<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l120 Err(__f),
+                Err(__f) => break '__l123 Err(__f),
             };
             let (e, __pos) = match __rule_prefix(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l120 Err(__f),
+                Err(__f) => break '__l123 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5338,9 +5534,9 @@ fn __rule_prefix<'i>(
                 __pos,
             ))
         } {
-            break '__l119 Ok(__r);
+            break '__l122 Ok(__r);
         }
-        if let Ok(__r) = '__l121: {
+        if let Ok(__r) = '__l124: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5356,11 +5552,11 @@ fn __rule_prefix<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l121 Err(__f),
+                Err(__f) => break '__l124 Err(__f),
             };
             let (e, __pos) = match __rule_prefix(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l121 Err(__f),
+                Err(__f) => break '__l124 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5368,7 +5564,7 @@ fn __rule_prefix<'i>(
                 __pos,
             ))
         } {
-            break '__l119 Ok(__r);
+            break '__l122 Ok(__r);
         }
         __rule_postfix(__cx, __m, __pos)
     }
@@ -5389,10 +5585,10 @@ fn __rule_postfix<'i>(
     {
         let __start = __skip(__cx, __m, __pos);
         let __mark = __cx.mark();
-        match '__l122: {
+        match '__l125: {
             let (p, __pos) = match __rule_primary(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l122 Err(__f),
+                Err(__f) => break '__l125 Err(__f),
             };
             let (op, __pos) = match match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5416,7 +5612,7 @@ fn __rule_postfix<'i>(
                 Err(_) => Ok((::core::option::Option::None, __pos)),
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l122 Err(__f),
+                Err(__f) => break '__l125 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok(((|| { make_postfix(p, op, __span__) })(), __pos))
@@ -5472,8 +5668,8 @@ fn __rule_primary<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Primary> {
-    '__l123: {
-        if let Ok(__r) = '__l125: {
+    '__l126: {
+        if let Ok(__r) = '__l128: {
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, "(") {
@@ -5488,13 +5684,13 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l125 Err(__f),
+                Err(__f) => break '__l128 Err(__f),
             };
             let (e, __pos) = match __rule_expr(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l125 Err(__f),
+                Err(__f) => break '__l128 Err(__f),
             };
-            let (sep, __pos) = match match '__l126: {
+            let (sep, __pos) = match match '__l129: {
                 let __pos = match {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ",") {
@@ -5509,11 +5705,11 @@ fn __rule_primary<'i>(
                     }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l126 Err(__f),
+                    Err(__f) => break '__l129 Err(__f),
                 };
                 let (s, __pos) = match __rule_expr(__cx, __m, __pos) {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l126 Err(__f),
+                    Err(__f) => break '__l129 Err(__f),
                 };
                 Ok(((|| { s })(), __pos))
             } {
@@ -5521,7 +5717,7 @@ fn __rule_primary<'i>(
                 Err(_) => Ok((::core::option::Option::None, __pos)),
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l125 Err(__f),
+                Err(__f) => break '__l128 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5537,7 +5733,7 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l125 Err(__f),
+                Err(__f) => break '__l128 Err(__f),
             };
             Ok((
                 (|| -> Primary {
@@ -5549,9 +5745,9 @@ fn __rule_primary<'i>(
                 __pos,
             ))
         } {
-            break '__l123 Ok(__r);
+            break '__l126 Ok(__r);
         }
-        if let Ok(__r) = '__l127: {
+        if let Ok(__r) = '__l130: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5567,11 +5763,11 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l127 Err(__f),
+                Err(__f) => break '__l130 Err(__f),
             };
             let (e, __pos) = match __rule_expr(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l127 Err(__f),
+                Err(__f) => break '__l130 Err(__f),
             };
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5587,7 +5783,7 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l127 Err(__f),
+                Err(__f) => break '__l130 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5597,9 +5793,9 @@ fn __rule_primary<'i>(
                 __pos,
             ))
         } {
-            break '__l123 Ok(__r);
+            break '__l126 Ok(__r);
         }
-        if let Ok(__r) = '__l128: {
+        if let Ok(__r) = '__l131: {
             let __start = __skip(__cx, __m, __pos);
             let (l, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5620,7 +5816,7 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l128 Err(__f),
+                Err(__f) => break '__l131 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5630,9 +5826,9 @@ fn __rule_primary<'i>(
                 __pos,
             ))
         } {
-            break '__l123 Ok(__r);
+            break '__l126 Ok(__r);
         }
-        if let Ok(__r) = '__l129: {
+        if let Ok(__r) = '__l132: {
             let __start = __skip(__cx, __m, __pos);
             let (c, __pos) = match {
                 let __pos = __skip(__cx, __m, __pos);
@@ -5653,7 +5849,7 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l129 Err(__f),
+                Err(__f) => break '__l132 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5663,17 +5859,17 @@ fn __rule_primary<'i>(
                 __pos,
             ))
         } {
-            break '__l123 Ok(__r);
+            break '__l126 Ok(__r);
         }
-        if let Ok(__r) = '__l130: {
+        if let Ok(__r) = '__l133: {
             let __start = __skip(__cx, __m, __pos);
             let __pos = match {
                 let __pos = __skip(__cx, __m, __pos);
                 let __mark = __cx.mark();
-                match '__l131: {
+                match '__l134: {
                     let __pos = match __cx.lit(__pos, ".") {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l131 Err(__f),
+                        Err(__f) => break '__l134 Err(__f),
                     };
                     let __pos = match {
                         __cx.push_quiet();
@@ -5688,7 +5884,7 @@ fn __rule_primary<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l131 Err(__f),
+                        Err(__f) => break '__l134 Err(__f),
                     };
                     Ok(__pos)
                 } {
@@ -5707,7 +5903,7 @@ fn __rule_primary<'i>(
                 }
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l130 Err(__f),
+                Err(__f) => break '__l133 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5715,13 +5911,13 @@ fn __rule_primary<'i>(
                 __pos,
             ))
         } {
-            break '__l123 Ok(__r);
+            break '__l126 Ok(__r);
         }
-        '__l124: {
+        '__l127: {
             let __start = __skip(__cx, __m, __pos);
             let (p, __pos) = match __rule_path(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l124 Err(__f),
+                Err(__f) => break '__l127 Err(__f),
             };
             let __span__ = __prpr_runtime::span(__start, __pos);
             Ok((
@@ -5746,7 +5942,7 @@ fn __rule_path<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Path> {
-    '__l132: {
+    '__l135: {
         let __start = __skip(__cx, __m, __pos);
         let (lc, __pos) = match match {
             let __pos = __skip(__cx, __m, __pos);
@@ -5768,11 +5964,11 @@ fn __rule_path<'i>(
             Err(_) => Ok((::core::option::Option::None, __pos)),
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l132 Err(__f),
+            Err(__f) => break '__l135 Err(__f),
         };
         let (first, __pos) = match __rule_path_start(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l132 Err(__f),
+            Err(__f) => break '__l135 Err(__f),
         };
         let (rest, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -5780,7 +5976,7 @@ fn __rule_path<'i>(
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l133: {
+                match '__l136: {
                     let __pos = match {
                         let __pos = __skip(__cx, __m, __pos);
                         match __cx.lit(__pos, "::") {
@@ -5795,11 +5991,11 @@ fn __rule_path<'i>(
                         }
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l133 Err(__f),
+                        Err(__f) => break '__l136 Err(__f),
                     };
                     let (s, __pos) = match __rule_path_start(__cx, __m, __pos) {
                         Ok(__r) => __r,
-                        Err(__f) => break '__l133 Err(__f),
+                        Err(__f) => break '__l136 Err(__f),
                     };
                     Ok(((|| { s })(), __pos))
                 } {
@@ -5818,7 +6014,7 @@ fn __rule_path<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l132 Err(__f),
+            Err(__f) => break '__l135 Err(__f),
         };
         let __span__ = __prpr_runtime::span(__start, __pos);
         Ok((
@@ -5846,7 +6042,7 @@ fn __rule_path_start<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Ident> {
-    '__l134: {
+    '__l137: {
         if let Ok(__r) = {
             let __pos = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
@@ -5865,12 +6061,12 @@ fn __rule_path_start<'i>(
                 }
             }
         } {
-            break '__l134 Ok(__r);
+            break '__l137 Ok(__r);
         }
         {
             let __start = __skip(__cx, __m, __pos);
             let __mark = __cx.mark();
-            match '__l135: {
+            match '__l138: {
                 let (id, __pos) = match {
                     let __pos = __skip(__cx, __m, __pos);
                     let __mark = __cx.mark();
@@ -5890,7 +6086,7 @@ fn __rule_path_start<'i>(
                     }
                 } {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l135 Err(__f),
+                    Err(__f) => break '__l138 Err(__f),
                 };
                 Ok((
                     (|| {
@@ -5932,27 +6128,27 @@ fn __rule_literal<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l136: {
-        let (l, __pos) = match '__l137: {
+    '__l139: {
+        let (l, __pos) = match '__l140: {
             if let Ok(__r) = __rule_byte_string(__cx, __m, __pos) {
-                break '__l137 Ok(__r);
+                break '__l140 Ok(__r);
             }
             if let Ok(__r) = __rule_raw_byte_string(__cx, __m, __pos) {
-                break '__l137 Ok(__r);
+                break '__l140 Ok(__r);
             }
             if let Ok(__r) = __rule_string(__cx, __m, __pos) {
-                break '__l137 Ok(__r);
+                break '__l140 Ok(__r);
             }
             if let Ok(__r) = __rule_raw_string(__cx, __m, __pos) {
-                break '__l137 Ok(__r);
+                break '__l140 Ok(__r);
             }
             if let Ok(__r) = __rule_byte_char(__cx, __m, __pos) {
-                break '__l137 Ok(__r);
+                break '__l140 Ok(__r);
             }
             __rule_char_lit(__cx, __m, __pos)
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l136 Err(__f),
+            Err(__f) => break '__l139 Err(__f),
         };
         let __pos = match {
             __cx.push_quiet();
@@ -5970,7 +6166,7 @@ fn __rule_literal<'i>(
             }
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l136 Err(__f),
+            Err(__f) => break '__l139 Err(__f),
         };
         Ok(((|| -> Lit { l })(), __pos))
     }
@@ -5988,10 +6184,10 @@ fn __rule_string<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l138: {
+    '__l141: {
         let __pos = match __cx.lit(__pos, "\"") {
             Ok(__p) => __p,
-            Err(__f) => break '__l138 Err(__f),
+            Err(__f) => break '__l141 Err(__f),
         };
         let (cs, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -6015,11 +6211,11 @@ fn __rule_string<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l138 Err(__f),
+            Err(__f) => break '__l141 Err(__f),
         };
         let __pos = match __cx.lit(__pos, "\"") {
             Ok(__p) => __p,
-            Err(__f) => break '__l138 Err(__f),
+            Err(__f) => break '__l141 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Str(cs.into_iter().flatten().collect()) })(), __pos))
     }
@@ -6037,33 +6233,33 @@ fn __rule_string_char<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Option<char>> {
-    '__l139: {
-        if let Ok(__r) = '__l141: {
+    '__l142: {
+        if let Ok(__r) = '__l144: {
             let __pos = match match __rule_line_continuation(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l141 Err(__f),
+                Err(__f) => break '__l144 Err(__f),
             };
             Ok(((|| -> Option<char> { None })(), __pos))
         } {
-            break '__l139 Ok(__r);
+            break '__l142 Ok(__r);
         }
-        if let Ok(__r) = '__l142: {
+        if let Ok(__r) = '__l145: {
             let __pos = match __cx.lit(__pos, "\\") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l142 Err(__f),
+                Err(__f) => break '__l145 Err(__f),
             };
             let (c, __pos) = match __rule_escape(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l142 Err(__f),
+                Err(__f) => break '__l145 Err(__f),
             };
             Ok(((|| -> Option<char> { Some(c) })(), __pos))
         } {
-            break '__l139 Ok(__r);
+            break '__l142 Ok(__r);
         }
-        '__l140: {
+        '__l143: {
             let (c, __pos) = match match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
@@ -6079,7 +6275,7 @@ fn __rule_string_char<'i>(
                 }
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l140 Err(__f),
+                Err(__f) => break '__l143 Err(__f),
             };
             Ok(((|| -> Option<char> { Some(c) })(), __pos))
         }
@@ -6098,10 +6294,10 @@ fn __rule_line_continuation<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    match '__l143: {
+    match '__l146: {
         let __pos = match __cx.lit(__pos, "\\\n") {
             Ok(__p) => __p,
-            Err(__f) => break '__l143 Err(__f),
+            Err(__f) => break '__l146 Err(__f),
         };
         let __pos = match {
             let mut __p = __pos;
@@ -6111,7 +6307,7 @@ fn __rule_line_continuation<'i>(
                 match {
                     let __start = __pos;
                     let __mark = __cx.mark();
-                    match '__l144: {
+                    match '__l147: {
                         let (c, __pos) = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok((__c, __p)),
                             ::core::option::Option::None => {
@@ -6119,7 +6315,7 @@ fn __rule_line_continuation<'i>(
                             }
                         } {
                             Ok(__r) => __r,
-                            Err(__f) => break '__l144 Err(__f),
+                            Err(__f) => break '__l147 Err(__f),
                         };
                         Ok(((|| { c.is_whitespace() })(), __pos))
                     } {
@@ -6154,7 +6350,7 @@ fn __rule_line_continuation<'i>(
             Ok(__p)
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l143 Err(__f),
+            Err(__f) => break '__l146 Err(__f),
         };
         Ok(__pos)
     } {
@@ -6175,10 +6371,10 @@ fn __rule_byte_string<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l145: {
+    '__l148: {
         let __pos = match __cx.lit(__pos, "b\"") {
             Ok(__p) => __p,
-            Err(__f) => break '__l145 Err(__f),
+            Err(__f) => break '__l148 Err(__f),
         };
         let (cs, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -6202,11 +6398,11 @@ fn __rule_byte_string<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l145 Err(__f),
+            Err(__f) => break '__l148 Err(__f),
         };
         let __pos = match __cx.lit(__pos, "\"") {
             Ok(__p) => __p,
-            Err(__f) => break '__l145 Err(__f),
+            Err(__f) => break '__l148 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Bytes(cs.into_iter().flatten().collect()) })(), __pos))
     }
@@ -6224,36 +6420,36 @@ fn __rule_byte_string_char<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Option<u8>> {
-    '__l146: {
-        if let Ok(__r) = '__l148: {
+    '__l149: {
+        if let Ok(__r) = '__l151: {
             let __pos = match match __rule_line_continuation(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l148 Err(__f),
+                Err(__f) => break '__l151 Err(__f),
             };
             Ok(((|| -> Option<u8> { None })(), __pos))
         } {
-            break '__l146 Ok(__r);
+            break '__l149 Ok(__r);
         }
-        if let Ok(__r) = '__l149: {
+        if let Ok(__r) = '__l152: {
             let __pos = match __cx.lit(__pos, "\\") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l149 Err(__f),
+                Err(__f) => break '__l152 Err(__f),
             };
             let (c, __pos) = match __rule_byte_escape(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l149 Err(__f),
+                Err(__f) => break '__l152 Err(__f),
             };
             Ok(((|| -> Option<u8> { Some(c) })(), __pos))
         } {
-            break '__l146 Ok(__r);
+            break '__l149 Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
-            match '__l147: {
+            match '__l150: {
                 let (c, __pos) = match match __cx.peek_char(__pos) {
                     ::core::option::Option::Some(
                         (__c, __p),
@@ -6269,7 +6465,7 @@ fn __rule_byte_string_char<'i>(
                     }
                 } {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l147 Err(__f),
+                    Err(__f) => break '__l150 Err(__f),
                 };
                 Ok((
                     (|| {
@@ -6314,14 +6510,14 @@ fn __rule_raw_string<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l150: {
+    '__l153: {
         let __pos = match __cx.lit(__pos, "r") {
             Ok(__p) => __p,
-            Err(__f) => break '__l150 Err(__f),
+            Err(__f) => break '__l153 Err(__f),
         };
         let (s, __pos) = match __rule_raw_body(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l150 Err(__f),
+            Err(__f) => break '__l153 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Str(s.to_string()) })(), __pos))
     }
@@ -6339,14 +6535,14 @@ fn __rule_raw_byte_string<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l151: {
+    '__l154: {
         let __pos = match __cx.lit(__pos, "br") {
             Ok(__p) => __p,
-            Err(__f) => break '__l151 Err(__f),
+            Err(__f) => break '__l154 Err(__f),
         };
         let (s, __pos) = match __rule_raw_body(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l151 Err(__f),
+            Err(__f) => break '__l154 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Bytes(s.as_bytes().to_vec()) })(), __pos))
     }
@@ -6364,11 +6560,11 @@ fn __rule_raw_body<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<&'i str> {
-    '__l152: {
-        if let Ok(__r) = '__l155: {
+    '__l155: {
+        if let Ok(__r) = '__l158: {
             let __pos = match __cx.lit(__pos, "\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l155 Err(__f),
+                Err(__f) => break '__l158 Err(__f),
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6376,7 +6572,7 @@ fn __rule_raw_body<'i>(
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l156: {
+                    match '__l159: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"");
@@ -6390,7 +6586,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l156 Err(__f),
+                            Err(__f) => break '__l159 Err(__f),
                         };
                         let __pos = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -6399,7 +6595,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l156 Err(__f),
+                            Err(__f) => break '__l159 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -6417,21 +6613,21 @@ fn __rule_raw_body<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l155 Err(__f),
+                Err(__f) => break '__l158 Err(__f),
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l155 Err(__f),
+                Err(__f) => break '__l158 Err(__f),
             };
             Ok(((|| -> &'i str { __text_s })(), __pos))
         } {
-            break '__l152 Ok(__r);
+            break '__l155 Ok(__r);
         }
-        if let Ok(__r) = '__l157: {
+        if let Ok(__r) = '__l160: {
             let __pos = match __cx.lit(__pos, "#\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l157 Err(__f),
+                Err(__f) => break '__l160 Err(__f),
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6439,7 +6635,7 @@ fn __rule_raw_body<'i>(
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l158: {
+                    match '__l161: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"#");
@@ -6453,7 +6649,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l158 Err(__f),
+                            Err(__f) => break '__l161 Err(__f),
                         };
                         let __pos = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -6462,7 +6658,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l158 Err(__f),
+                            Err(__f) => break '__l161 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -6480,21 +6676,21 @@ fn __rule_raw_body<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l157 Err(__f),
+                Err(__f) => break '__l160 Err(__f),
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"#") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l157 Err(__f),
+                Err(__f) => break '__l160 Err(__f),
             };
             Ok(((|| -> &'i str { __text_s })(), __pos))
         } {
-            break '__l152 Ok(__r);
+            break '__l155 Ok(__r);
         }
-        if let Ok(__r) = '__l159: {
+        if let Ok(__r) = '__l162: {
             let __pos = match __cx.lit(__pos, "##\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l159 Err(__f),
+                Err(__f) => break '__l162 Err(__f),
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6502,7 +6698,7 @@ fn __rule_raw_body<'i>(
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l160: {
+                    match '__l163: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"##");
@@ -6516,7 +6712,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l160 Err(__f),
+                            Err(__f) => break '__l163 Err(__f),
                         };
                         let __pos = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -6525,7 +6721,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l160 Err(__f),
+                            Err(__f) => break '__l163 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -6543,21 +6739,21 @@ fn __rule_raw_body<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l159 Err(__f),
+                Err(__f) => break '__l162 Err(__f),
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"##") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l159 Err(__f),
+                Err(__f) => break '__l162 Err(__f),
             };
             Ok(((|| -> &'i str { __text_s })(), __pos))
         } {
-            break '__l152 Ok(__r);
+            break '__l155 Ok(__r);
         }
-        '__l153: {
+        '__l156: {
             let __pos = match __cx.lit(__pos, "###\"") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l153 Err(__f),
+                Err(__f) => break '__l156 Err(__f),
             };
             let __start_s = __pos;
             let __pos = match {
@@ -6565,7 +6761,7 @@ fn __rule_raw_body<'i>(
                 let mut __first = true;
                 loop {
                     let __pos = __p;
-                    match '__l154: {
+                    match '__l157: {
                         let __pos = match {
                             __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"###");
@@ -6579,7 +6775,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l154 Err(__f),
+                            Err(__f) => break '__l157 Err(__f),
                         };
                         let __pos = match match __cx.peek_char(__pos) {
                             ::core::option::Option::Some((__c, __p)) => Ok(__p),
@@ -6588,7 +6784,7 @@ fn __rule_raw_body<'i>(
                             }
                         } {
                             Ok(__p) => __p,
-                            Err(__f) => break '__l154 Err(__f),
+                            Err(__f) => break '__l157 Err(__f),
                         };
                         Ok(__pos)
                     } {
@@ -6606,12 +6802,12 @@ fn __rule_raw_body<'i>(
                 Ok(__p)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l153 Err(__f),
+                Err(__f) => break '__l156 Err(__f),
             };
             let __text_s = __cx.slice(__start_s, __pos);
             let __pos = match __cx.lit(__pos, "\"###") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l153 Err(__f),
+                Err(__f) => break '__l156 Err(__f),
             };
             Ok(((|| -> &'i str { __text_s })(), __pos))
         }
@@ -6630,14 +6826,14 @@ fn __rule_char_lit<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l161: {
+    '__l164: {
         let __pos = match __cx.lit(__pos, "'") {
             Ok(__p) => __p,
-            Err(__f) => break '__l161 Err(__f),
+            Err(__f) => break '__l164 Err(__f),
         };
         let (c, __pos) = match __rule_char_body(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l161 Err(__f),
+            Err(__f) => break '__l164 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Str(c.to_string()) })(), __pos))
     }
@@ -6655,25 +6851,25 @@ fn __rule_char_body<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<char> {
-    '__l162: {
-        if let Ok(__r) = '__l164: {
+    '__l165: {
+        if let Ok(__r) = '__l167: {
             let __pos = match __cx.lit(__pos, "\\") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l164 Err(__f),
+                Err(__f) => break '__l167 Err(__f),
             };
             let (c, __pos) = match __rule_escape(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l164 Err(__f),
+                Err(__f) => break '__l167 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l164 Err(__f),
+                Err(__f) => break '__l167 Err(__f),
             };
             Ok(((|| -> char { c })(), __pos))
         } {
-            break '__l162 Ok(__r);
+            break '__l165 Ok(__r);
         }
-        '__l163: {
+        '__l166: {
             let (c, __pos) = match match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
@@ -6689,11 +6885,11 @@ fn __rule_char_body<'i>(
                 }
             } {
                 Ok(__r) => __r,
-                Err(__f) => break '__l163 Err(__f),
+                Err(__f) => break '__l166 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l163 Err(__f),
+                Err(__f) => break '__l166 Err(__f),
             };
             Ok(((|| -> char { c })(), __pos))
         }
@@ -6712,14 +6908,14 @@ fn __rule_byte_char<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Lit> {
-    '__l165: {
+    '__l168: {
         let __pos = match __cx.lit(__pos, "b'") {
             Ok(__p) => __p,
-            Err(__f) => break '__l165 Err(__f),
+            Err(__f) => break '__l168 Err(__f),
         };
         let (c, __pos) = match __rule_byte_char_body(__cx, __m, __pos) {
             Ok(__r) => __r,
-            Err(__f) => break '__l165 Err(__f),
+            Err(__f) => break '__l168 Err(__f),
         };
         Ok(((|| -> Lit { Lit::Bytes(vec![c]) })(), __pos))
     }
@@ -6737,28 +6933,28 @@ fn __rule_byte_char_body<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<u8> {
-    '__l166: {
-        if let Ok(__r) = '__l168: {
+    '__l169: {
+        if let Ok(__r) = '__l171: {
             let __pos = match __cx.lit(__pos, "\\") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l168 Err(__f),
+                Err(__f) => break '__l171 Err(__f),
             };
             let (c, __pos) = match __rule_byte_escape(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l168 Err(__f),
+                Err(__f) => break '__l171 Err(__f),
             };
             let __pos = match __cx.lit(__pos, "'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l168 Err(__f),
+                Err(__f) => break '__l171 Err(__f),
             };
             Ok(((|| -> u8 { c })(), __pos))
         } {
-            break '__l166 Ok(__r);
+            break '__l169 Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
-            match '__l167: {
+            match '__l170: {
                 let (c, __pos) = match match __cx.peek_char(__pos) {
                     ::core::option::Option::Some(
                         (__c, __p),
@@ -6774,11 +6970,11 @@ fn __rule_byte_char_body<'i>(
                     }
                 } {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l167 Err(__f),
+                    Err(__f) => break '__l170 Err(__f),
                 };
                 let __pos = match __cx.lit(__pos, "'") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l167 Err(__f),
+                    Err(__f) => break '__l170 Err(__f),
                 };
                 Ok(((|| { c.is_ascii().then_some(c as u8) })(), __pos))
             } {
@@ -6814,98 +7010,98 @@ fn __rule_escape<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<char> {
-    '__l169: {
-        if let Ok(__r) = '__l171: {
-            let __pos = match __cx.lit(__pos, "n") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l171 Err(__f),
-            };
-            Ok(((|| -> char { '\n' })(), __pos))
-        } {
-            break '__l169 Ok(__r);
-        }
-        if let Ok(__r) = '__l172: {
-            let __pos = match __cx.lit(__pos, "r") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l172 Err(__f),
-            };
-            Ok(((|| -> char { '\r' })(), __pos))
-        } {
-            break '__l169 Ok(__r);
-        }
-        if let Ok(__r) = '__l173: {
-            let __pos = match __cx.lit(__pos, "t") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l173 Err(__f),
-            };
-            Ok(((|| -> char { '\t' })(), __pos))
-        } {
-            break '__l169 Ok(__r);
-        }
+    '__l172: {
         if let Ok(__r) = '__l174: {
-            let __pos = match __cx.lit(__pos, "\\") {
+            let __pos = match __cx.lit(__pos, "n") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l174 Err(__f),
             };
-            Ok(((|| -> char { '\\' })(), __pos))
+            Ok(((|| -> char { '\n' })(), __pos))
         } {
-            break '__l169 Ok(__r);
+            break '__l172 Ok(__r);
         }
         if let Ok(__r) = '__l175: {
-            let __pos = match __cx.lit(__pos, "0") {
+            let __pos = match __cx.lit(__pos, "r") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l175 Err(__f),
             };
-            Ok(((|| -> char { '\0' })(), __pos))
+            Ok(((|| -> char { '\r' })(), __pos))
         } {
-            break '__l169 Ok(__r);
+            break '__l172 Ok(__r);
         }
         if let Ok(__r) = '__l176: {
-            let __pos = match __cx.lit(__pos, "'") {
+            let __pos = match __cx.lit(__pos, "t") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l176 Err(__f),
             };
-            Ok(((|| -> char { '\'' })(), __pos))
+            Ok(((|| -> char { '\t' })(), __pos))
         } {
-            break '__l169 Ok(__r);
+            break '__l172 Ok(__r);
         }
         if let Ok(__r) = '__l177: {
-            let __pos = match __cx.lit(__pos, "\"") {
+            let __pos = match __cx.lit(__pos, "\\") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l177 Err(__f),
             };
+            Ok(((|| -> char { '\\' })(), __pos))
+        } {
+            break '__l172 Ok(__r);
+        }
+        if let Ok(__r) = '__l178: {
+            let __pos = match __cx.lit(__pos, "0") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l178 Err(__f),
+            };
+            Ok(((|| -> char { '\0' })(), __pos))
+        } {
+            break '__l172 Ok(__r);
+        }
+        if let Ok(__r) = '__l179: {
+            let __pos = match __cx.lit(__pos, "'") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l179 Err(__f),
+            };
+            Ok(((|| -> char { '\'' })(), __pos))
+        } {
+            break '__l172 Ok(__r);
+        }
+        if let Ok(__r) = '__l180: {
+            let __pos = match __cx.lit(__pos, "\"") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l180 Err(__f),
+            };
             Ok(((|| -> char { '"' })(), __pos))
         } {
-            break '__l169 Ok(__r);
+            break '__l172 Ok(__r);
         }
         if let Ok(__r) = {
             let __start = __pos;
             let __mark = __cx.mark();
-            match '__l178: {
+            match '__l181: {
                 let __pos = match __cx.lit(__pos, "x") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l178 Err(__f),
+                    Err(__f) => break '__l181 Err(__f),
                 };
                 let __start_h = __pos;
-                let __pos = match '__l179: {
+                let __pos = match '__l182: {
                     let __pos = match match __rule_hex(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l179 Err(__f),
+                        Err(__f) => break '__l182 Err(__f),
                     };
                     let __pos = match match __rule_hex(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l179 Err(__f),
+                        Err(__f) => break '__l182 Err(__f),
                     };
                     Ok(__pos)
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l178 Err(__f),
+                    Err(__f) => break '__l181 Err(__f),
                 };
                 let __text_h = __cx.slice(__start_h, __pos);
                 Ok((
@@ -6937,15 +7133,15 @@ fn __rule_escape<'i>(
                 }
             }
         } {
-            break '__l169 Ok(__r);
+            break '__l172 Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
-            match '__l170: {
+            match '__l173: {
                 let __pos = match __cx.lit(__pos, "u{") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l170 Err(__f),
+                    Err(__f) => break '__l173 Err(__f),
                 };
                 let __start_h = __pos;
                 let __pos = match {
@@ -6971,12 +7167,12 @@ fn __rule_escape<'i>(
                     if __first { Err(__prpr_runtime::Fail) } else { Ok(__p) }
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l170 Err(__f),
+                    Err(__f) => break '__l173 Err(__f),
                 };
                 let __text_h = __cx.slice(__start_h, __pos);
                 let __pos = match __cx.lit(__pos, "}") {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l170 Err(__f),
+                    Err(__f) => break '__l173 Err(__f),
                 };
                 Ok((
                     (|| {
@@ -7020,95 +7216,95 @@ fn __rule_byte_escape<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<u8> {
-    '__l180: {
-        if let Ok(__r) = '__l183: {
-            let __pos = match __cx.lit(__pos, "n") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l183 Err(__f),
-            };
-            Ok(((|| -> u8 { b'\n' })(), __pos))
-        } {
-            break '__l180 Ok(__r);
-        }
-        if let Ok(__r) = '__l184: {
-            let __pos = match __cx.lit(__pos, "r") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l184 Err(__f),
-            };
-            Ok(((|| -> u8 { b'\r' })(), __pos))
-        } {
-            break '__l180 Ok(__r);
-        }
-        if let Ok(__r) = '__l185: {
-            let __pos = match __cx.lit(__pos, "t") {
-                Ok(__p) => __p,
-                Err(__f) => break '__l185 Err(__f),
-            };
-            Ok(((|| -> u8 { b'\t' })(), __pos))
-        } {
-            break '__l180 Ok(__r);
-        }
+    '__l183: {
         if let Ok(__r) = '__l186: {
-            let __pos = match __cx.lit(__pos, "\\") {
+            let __pos = match __cx.lit(__pos, "n") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l186 Err(__f),
             };
-            Ok(((|| -> u8 { b'\\' })(), __pos))
+            Ok(((|| -> u8 { b'\n' })(), __pos))
         } {
-            break '__l180 Ok(__r);
+            break '__l183 Ok(__r);
         }
         if let Ok(__r) = '__l187: {
-            let __pos = match __cx.lit(__pos, "0") {
+            let __pos = match __cx.lit(__pos, "r") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l187 Err(__f),
             };
-            Ok(((|| -> u8 { b'\0' })(), __pos))
+            Ok(((|| -> u8 { b'\r' })(), __pos))
         } {
-            break '__l180 Ok(__r);
+            break '__l183 Ok(__r);
         }
         if let Ok(__r) = '__l188: {
-            let __pos = match __cx.lit(__pos, "'") {
+            let __pos = match __cx.lit(__pos, "t") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l188 Err(__f),
             };
-            Ok(((|| -> u8 { b'\'' })(), __pos))
+            Ok(((|| -> u8 { b'\t' })(), __pos))
         } {
-            break '__l180 Ok(__r);
+            break '__l183 Ok(__r);
         }
         if let Ok(__r) = '__l189: {
-            let __pos = match __cx.lit(__pos, "\"") {
+            let __pos = match __cx.lit(__pos, "\\") {
                 Ok(__p) => __p,
                 Err(__f) => break '__l189 Err(__f),
             };
+            Ok(((|| -> u8 { b'\\' })(), __pos))
+        } {
+            break '__l183 Ok(__r);
+        }
+        if let Ok(__r) = '__l190: {
+            let __pos = match __cx.lit(__pos, "0") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l190 Err(__f),
+            };
+            Ok(((|| -> u8 { b'\0' })(), __pos))
+        } {
+            break '__l183 Ok(__r);
+        }
+        if let Ok(__r) = '__l191: {
+            let __pos = match __cx.lit(__pos, "'") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l191 Err(__f),
+            };
+            Ok(((|| -> u8 { b'\'' })(), __pos))
+        } {
+            break '__l183 Ok(__r);
+        }
+        if let Ok(__r) = '__l192: {
+            let __pos = match __cx.lit(__pos, "\"") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l192 Err(__f),
+            };
             Ok(((|| -> u8 { b'"' })(), __pos))
         } {
-            break '__l180 Ok(__r);
+            break '__l183 Ok(__r);
         }
-        '__l181: {
+        '__l184: {
             let __pos = match __cx.lit(__pos, "x") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l181 Err(__f),
+                Err(__f) => break '__l184 Err(__f),
             };
             let __start_h = __pos;
-            let __pos = match '__l182: {
+            let __pos = match '__l185: {
                 let __pos = match match __rule_hex(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l182 Err(__f),
+                    Err(__f) => break '__l185 Err(__f),
                 };
                 let __pos = match match __rule_hex(__cx, __m, __pos) {
                     Ok((_, __p)) => Ok(__p),
                     Err(__f) => Err(__f),
                 } {
                     Ok(__p) => __p,
-                    Err(__f) => break '__l182 Err(__f),
+                    Err(__f) => break '__l185 Err(__f),
                 };
                 Ok(__pos)
             } {
                 Ok(__p) => __p,
-                Err(__f) => break '__l181 Err(__f),
+                Err(__f) => break '__l184 Err(__f),
             };
             let __text_h = __cx.slice(__start_h, __pos);
             Ok(((|| -> u8 { u8::from_str_radix(__text_h, 16).unwrap() })(), __pos))
@@ -7149,11 +7345,11 @@ fn __rule_class<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<Class> {
-    '__l190: {
+    '__l193: {
         let __start = __pos;
         let __pos = match __cx.lit(__pos, "[") {
             Ok(__p) => __p,
-            Err(__f) => break '__l190 Err(__f),
+            Err(__f) => break '__l193 Err(__f),
         };
         let (neg, __pos) = match match match __cx.lit(__pos, "^") {
             Ok(__p) => Ok(("^", __p)),
@@ -7163,7 +7359,7 @@ fn __rule_class<'i>(
             Err(_) => Ok((::core::option::Option::None, __pos)),
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l190 Err(__f),
+            Err(__f) => break '__l193 Err(__f),
         };
         let (ranges, __pos) = match {
             let mut __vs = __prpr_runtime::Vec::new();
@@ -7171,17 +7367,17 @@ fn __rule_class<'i>(
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l191: {
+                match '__l194: {
                     let __pos = match match __rule_spaces(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
                         Ok(__p) => __p,
-                        Err(__f) => break '__l191 Err(__f),
+                        Err(__f) => break '__l194 Err(__f),
                     };
                     let (r, __pos) = match __rule_class_item(__cx, __m, __pos) {
                         Ok(__r) => __r,
-                        Err(__f) => break '__l191 Err(__f),
+                        Err(__f) => break '__l194 Err(__f),
                     };
                     Ok(((|| { r })(), __pos))
                 } {
@@ -7200,18 +7396,18 @@ fn __rule_class<'i>(
             Ok((__vs, __p))
         } {
             Ok(__r) => __r,
-            Err(__f) => break '__l190 Err(__f),
+            Err(__f) => break '__l193 Err(__f),
         };
         let __pos = match match __rule_spaces(__cx, __m, __pos) {
             Ok((_, __p)) => Ok(__p),
             Err(__f) => Err(__f),
         } {
             Ok(__p) => __p,
-            Err(__f) => break '__l190 Err(__f),
+            Err(__f) => break '__l193 Err(__f),
         };
         let __pos = match __cx.lit(__pos, "]") {
             Ok(__p) => __p,
-            Err(__f) => break '__l190 Err(__f),
+            Err(__f) => break '__l193 Err(__f),
         };
         let __text__ = __cx.slice(__start, __pos);
         Ok((
@@ -7239,72 +7435,43 @@ fn __rule_class_item<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<(char, char)> {
-    {
-        let __start = __pos;
-        let __mark = __cx.mark();
-        match '__l192: {
-            let (lo, __pos) = match __rule_class_char(__cx, __m, __pos) {
-                Ok(__r) => __r,
-                Err(__f) => break '__l192 Err(__f),
-            };
-            let (hi, __pos) = match match '__l193: {
-                let __pos = match match __rule_spaces(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
-                } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l193 Err(__f),
-                };
-                let __pos = match __cx.lit(__pos, "-") {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l193 Err(__f),
-                };
-                let __pos = match match __rule_spaces(__cx, __m, __pos) {
-                    Ok((_, __p)) => Ok(__p),
-                    Err(__f) => Err(__f),
-                } {
-                    Ok(__p) => __p,
-                    Err(__f) => break '__l193 Err(__f),
-                };
-                let (c, __pos) = match __rule_class_char(__cx, __m, __pos) {
-                    Ok(__r) => __r,
-                    Err(__f) => break '__l193 Err(__f),
-                };
-                Ok(((|| { c })(), __pos))
+    '__l195: {
+        let (lo, __pos) = match __rule_class_char(__cx, __m, __pos) {
+            Ok(__r) => __r,
+            Err(__f) => break '__l195 Err(__f),
+        };
+        let (hi, __pos) = match match '__l196: {
+            let __pos = match match __rule_spaces(__cx, __m, __pos) {
+                Ok((_, __p)) => Ok(__p),
+                Err(__f) => Err(__f),
             } {
-                Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
-                Err(_) => Ok((::core::option::Option::None, __pos)),
-            } {
-                Ok(__r) => __r,
-                Err(__f) => break '__l192 Err(__f),
+                Ok(__p) => __p,
+                Err(__f) => break '__l196 Err(__f),
             };
-            Ok((
-                (|| {
-                    match hi {
-                        None => Ok((lo, lo)),
-                        Some(hi) if lo <= hi => Ok((lo, hi)),
-                        Some(_) => Err("range in ascending order"),
-                    }
-                })(),
-                __pos,
-            ))
+            let __pos = match __cx.lit(__pos, "-") {
+                Ok(__p) => __p,
+                Err(__f) => break '__l196 Err(__f),
+            };
+            let __pos = match match __rule_spaces(__cx, __m, __pos) {
+                Ok((_, __p)) => Ok(__p),
+                Err(__f) => Err(__f),
+            } {
+                Ok(__p) => __p,
+                Err(__f) => break '__l196 Err(__f),
+            };
+            let (c, __pos) = match __rule_class_char(__cx, __m, __pos) {
+                Ok(__r) => __r,
+                Err(__f) => break '__l196 Err(__f),
+            };
+            Ok(((|| { c })(), __pos))
         } {
-            Ok((__o, __pos)) => {
-                match __prpr_runtime::Predicate::into_outcome(__o) {
-                    Ok(__v) => {
-                        __cx.commit(__mark);
-                        Ok((__v, __pos))
-                    }
-                    Err(__message) => {
-                        Err(__cx.fail_predicate(__mark, __start, __message))
-                    }
-                }
-            }
-            Err(__f) => {
-                __cx.commit(__mark);
-                Err(__f)
-            }
-        }
+            Ok((__v, __p)) => Ok((::core::option::Option::Some(__v), __p)),
+            Err(_) => Ok((::core::option::Option::None, __pos)),
+        } {
+            Ok(__r) => __r,
+            Err(__f) => break '__l195 Err(__f),
+        };
+        Ok(((|| -> (char, char) { (lo, hi.unwrap_or(lo)) })(), __pos))
     }
 }
 /// Parses the whole input with the rule `class_item`.
@@ -7322,37 +7489,37 @@ fn __rule_class_char<'i>(
 ) -> __prpr_runtime::PResult<char> {
     let __at = __pos;
     let __saved = __cx.push_label(__at, "character");
-    let __r = '__l194: {
-        if let Ok(__r) = '__l196: {
+    let __r = '__l197: {
+        if let Ok(__r) = '__l199: {
             let __pos = match __cx.lit(__pos, "b'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l196 Err(__f),
+                Err(__f) => break '__l199 Err(__f),
             };
             let (c, __pos) = match __rule_byte_char_body(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l196 Err(__f),
+                Err(__f) => break '__l199 Err(__f),
             };
             Ok(((|| -> char { c as char })(), __pos))
         } {
-            break '__l194 Ok(__r);
+            break '__l197 Ok(__r);
         }
-        if let Ok(__r) = '__l197: {
+        if let Ok(__r) = '__l200: {
             let __pos = match __cx.lit(__pos, "'") {
                 Ok(__p) => __p,
-                Err(__f) => break '__l197 Err(__f),
+                Err(__f) => break '__l200 Err(__f),
             };
             let (c, __pos) = match __rule_char_body(__cx, __m, __pos) {
                 Ok(__r) => __r,
-                Err(__f) => break '__l197 Err(__f),
+                Err(__f) => break '__l200 Err(__f),
             };
             Ok(((|| -> char { c })(), __pos))
         } {
-            break '__l194 Ok(__r);
+            break '__l197 Ok(__r);
         }
         {
             let __start = __pos;
             let __mark = __cx.mark();
-            match '__l195: {
+            match '__l198: {
                 let (c, __pos) = match match __cx.peek_char(__pos) {
                     ::core::option::Option::Some(
                         (__c, __p),
@@ -7372,7 +7539,7 @@ fn __rule_class_char<'i>(
                     }
                 } {
                     Ok(__r) => __r,
-                    Err(__f) => break '__l195 Err(__f),
+                    Err(__f) => break '__l198 Err(__f),
                 };
                 Ok(((|| { (!c.is_whitespace()).then_some(c) })(), __pos))
             } {
@@ -7417,12 +7584,12 @@ fn __rule_spaces<'i>(
             let mut __first = true;
             loop {
                 let __pos = __p;
-                match '__l198: {
+                match '__l201: {
                     if let Ok(__r) = match __rule_whitespace(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
                         Err(__f) => Err(__f),
                     } {
-                        break '__l198 Ok(__r);
+                        break '__l201 Ok(__r);
                     }
                     match __rule_comment(__cx, __m, __pos) {
                         Ok((_, __p)) => Ok(__p),
@@ -7489,19 +7656,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_whitespace(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_whitespace: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_whitespace<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `comment` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7511,19 +7665,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_comment(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_comment: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_comment<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `block_comment` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7535,19 +7676,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_block_comment(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_block_comment: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_block_comment<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `word_char` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7557,19 +7685,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_word_char(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_word_char: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_word_char<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `ident_start` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7581,19 +7696,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_ident_start(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_ident_start: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_ident_start<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `ident_continue` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7603,19 +7705,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_ident_continue(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_ident_continue: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_ident_continue<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `ident_raw` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7627,19 +7716,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Ident> {
         __rule_ident_raw(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_ident_raw: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_ident_raw<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `ident` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7649,19 +7725,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Ident> {
         __rule_ident(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_ident: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_ident<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `grammar` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7673,19 +7736,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Grammar> {
         __rule_grammar(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    pub const __atom_grammar: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    pub fn __delimited_grammar<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `inner_attr` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7695,19 +7745,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Attr> {
         __rule_inner_attr(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_inner_attr: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_inner_attr<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `outer_attr` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7719,19 +7756,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Attr> {
         __rule_outer_attr(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_outer_attr: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_outer_attr<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `doc_comment` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7741,19 +7765,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Attr> {
         __rule_doc_comment(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_doc_comment: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_doc_comment<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `attr_body` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7765,19 +7776,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<(Ident, AttrArg)> {
         __rule_attr_body(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_attr_body: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_attr_body<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `attr_value` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7788,18 +7786,15 @@ impl Rules {
     ) -> __prpr_runtime::PResult<AttrArg> {
         __rule_attr_value(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_attr_value: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_attr_value<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
+    /// Matches the rule `attr_tokens` at `pos`, and returns its value and the position after it.
+    #[inline]
+    #[allow(dead_code)]
+    fn attr_tokens<'i>(
+        cx: &mut __prpr_runtime::Cx<'i, str>,
+        memo: &mut Memo<'i>,
+        pos: usize,
+    ) -> __prpr_runtime::PResult<()> {
+        __rule_attr_tokens(cx, memo, pos)
     }
     /// Matches the rule `item` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7811,19 +7806,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Item> {
         __rule_item(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_item: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_item<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `rust_item` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7833,19 +7815,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Span> {
         __rule_rust_item(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_item: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_item<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `rust_attr` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7857,19 +7826,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_rust_attr(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_attr: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_attr<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `rust_doc_comment` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7879,19 +7835,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_rust_doc_comment(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_doc_comment: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_doc_comment<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `semi_item` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7903,19 +7846,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_semi_item(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_semi_item: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_semi_item<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `brace_item` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7925,19 +7855,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_brace_item(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_brace_item: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_brace_item<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `rust_to_semi` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7949,19 +7866,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_rust_to_semi(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_to_semi: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_to_semi<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `rust_to_brace` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -7971,19 +7875,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_rust_to_brace(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_to_brace: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_to_brace<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `vis` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -7995,19 +7886,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Span> {
         __rule_vis(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_vis: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_vis<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `rust_paren` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8017,19 +7895,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_rust_paren(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_paren: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_paren<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `rust_tt` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8041,19 +7906,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_rust_tt(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_tt: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_tt<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `rust_group` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8063,19 +7915,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_rust_group(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_group: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_group<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `rust_string` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8087,19 +7926,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_rust_string(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_string: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_string<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `rust_char_or_lifetime` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8109,19 +7935,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_rust_char_or_lifetime(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_char_or_lifetime: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_char_or_lifetime<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `rule` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8133,19 +7946,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Rule> {
         __rule_rule(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rule: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rule<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `rule_header` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8155,19 +7955,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_rule_header(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rule_header: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rule_header<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `item_start` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8179,19 +7966,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_item_start(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_item_start: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_item_start<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `ty_span` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8201,19 +7975,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Span> {
         __rule_ty_span(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_ty_span: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_ty_span<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `ty` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8225,19 +7986,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_ty(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_ty: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_ty<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `ty_list` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8247,19 +7995,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_ty_list(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_ty_list: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_ty_list<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `array_len` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8271,19 +8006,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_array_len(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_array_len: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_array_len<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `type_path` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8293,19 +8015,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_type_path(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_type_path: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_type_path<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `path_segment` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8317,19 +8026,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_path_segment(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_path_segment: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_path_segment<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `generic_arg` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8339,19 +8035,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_generic_arg(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_generic_arg: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_generic_arg<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `number` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8363,19 +8046,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_number(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_number: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_number<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `bounds` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8385,19 +8055,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_bounds(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_bounds: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_bounds<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `bound` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8409,19 +8066,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_bound(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_bound: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_bound<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `lifetime` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8431,19 +8075,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_lifetime(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_lifetime: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_lifetime<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `expr` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8455,19 +8086,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Expr> {
         __rule_expr(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_expr: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_expr<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `choice` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8477,19 +8095,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Expr> {
         __rule_choice(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_choice: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_choice<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `choice_sep` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8501,19 +8106,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<()> {
         __rule_choice_sep(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_choice_sep: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_choice_sep<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `sequence` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8523,19 +8115,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Expr> {
         __rule_sequence(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_sequence: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_sequence<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `action` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8547,19 +8126,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<(Span, bool)> {
         __rule_action(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_action: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_action<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `rust_brace` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8569,19 +8135,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Span> {
         __rule_rust_brace(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_rust_brace: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_rust_brace<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `element` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8593,19 +8146,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Expr> {
         __rule_element(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_element: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_element<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `bind` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8615,19 +8155,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Expr> {
         __rule_bind(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_bind: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_bind<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `prefix` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8639,19 +8166,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Expr> {
         __rule_prefix(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_prefix: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_prefix<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `postfix` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8661,19 +8175,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Expr> {
         __rule_postfix(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_postfix: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_postfix<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `postfix_op` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8685,19 +8186,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<char> {
         __rule_postfix_op(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_postfix_op: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_postfix_op<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `primary` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8707,19 +8195,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Primary> {
         __rule_primary(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_primary: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_primary<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `path` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8731,19 +8206,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Path> {
         __rule_path(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_path: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_path<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
-    }
     /// Matches the rule `path_start` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8753,19 +8215,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Ident> {
         __rule_path_start(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_path_start: bool = false;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_path_start<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        true
     }
     /// Matches the rule `literal` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8777,19 +8226,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Lit> {
         __rule_literal(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_literal: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_literal<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `string` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8799,19 +8235,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Lit> {
         __rule_string(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_string: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_string<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `string_char` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8823,19 +8246,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Option<char>> {
         __rule_string_char(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_string_char: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_string_char<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `line_continuation` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8845,19 +8255,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_line_continuation(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_line_continuation: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_line_continuation<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `byte_string` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8869,19 +8266,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Lit> {
         __rule_byte_string(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_byte_string: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_byte_string<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `byte_string_char` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8891,19 +8275,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Option<u8>> {
         __rule_byte_string_char(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_byte_string_char: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_byte_string_char<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `raw_string` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8915,19 +8286,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Lit> {
         __rule_raw_string(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_raw_string: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_raw_string<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `raw_byte_string` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8937,19 +8295,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Lit> {
         __rule_raw_byte_string(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_raw_byte_string: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_raw_byte_string<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `raw_body` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -8961,19 +8306,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<&'i str> {
         __rule_raw_body(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_raw_body: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_raw_body<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `char_lit` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -8983,19 +8315,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Lit> {
         __rule_char_lit(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_char_lit: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_char_lit<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `char_body` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -9007,19 +8326,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<char> {
         __rule_char_body(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_char_body: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_char_body<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `byte_char` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -9029,19 +8335,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<Lit> {
         __rule_byte_char(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_byte_char: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_byte_char<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `byte_char_body` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -9053,19 +8346,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<u8> {
         __rule_byte_char_body(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_byte_char_body: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_byte_char_body<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `escape` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -9075,19 +8355,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<char> {
         __rule_escape(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_escape: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_escape<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `byte_escape` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -9099,19 +8366,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<u8> {
         __rule_byte_escape(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_byte_escape: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_byte_escape<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `hex` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -9121,19 +8375,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<()> {
         __rule_hex(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_hex: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_hex<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `class` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -9145,19 +8386,6 @@ impl Rules {
     ) -> __prpr_runtime::PResult<Class> {
         __rule_class(cx, memo, pos)
     }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_class: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_class<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
-    }
     /// Matches the rule `class_item` at `pos`, and returns its value and the position after it.
     #[inline]
     #[allow(dead_code)]
@@ -9167,19 +8395,6 @@ impl Rules {
         pos: usize,
     ) -> __prpr_runtime::PResult<(char, char)> {
         __rule_class_item(cx, memo, pos)
-    }
-    #[doc(hidden)]
-    #[allow(dead_code, non_upper_case_globals)]
-    const __atom_class_item: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_class_item<'i>(
-        __cx: &mut __prpr_runtime::Cx<'i, str>,
-        __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
     }
     /// Matches the rule `class_char` at `pos`, and returns its value and the position after it.
     #[inline]
@@ -9191,18 +8406,2822 @@ impl Rules {
     ) -> __prpr_runtime::PResult<char> {
         __rule_class_char(cx, memo, pos)
     }
-    #[doc(hidden)]
+}
+/// The rules as other grammars use them.
+#[doc(hidden)]
+pub enum __Rules {}
+impl __Rules {
     #[allow(dead_code, non_upper_case_globals)]
-    const __atom_class_char: bool = true;
-    #[doc(hidden)]
-    #[allow(unused, non_snake_case)]
-    fn __delimited_class_char<'i>(
+    const whitespace: __Rule_whitespace = __Rule_whitespace;
+    #[allow(dead_code, non_upper_case_globals)]
+    const comment: __Rule_comment = __Rule_comment;
+    #[allow(dead_code, non_upper_case_globals)]
+    const block_comment: __Rule_block_comment = __Rule_block_comment;
+    #[allow(dead_code, non_upper_case_globals)]
+    const word_char: __Rule_word_char = __Rule_word_char;
+    #[allow(dead_code, non_upper_case_globals)]
+    const ident_start: __Rule_ident_start = __Rule_ident_start;
+    #[allow(dead_code, non_upper_case_globals)]
+    const ident_continue: __Rule_ident_continue = __Rule_ident_continue;
+    #[allow(dead_code, non_upper_case_globals)]
+    const ident_raw: __Rule_ident_raw = __Rule_ident_raw;
+    #[allow(dead_code, non_upper_case_globals)]
+    const ident: __Rule_ident = __Rule_ident;
+    #[allow(dead_code, non_upper_case_globals)]
+    pub const grammar: __Rule_grammar = __Rule_grammar;
+    #[allow(dead_code, non_upper_case_globals)]
+    const inner_attr: __Rule_inner_attr = __Rule_inner_attr;
+    #[allow(dead_code, non_upper_case_globals)]
+    const outer_attr: __Rule_outer_attr = __Rule_outer_attr;
+    #[allow(dead_code, non_upper_case_globals)]
+    const doc_comment: __Rule_doc_comment = __Rule_doc_comment;
+    #[allow(dead_code, non_upper_case_globals)]
+    const attr_body: __Rule_attr_body = __Rule_attr_body;
+    #[allow(dead_code, non_upper_case_globals)]
+    const attr_value: __Rule_attr_value = __Rule_attr_value;
+    #[allow(dead_code, non_upper_case_globals)]
+    const attr_tokens: __Rule_attr_tokens = __Rule_attr_tokens;
+    #[allow(dead_code, non_upper_case_globals)]
+    const item: __Rule_item = __Rule_item;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_item: __Rule_rust_item = __Rule_rust_item;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_attr: __Rule_rust_attr = __Rule_rust_attr;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_doc_comment: __Rule_rust_doc_comment = __Rule_rust_doc_comment;
+    #[allow(dead_code, non_upper_case_globals)]
+    const semi_item: __Rule_semi_item = __Rule_semi_item;
+    #[allow(dead_code, non_upper_case_globals)]
+    const brace_item: __Rule_brace_item = __Rule_brace_item;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_to_semi: __Rule_rust_to_semi = __Rule_rust_to_semi;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_to_brace: __Rule_rust_to_brace = __Rule_rust_to_brace;
+    #[allow(dead_code, non_upper_case_globals)]
+    const vis: __Rule_vis = __Rule_vis;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_paren: __Rule_rust_paren = __Rule_rust_paren;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_tt: __Rule_rust_tt = __Rule_rust_tt;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_group: __Rule_rust_group = __Rule_rust_group;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_string: __Rule_rust_string = __Rule_rust_string;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_char_or_lifetime: __Rule_rust_char_or_lifetime = __Rule_rust_char_or_lifetime;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rule: __Rule_rule = __Rule_rule;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rule_header: __Rule_rule_header = __Rule_rule_header;
+    #[allow(dead_code, non_upper_case_globals)]
+    const item_start: __Rule_item_start = __Rule_item_start;
+    #[allow(dead_code, non_upper_case_globals)]
+    const ty_span: __Rule_ty_span = __Rule_ty_span;
+    #[allow(dead_code, non_upper_case_globals)]
+    const ty: __Rule_ty = __Rule_ty;
+    #[allow(dead_code, non_upper_case_globals)]
+    const ty_list: __Rule_ty_list = __Rule_ty_list;
+    #[allow(dead_code, non_upper_case_globals)]
+    const array_len: __Rule_array_len = __Rule_array_len;
+    #[allow(dead_code, non_upper_case_globals)]
+    const type_path: __Rule_type_path = __Rule_type_path;
+    #[allow(dead_code, non_upper_case_globals)]
+    const path_segment: __Rule_path_segment = __Rule_path_segment;
+    #[allow(dead_code, non_upper_case_globals)]
+    const generic_arg: __Rule_generic_arg = __Rule_generic_arg;
+    #[allow(dead_code, non_upper_case_globals)]
+    const number: __Rule_number = __Rule_number;
+    #[allow(dead_code, non_upper_case_globals)]
+    const bounds: __Rule_bounds = __Rule_bounds;
+    #[allow(dead_code, non_upper_case_globals)]
+    const bound: __Rule_bound = __Rule_bound;
+    #[allow(dead_code, non_upper_case_globals)]
+    const lifetime: __Rule_lifetime = __Rule_lifetime;
+    #[allow(dead_code, non_upper_case_globals)]
+    const expr: __Rule_expr = __Rule_expr;
+    #[allow(dead_code, non_upper_case_globals)]
+    const choice: __Rule_choice = __Rule_choice;
+    #[allow(dead_code, non_upper_case_globals)]
+    const choice_sep: __Rule_choice_sep = __Rule_choice_sep;
+    #[allow(dead_code, non_upper_case_globals)]
+    const sequence: __Rule_sequence = __Rule_sequence;
+    #[allow(dead_code, non_upper_case_globals)]
+    const action: __Rule_action = __Rule_action;
+    #[allow(dead_code, non_upper_case_globals)]
+    const rust_brace: __Rule_rust_brace = __Rule_rust_brace;
+    #[allow(dead_code, non_upper_case_globals)]
+    const element: __Rule_element = __Rule_element;
+    #[allow(dead_code, non_upper_case_globals)]
+    const bind: __Rule_bind = __Rule_bind;
+    #[allow(dead_code, non_upper_case_globals)]
+    const prefix: __Rule_prefix = __Rule_prefix;
+    #[allow(dead_code, non_upper_case_globals)]
+    const postfix: __Rule_postfix = __Rule_postfix;
+    #[allow(dead_code, non_upper_case_globals)]
+    const postfix_op: __Rule_postfix_op = __Rule_postfix_op;
+    #[allow(dead_code, non_upper_case_globals)]
+    const primary: __Rule_primary = __Rule_primary;
+    #[allow(dead_code, non_upper_case_globals)]
+    const path: __Rule_path = __Rule_path;
+    #[allow(dead_code, non_upper_case_globals)]
+    const path_start: __Rule_path_start = __Rule_path_start;
+    #[allow(dead_code, non_upper_case_globals)]
+    const literal: __Rule_literal = __Rule_literal;
+    #[allow(dead_code, non_upper_case_globals)]
+    const string: __Rule_string = __Rule_string;
+    #[allow(dead_code, non_upper_case_globals)]
+    const string_char: __Rule_string_char = __Rule_string_char;
+    #[allow(dead_code, non_upper_case_globals)]
+    const line_continuation: __Rule_line_continuation = __Rule_line_continuation;
+    #[allow(dead_code, non_upper_case_globals)]
+    const byte_string: __Rule_byte_string = __Rule_byte_string;
+    #[allow(dead_code, non_upper_case_globals)]
+    const byte_string_char: __Rule_byte_string_char = __Rule_byte_string_char;
+    #[allow(dead_code, non_upper_case_globals)]
+    const raw_string: __Rule_raw_string = __Rule_raw_string;
+    #[allow(dead_code, non_upper_case_globals)]
+    const raw_byte_string: __Rule_raw_byte_string = __Rule_raw_byte_string;
+    #[allow(dead_code, non_upper_case_globals)]
+    const raw_body: __Rule_raw_body = __Rule_raw_body;
+    #[allow(dead_code, non_upper_case_globals)]
+    const char_lit: __Rule_char_lit = __Rule_char_lit;
+    #[allow(dead_code, non_upper_case_globals)]
+    const char_body: __Rule_char_body = __Rule_char_body;
+    #[allow(dead_code, non_upper_case_globals)]
+    const byte_char: __Rule_byte_char = __Rule_byte_char;
+    #[allow(dead_code, non_upper_case_globals)]
+    const byte_char_body: __Rule_byte_char_body = __Rule_byte_char_body;
+    #[allow(dead_code, non_upper_case_globals)]
+    const escape: __Rule_escape = __Rule_escape;
+    #[allow(dead_code, non_upper_case_globals)]
+    const byte_escape: __Rule_byte_escape = __Rule_byte_escape;
+    #[allow(dead_code, non_upper_case_globals)]
+    const hex: __Rule_hex = __Rule_hex;
+    #[allow(dead_code, non_upper_case_globals)]
+    const class: __Rule_class = __Rule_class;
+    #[allow(dead_code, non_upper_case_globals)]
+    const class_item: __Rule_class_item = __Rule_class_item;
+    #[allow(dead_code, non_upper_case_globals)]
+    const class_char: __Rule_class_char = __Rule_class_char;
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_whitespace;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_whitespace {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
         __cx: &mut __prpr_runtime::Cx<'i, str>,
         __m: &mut Memo<'i>,
-        __start: usize,
-        __end: usize,
-    ) -> bool {
-        __delimited(__cx, __m, __start, __end)
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_whitespace(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_whitespace(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_comment;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_comment {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_comment(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_comment(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_block_comment;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_block_comment {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_block_comment(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_block_comment(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_word_char;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_word_char {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_word_char(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_word_char(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_ident_start;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_ident_start {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_ident_start(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_ident_start(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_ident_continue;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_ident_continue {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_ident_continue(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_ident_continue(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_ident_raw;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Ident> for __Rule_ident_raw {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Ident> {
+        if !__token {
+            return __rule_ident_raw(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_ident_raw(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_ident;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Ident> for __Rule_ident {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Ident> {
+        if !__token {
+            return __rule_ident(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_ident(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+pub struct __Rule_grammar;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Grammar> for __Rule_grammar {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Grammar> {
+        if !__token {
+            return __rule_grammar(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_grammar(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_inner_attr;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Attr> for __Rule_inner_attr {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Attr> {
+        if !__token {
+            return __rule_inner_attr(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_inner_attr(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_outer_attr;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Attr> for __Rule_outer_attr {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Attr> {
+        if !__token {
+            return __rule_outer_attr(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_outer_attr(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_doc_comment;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Attr> for __Rule_doc_comment {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Attr> {
+        if !__token {
+            return __rule_doc_comment(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_doc_comment(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_attr_body;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, (Ident, AttrArg)> for __Rule_attr_body {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<(Ident, AttrArg)> {
+        if !__token {
+            return __rule_attr_body(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_attr_body(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_attr_value;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, AttrArg> for __Rule_attr_value {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<AttrArg> {
+        if !__token {
+            return __rule_attr_value(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_attr_value(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_attr_tokens;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_attr_tokens {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_attr_tokens(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_attr_tokens(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_item;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Item> for __Rule_item {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Item> {
+        if !__token {
+            return __rule_item(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_item(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_item;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Span> for __Rule_rust_item {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Span> {
+        if !__token {
+            return __rule_rust_item(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_item(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_attr;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_attr {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_rust_attr(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_attr(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_doc_comment;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_doc_comment {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_rust_doc_comment(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_doc_comment(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_semi_item;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_semi_item {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_semi_item(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_semi_item(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_brace_item;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_brace_item {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_brace_item(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_brace_item(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_to_semi;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_to_semi {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_rust_to_semi(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_to_semi(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_to_brace;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_to_brace {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_rust_to_brace(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_to_brace(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_vis;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Span> for __Rule_vis {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Span> {
+        if !__token {
+            return __rule_vis(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_vis(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_paren;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_paren {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_rust_paren(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_paren(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_tt;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_tt {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_rust_tt(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_tt(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_group;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_group {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_rust_group(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_group(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_string;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_string {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_rust_string(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_string(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_char_or_lifetime;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rust_char_or_lifetime {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_rust_char_or_lifetime(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_char_or_lifetime(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rule;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Rule> for __Rule_rule {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Rule> {
+        if !__token {
+            return __rule_rule(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rule(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rule_header;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_rule_header {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_rule_header(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rule_header(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_item_start;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_item_start {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_item_start(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_item_start(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_ty_span;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Span> for __Rule_ty_span {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Span> {
+        if !__token {
+            return __rule_ty_span(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_ty_span(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_ty;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_ty {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_ty(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_ty(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_ty_list;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_ty_list {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_ty_list(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_ty_list(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_array_len;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_array_len {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_array_len(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_array_len(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_type_path;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_type_path {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_type_path(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_type_path(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_path_segment;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_path_segment {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_path_segment(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_path_segment(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_generic_arg;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_generic_arg {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_generic_arg(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_generic_arg(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_number;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_number {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_number(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_number(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_bounds;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_bounds {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_bounds(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_bounds(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_bound;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_bound {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_bound(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_bound(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_lifetime;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_lifetime {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_lifetime(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_lifetime(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_expr;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_expr {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Expr> {
+        if !__token {
+            return __rule_expr(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_expr(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_choice;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_choice {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Expr> {
+        if !__token {
+            return __rule_choice(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_choice(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_choice_sep;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_choice_sep {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_choice_sep(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_choice_sep(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_sequence;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_sequence {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Expr> {
+        if !__token {
+            return __rule_sequence(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_sequence(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_action;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, (Span, bool)> for __Rule_action {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<(Span, bool)> {
+        if !__token {
+            return __rule_action(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_action(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_rust_brace;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Span> for __Rule_rust_brace {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Span> {
+        if !__token {
+            return __rule_rust_brace(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_rust_brace(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_element;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_element {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Expr> {
+        if !__token {
+            return __rule_element(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_element(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_bind;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_bind {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Expr> {
+        if !__token {
+            return __rule_bind(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_bind(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_prefix;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_prefix {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Expr> {
+        if !__token {
+            return __rule_prefix(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_prefix(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_postfix;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Expr> for __Rule_postfix {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Expr> {
+        if !__token {
+            return __rule_postfix(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_postfix(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_postfix_op;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, char> for __Rule_postfix_op {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<char> {
+        if !__token {
+            return __rule_postfix_op(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_postfix_op(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_primary;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Primary> for __Rule_primary {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Primary> {
+        if !__token {
+            return __rule_primary(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_primary(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_path;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Path> for __Rule_path {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Path> {
+        if !__token {
+            return __rule_path(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_path(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_path_start;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Ident> for __Rule_path_start {
+    type Memo = Memo<'i>;
+    const ATOM: bool = false;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Ident> {
+        if !__token {
+            return __rule_path_start(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_path_start(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if true {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_literal;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_literal {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Lit> {
+        if !__token {
+            return __rule_literal(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_literal(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_string;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_string {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Lit> {
+        if !__token {
+            return __rule_string(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_string(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_string_char;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Option<char>> for __Rule_string_char {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Option<char>> {
+        if !__token {
+            return __rule_string_char(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_string_char(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_line_continuation;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_line_continuation {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_line_continuation(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_line_continuation(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_byte_string;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_byte_string {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Lit> {
+        if !__token {
+            return __rule_byte_string(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_byte_string(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_byte_string_char;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Option<u8>> for __Rule_byte_string_char {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Option<u8>> {
+        if !__token {
+            return __rule_byte_string_char(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_byte_string_char(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_raw_string;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_raw_string {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Lit> {
+        if !__token {
+            return __rule_raw_string(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_raw_string(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_raw_byte_string;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_raw_byte_string {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Lit> {
+        if !__token {
+            return __rule_raw_byte_string(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_raw_byte_string(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_raw_body;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, &'i str> for __Rule_raw_body {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<&'i str> {
+        if !__token {
+            return __rule_raw_body(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_raw_body(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_char_lit;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_char_lit {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Lit> {
+        if !__token {
+            return __rule_char_lit(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_char_lit(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_char_body;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, char> for __Rule_char_body {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<char> {
+        if !__token {
+            return __rule_char_body(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_char_body(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_byte_char;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Lit> for __Rule_byte_char {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Lit> {
+        if !__token {
+            return __rule_byte_char(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_byte_char(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_byte_char_body;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, u8> for __Rule_byte_char_body {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<u8> {
+        if !__token {
+            return __rule_byte_char_body(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_byte_char_body(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_escape;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, char> for __Rule_escape {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<char> {
+        if !__token {
+            return __rule_escape(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_escape(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_byte_escape;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, u8> for __Rule_byte_escape {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<u8> {
+        if !__token {
+            return __rule_byte_escape(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_byte_escape(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_hex;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, ()> for __Rule_hex {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<()> {
+        if !__token {
+            return __rule_hex(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_hex(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_class;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, Class> for __Rule_class {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<Class> {
+        if !__token {
+            return __rule_class(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_class(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_class_item;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, (char, char)> for __Rule_class_item {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<(char, char)> {
+        if !__token {
+            return __rule_class_item(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_class_item(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(dead_code, non_camel_case_types)]
+struct __Rule_class_char;
+impl<'i> __prpr_runtime::ForeignRule<'i, str, char> for __Rule_class_char {
+    type Memo = Memo<'i>;
+    const ATOM: bool = true;
+    #[inline]
+    fn parse(
+        &self,
+        __cx: &mut __prpr_runtime::Cx<'i, str>,
+        __m: &mut Memo<'i>,
+        __pos: usize,
+        __token: bool,
+    ) -> __prpr_runtime::PResult<char> {
+        if !__token {
+            return __rule_class_char(__cx, __m, __pos);
+        }
+        let __mark = __cx.mark();
+        match __rule_class_char(__cx, __m, __pos) {
+            Ok(__r) => {
+                __cx.rollback(__mark);
+                let (__start, __end) = (__pos, __r.1);
+                if __delimited(__cx, __m, __start, __end) {
+                    Ok(__r)
+                } else {
+                    Err(__cx.fail(__end, __prpr_runtime::Expected::Delimiter))
+                }
+            }
+            Err(__f) => {
+                __cx.commit(__mark);
+                Err(__f)
+            }
+        }
     }
 }
 
@@ -9828,6 +11847,41 @@ impl<T> MemoTable<T> {
             self.slots[i] = Some((pos, result));
         }
     }
+}
+
+/// A rule as other grammars use it: generated for each rule, as the type of a constant named after
+/// the rule, so that a reference to the rule refers to one name.
+#[doc(hidden)]
+#[diagnostic::on_unimplemented(
+    message = "this rule of another grammar parses another kind of input than this grammar",
+    note = "grammars that use each other's rules must parse the same kind of input, `str` or `bytes`"
+)]
+///
+/// The value of the rule, `T`, is a parameter rather than an associated type, so that the impl is
+/// no more visible than the value, which may be private.
+pub trait ForeignRule<'i, I: ?Sized, T> {
+    type Memo;
+
+    /// Whether the rule is an atom, a token.
+    const ATOM: bool;
+
+    /// Matches the rule at `pos`. As a `token`, what was expected inside it is forgotten when it
+    /// matches, and it must be delimited as its grammar requires.
+    fn parse(
+        &self,
+        cx: &mut Cx<'i, I>,
+        memo: &mut Self::Memo,
+        pos: usize,
+        token: bool,
+    ) -> PResult<T>;
+}
+
+/// Whether `rule` is an atom. The kind of input is not constrained here, so that a rule of a
+/// grammar of another kind of input is only reported by [`ForeignRule::parse`].
+#[doc(hidden)]
+#[inline(always)]
+pub const fn foreign_atom<'i, I: ?Sized, T, R: ForeignRule<'i, I, T>>(_rule: &R) -> bool {
+    R::ATOM
 }
 
 /// Runs `rule` from the start of `input` and requires the whole input to be consumed.

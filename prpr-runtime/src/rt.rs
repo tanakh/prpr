@@ -617,6 +617,41 @@ impl<T> MemoTable<T> {
     }
 }
 
+/// A rule as other grammars use it: generated for each rule, as the type of a constant named after
+/// the rule, so that a reference to the rule refers to one name.
+#[doc(hidden)]
+#[diagnostic::on_unimplemented(
+    message = "this rule of another grammar parses another kind of input than this grammar",
+    note = "grammars that use each other's rules must parse the same kind of input, `str` or `bytes`"
+)]
+///
+/// The value of the rule, `T`, is a parameter rather than an associated type, so that the impl is
+/// no more visible than the value, which may be private.
+pub trait ForeignRule<'i, I: ?Sized, T> {
+    type Memo;
+
+    /// Whether the rule is an atom, a token.
+    const ATOM: bool;
+
+    /// Matches the rule at `pos`. As a `token`, what was expected inside it is forgotten when it
+    /// matches, and it must be delimited as its grammar requires.
+    fn parse(
+        &self,
+        cx: &mut Cx<'i, I>,
+        memo: &mut Self::Memo,
+        pos: usize,
+        token: bool,
+    ) -> PResult<T>;
+}
+
+/// Whether `rule` is an atom. The kind of input is not constrained here, so that a rule of a
+/// grammar of another kind of input is only reported by [`ForeignRule::parse`].
+#[doc(hidden)]
+#[inline(always)]
+pub const fn foreign_atom<'i, I: ?Sized, T, R: ForeignRule<'i, I, T>>(_rule: &R) -> bool {
+    R::ATOM
+}
+
 /// Runs `rule` from the start of `input` and requires the whole input to be consumed.
 /// `trailing` skips what may follow the rule (e.g. whitespace).
 ///

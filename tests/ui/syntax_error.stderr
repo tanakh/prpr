@@ -4,11 +4,11 @@ error: syntax error: expected expression, found `/`
 2 |     a = "x" / / "y"
   |               ^
 
-error: syntax error: expected one of `]`, `^`, or range in ascending order, found `z`
- --> tests/ui/syntax_error.rs:7:10
+error: syntax error: expected one of `&`, `/`, `{`, `[*+?]`, expression, rule, or end of input, found `@`
+ --> tests/ui/syntax_error.rs:7:13
   |
-7 |     b = [z-a]
-  |          ^
+7 |     b = "x" @ "y"
+  |             ^
 
 error: aborting due to 2 previous errors
 
