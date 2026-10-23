@@ -64,7 +64,7 @@ fn main() {
   A sequence in parentheses can have an action of its own, like `("+" n:number { n })` in [the calculator](../getting-started/first-parser.md#putting-rules-together).
 * The value of an action whose sequence is the whole body of a rule has the type of the rule; other actions have their types inferred.
 * An action is the body of a closure, so `return` and `?` in it leave the action, not the parser.
-* An action can also stand alone, as in `"null" { Value::Null }`, or even without anything before it, as in `x / { 0 }`, where it matches the empty input.
+* An action can follow a single element, as in `"null" { Value::Null }`, or nothing at all, as in `x / { 0 }`, where it matches the empty input.
 
 ## The text and the span of a binding
 

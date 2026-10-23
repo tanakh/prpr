@@ -19,7 +19,7 @@ pub use prpr_runtime::{Expected, Found, LineCol, ParseError};
 /// ```
 ///
 /// The parser, such as the function that a grammar generates for a rule, takes the text of the
-/// input and returns the parsed value or a [`ParseError`]. The function takes the
+/// input and returns the parsed value or a [`ParseError`]. `expand` takes the
 /// [`runtime::SourceText`] of the input and the value, and returns the tokens of the expansion,
 /// or a [`runtime::MacroError`] that is reported at the part of the input it is about.
 /// Attributes before the name, such as doc comments, are attributes of the proc-macro.

@@ -55,7 +55,7 @@ Grammars are written with Rust tokens (they can appear inside `grammar!`), so so
 * whitespace, `[`, `]`, `'`, `"` and `\`;
 * `/` when it would form `//` or `/*`, which start comments.
 
-For the same reason, a digit directly followed by `e` or `E` is read as an incomplete number, so `[0-9e]` is an error; write `[0-9 e]` or `[e0-9]` instead.
+For the same reason, inside `grammar!`, a digit directly followed by `e` or `E` is read as an incomplete number, so `[0-9e]` is an error; write `[0-9 e]` or `[e0-9]` instead.
 
 ## Any character
 

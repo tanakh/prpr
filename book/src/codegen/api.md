@@ -32,7 +32,7 @@ pub struct Memo<'i> { /* private fields */ }
 | item | what it is for |
 |---|---|
 | a function for each rule | Parsing a whole input. |
-| the type `Rules` | Matching a rule at a position, from other grammars or from Rust code. |
+| the type `Rules` | Matching a rule at a position, from Rust code. |
 | the struct `Memo` | The state of a parse besides the input. |
 | items whose names start with `__` | Helpers of the generated code; they are hidden from the documentation. |
 
@@ -51,7 +51,7 @@ It takes a `&'i str`, or a `&'i [u8]` with [`#![input = bytes]`](../guide/binary
 * Doc comments on the rule become the documentation of the function.
 
 Each call creates the state of its parse and drops it at the end; there is no global state, so the functions can be called from several threads at once.
-The functions of private rules are private; they are allowed to be unused, so that rules used only by other rules cause no warnings.
+The functions of private rules are private; they are allowed to be unused, so that rules used only by other rules cause no warnings (with [`#![lint]`](../guide/lints.md#unused-rules), rules that nothing uses are reported).
 
 `ParseError` and the types it uses, `Expected`, `Found` and `LineCol`, are defined in `prpr::runtime` and also exported at the root of the `prpr` crate.
 
@@ -68,7 +68,7 @@ pub type PResult<T> = Result<(T, usize), Fail>;
 Unlike entry functions, it does not need to reach the end of the input, and a syntactic rule does not skip whitespace after its last token.
 An atom does not check that it is [delimited](../guide/whitespace.md#delimiters); grammars that use it as a token check that.
 
-Rule functions are how [other grammars](../guide/composing.md) use the rules of a grammar.
+[Other grammars](../guide/composing.md) use the same rules through hidden items of the grammar, which also tell them whether a rule is a token.
 From Rust code, `prpr::runtime::parse_prefix` runs one at the start of an input.
 For more control, call a rule function with a context and a `Memo` of your own:
 
@@ -106,7 +106,7 @@ The context, `Cx`, holds the input and records what was expected where parsing f
 
 ## `Memo`
 
-A `Memo` holds the state of a parse: the results of [memoized](../guide/memoization.md) rules, including those of other grammars the grammar uses, and where the whitespace at each position ends.
+A `Memo` holds the state of a parse: the results of [memoized](../guide/memoization.md) rules, including those of other grammars the grammar uses, where the last whitespace that was skipped ends, and the counts of [`#![profile]`](../guide/memoization.md#finding-what-to-memoize).
 Create one with `Memo::default()` for each input, and use it with that input only.
 Entry functions and `parse_prefix` create their own.
 

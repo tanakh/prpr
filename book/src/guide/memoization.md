@@ -71,7 +71,7 @@ Two tools help find the rules that are parsed more than once.
 [`#![lint]`](lints.md#rules-parsed-more-than-once) finds rules that alternatives may parse at the same position, from the grammar alone.
 Profiling counts how often each rule is actually parsed again on an input.
 
-With `#![profile]`, the rules of a grammar count their calls, and `prpr::runtime::profile` runs one of them from the start of an input, as `parse_prefix` does, and returns the counts with the result:
+With `#![profile]`, the rules of a grammar count their calls, and `prpr::runtime::profile` runs one of them from the start of an input, as [`parse_prefix`](composing.md#calling-rules-from-rust) does, and returns the counts with the result, the value and the position after it, here `(5, 17)`:
 
 ```rust
 mod calc {

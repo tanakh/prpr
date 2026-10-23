@@ -15,7 +15,7 @@ Some techniques it uses:
 * **Identifiers and keywords.**
   `ident_raw` matches identifiers of any script, and `ident` excludes keywords with a predicate, as in [Identifiers and keywords](../cookbook/keywords.md).
 * **Checks with messages.**
-  Predicates check what expressions alone cannot, such as that a range in a class is in ascending order, and report what was expected when the check fails.
+  Predicates check what expressions alone cannot, such as that a `\x` escape in a string is at most `\x7F`, and report what was expected when the check fails.
 
 The parser is generated with the runtime included, so that changes to the runtime cannot break it.
 After changing the grammar, regenerate the parser with `PRPR_BLESS=1 cargo test -p prpr-cli --test bootstrap`; the same test checks that the parser is up to date.

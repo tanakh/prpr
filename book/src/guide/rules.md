@@ -36,7 +36,7 @@ Rule names are Rust identifiers, and keywords such as `type` or `match` cannot b
 ## Types
 
 The type after the name is the type of the rule's value.
-It is a Rust type made of paths with generic arguments, references, tuples, arrays, `dyn` and `impl` bounds and function pointers, such as `i64`, `Vec<(String, Expr)>`, `Box<dyn Fn(i32) -> i32>` or `[u8; 4]`.
+It is a Rust type made of paths with generic arguments, references, tuples, arrays, `dyn` bounds and function pointers, such as `i64`, `Vec<(String, Expr)>`, `Box<dyn Fn(i32) -> i32>` or `[u8; 4]`.
 Qualified paths such as `<T as Trait>::Output` are not supported; define a type alias and use that.
 
 The lifetime `'i` is the lifetime of the input, so a rule can return parts of the input without copying them, like `word` above.
@@ -80,7 +80,7 @@ The function skips whitespace at the start and at the end (unless the rule is an
 Doc comments on the rule become the documentation of the function.
 Rules without `pub` get private functions, which are still useful in tests.
 
-Each rule also gets an associated function of the type `Rules`, which other grammars and Rust code can call; see [Composing grammars](composing.md).
+Each rule also gets an associated function of the type `Rules`, which matches the rule at a position, for Rust code; other grammars use the rules through hidden items of their own (see [Composing grammars](composing.md)).
 
 The generated items are put in the scope where `grammar!` is invoked: a function for each rule, the type `Rules`, the struct `Memo` and a few helpers whose names start with `__`.
 To keep them apart from other code, put each grammar in a module of its own.

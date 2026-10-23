@@ -43,7 +43,7 @@ assert_eq!(expr("1 +").unwrap_err().to_string(), "expected one of `(` or number,
 
 ## Crates
 
-* `prpr`: the `grammar!` macro and the runtime.
+* `prpr`: the `grammar!`, `include_grammar!` and `define_proc_macro!` macros, and the runtime.
 * `prpr-runtime`: the runtime alone, for generated files.
 * `prpr-macros`: the `grammar!` and `include_grammar!` macros, used through `prpr`.
 * `prpr-codegen`: the code generator, for `build.rs` scripts and tools.
@@ -58,6 +58,6 @@ Licensed under either of
 
 at your option.
 
-As a special exception, the code that prpr generates, including the runtime that `prpr runtime` writes and that `--inline-runtime` includes in generated modules, may be used, modified and distributed under terms of your choice, without the notices that these licenses require.
+As a special exception, the code that prpr generates, including the runtime that `prpr runtime` and `prpr_codegen::file::runtime_module` write and that `--inline-runtime` and `Runtime::Inline` include in generated modules, may be used, modified and distributed under terms of your choice, without the notices that these licenses require.
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.

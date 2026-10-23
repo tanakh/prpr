@@ -157,7 +157,7 @@ defines the function-like proc-macro `name!`:
 * Errors are reported at the tokens they are about.
 * Attributes before the name, such as doc comments, are attributes of the proc-macro.
 
-For more control, as to parse the input in several steps, or to keep values that borrow its text, define the proc-macro with `SourceText::with`, which `define_proc_macro!` uses:
+For more control, such as to parse the input in several steps, or to keep values that borrow its text, define the proc-macro with `SourceText::with`, which `define_proc_macro!` uses:
 
 ```rust,ignore
 #[proc_macro]
@@ -203,5 +203,5 @@ A language whose syntax goes beyond Rust tokens, such as one with unbalanced quo
 
 ## Grammars in proc-macro crates
 
-A proc-macro crate can only export macros.
-Its rules and the types of their values must therefore not be `pub`; as in the example, put the grammar in a module and make the rules that the macro calls `pub(super)` or `pub(crate)`.
+A proc-macro crate can only export macros, and a grammar always defines the public items `Rules` and `Memo`.
+So put the grammar in a private module, as in the example; its rules may then have any visibility.

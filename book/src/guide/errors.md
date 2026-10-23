@@ -27,7 +27,7 @@ fn main() {
 
 * `offset()` is the byte offset of the error, and `span()` the span of what was found there (empty at the end of the input), as a `std::range::Range<usize>`.
 * `expected()` lists what was expected, sorted and without duplicates.
-  Each item is a `prpr::Expected`: a literal, a character class, a label, any character, the end of the input, a delimiter, or a message from a semantic predicate.
+  Each item is a `prpr::Expected`: a literal, a byte string, a character class, a label, any character, the end of the input, a delimiter, or a message from a semantic predicate.
 * `found()` is the character (or byte) at the offset, or the end of the input.
 * `Display` writes "expected ..., found ...", or "unexpected ..." when nothing in particular was expected, as when a predicate returned `None` or `false`.
 
@@ -126,7 +126,7 @@ error: expected number, found `]`
 
 ### With error reporting libraries
 
-Spans are byte ranges, which is what diagnostic libraries take, as a `std::ops::Range<usize>`.
+Spans are byte ranges, which diagnostic libraries take as `std::ops::Range<usize>`; convert them with `std::ops::Range::from(e.span())`.
 Each example below reports the error of `list("[1, 2,]")` from the beginning of this chapter, and is followed by its output in a terminal.
 
 With [ariadne](https://crates.io/crates/ariadne) 0.6:
@@ -197,3 +197,4 @@ fn report(path: &str, src: &str, e: &prpr::ParseError) {
   <span class="ansi-36">│</span>       <span class="ansi-31">^</span></code></pre>
 
 To word messages differently, build them from `expected()` and `found()`.
+More kinds of `Expected` may be added in later versions, so a `match` on it needs a `_` arm.

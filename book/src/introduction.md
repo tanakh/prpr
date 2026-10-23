@@ -49,8 +49,8 @@ The grammar above defines two rules.
 ## How to read this book
 
 [Getting started](getting-started/installation.md) walks through two complete parsers: a calculator and a JSON parser.
-The [Guide](guide/rules.md) then explains each part of prpr in depth: rules, expressions, values, whitespace, errors, memoization, binary input and composition.
-[Generating code](codegen/api.md) describes the generated code and the ways to generate it: from grammar files, in build scripts, and in proc-macros.
+The [Guide](guide/rules.md) then explains each part of prpr in depth: rules, expressions, values, whitespace, errors, memoization, lints, binary input and composition.
+[Generating code](codegen/api.md) describes the generated code, the ways to generate it from grammar files, ahead of time or in build scripts, and how to parse the input of proc-macros with prpr.
 The [Cookbook](cookbook/keywords.md) shows how to handle common tasks, such as keywords, operator precedence, comments and syntax trees with spans.
 The [Reference](reference/syntax.md) summarizes the syntax of grammars and the errors prpr reports.
 The examples in this book are tested, so they work as they are written.

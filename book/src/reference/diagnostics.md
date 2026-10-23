@@ -17,7 +17,7 @@ error: cannot find rule `factor`
   |            ^^^^^^
 ```
 
-For grammar files, `prpr check`, `prpr gen` and `prpr_codegen::file::generate` render errors with the line of the grammar they are about:
+For grammar files, `prpr check`, `prpr gen` and the builder of `prpr_codegen::build` render errors with the line of the grammar they are about (`prpr_codegen::file::generate` returns them, and `Diagnostic::render` renders them so):
 
 ```text
 error: cannot find rule `factor`
@@ -80,6 +80,7 @@ The attributes of rules and grammars are listed in [Rules](../guide/rules.md#att
 **`` expected `#[label = "..."]` ``**, **`` expected `#[memo]` without arguments ``**, **`` expected `#[boundary(expression)]` ``**, **`` expected `#![input = str]` or `#![input = bytes]` ``**, **`` expected `#![lint]` without arguments ``**
 
 An attribute has the wrong kind of argument.
+The same goes for `#[no_memo]`, `#[no_boundary]` and `#![profile]`, which take no arguments.
 
 **`` a rule cannot have both `#[memo]` and `#[no_memo]` ``**
 
@@ -99,6 +100,10 @@ Byte strings such as `b"\x89PNG"` and bytes such as `b'\0'` are only allowed in 
 **`` a character class for byte input can only contain characters up to `\u{ff}` ``**
 
 In a grammar of binary input, a class matches a byte, and its characters stand for the bytes of the same values.
+
+**`` the range `z-a` is reversed ``**
+
+A range in a class goes from the lower character to the higher; write `a-z`.
 
 **`` `name` is bound more than once in this sequence ``**
 
@@ -151,10 +156,17 @@ Bindings of other sequences, such as sequences in parentheses, are not visible.
 In a grammar file, the Rust code in an action, a type or a Rust item is not valid Rust syntax.
 With `grammar!`, the Rust compiler reports such errors itself.
 
+## Grammar files included with `include_grammar!`
+
+**`expected the path of a grammar file, as a string literal`**, **`cannot read ...`**
+
+`include_grammar!` takes the path of a file, relative to the file that invokes it, as a string literal; macros such as `concat!` are not expanded.
+The mistakes in the grammar are reported at the path, with the place in the file in the message (see [Including a grammar file](../codegen/cli.md#including-a-grammar-file)).
+
 ## Errors from the Rust compiler
 
 The Rust code of a grammar is checked by the Rust compiler, in the generated code.
-With `grammar!`, it reports errors at the grammar; for grammar files, it reports them in the generated module.
+With `grammar!`, it reports errors at the grammar; for grammar files, it reports them in the generated module, or at the invocation of `include_grammar!`.
 
 * **Type errors in actions** are reported at the action, and the type of the rule is pointed out as the expected type:
 
@@ -197,5 +209,10 @@ With `grammar!`, it reports errors at the grammar; for grammar files, it reports
 
   ```text
   error[E0277]: this rule of another grammar parses another kind of input than this grammar
+    --> src/main.rs:23:42
+     |
+  23 |         pub other_input = super::binary::byte
+     |                                          ^^^^ unsatisfied trait bound
+     |
      = note: grammars that use each other's rules must parse the same kind of input, `str` or `bytes`
   ```

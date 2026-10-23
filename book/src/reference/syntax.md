@@ -47,8 +47,8 @@ rule        = attribute* visibility? "atom"? name (":" type)? "=" expression
 ```
 
 * `visibility` is a Rust visibility: `pub`, `pub(crate)`, `pub(super)` or `pub(in path)`.
-* `type` is a Rust type: a path with generic arguments, a reference, a tuple, an array or a slice, a pointer, `dyn` or `impl` bounds, a function pointer, `!` or `_`.
-  Qualified paths such as `<T as Trait>::Output` are not supported.
+* `type` is a Rust type: a path with generic arguments, a reference, a tuple, an array or a slice, a pointer, `dyn` bounds or a function pointer.
+  Qualified paths such as `<T as Trait>::Output` are not supported, and `impl` bounds, `!` and `_` are parsed but cannot be the types of rules.
 * A rule ends where the next rule or Rust item begins: the body of a rule stops before `name =` or `name: type =`.
 
 | attribute | meaning |

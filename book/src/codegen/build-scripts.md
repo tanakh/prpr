@@ -68,6 +68,16 @@ fn main() {
 
 Use the same version of `prpr-codegen` and the runtime; the generated module checks that the runtime is compatible.
 
+`include_parser!` is a macro of `prpr-runtime`, which a crate that depends on `prpr` finds as `prpr::runtime::include_parser!`.
+It reads the module from `$OUT_DIR`, so a module written elsewhere with `out_dir` is included with `include!`.
+With `Runtime::Inline`, a crate that depends on neither crate includes its modules with `include!` too:
+
+```rust,ignore
+mod list {
+    include!(concat!(env!("OUT_DIR"), "/src/list.peg.rs"));
+}
+```
+
 ## Errors
 
 When a grammar has mistakes, `compile` writes them to the standard error, with the lines of the grammar they are about, and the build fails.
