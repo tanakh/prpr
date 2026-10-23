@@ -115,3 +115,31 @@ error: expected `bar`, found `f`
   | ^"
     );
 }
+
+mod comments {
+    prpr::grammar! {
+        pub words = word*
+        atom word = [a-z]+
+        atom comment = "//" (!"\n" .)* / "/*" (!"*/" .)* "*/"
+    }
+}
+
+#[test]
+fn comments() {
+    // A comment that started and cannot end is reported where its end was expected.
+    assert_eq!(
+        err(comments::words("a /* b")),
+        (
+            "expected one of `*/` or any character, found end of input".into(),
+            6
+        )
+    );
+    // Otherwise, comments are never expected.
+    assert_eq!(
+        err(comments::words("a /* b */ 1")),
+        (
+            "expected one of `[a-z]` or end of input, found `1`".into(),
+            10
+        )
+    );
+}

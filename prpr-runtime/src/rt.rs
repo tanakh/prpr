@@ -185,11 +185,19 @@ pub struct Cx<'i, I: ?Sized> {
     // only kept while a mark is active, so that the state can be rolled back to the mark.
     expected: Vec<(usize, Expected)>,
     marks: u32,
-    quiet: u32,
+    // Failures at positions up to this one are not recorded: `usize::MAX` while whitespace is
+    // skipped or a lookahead or a delimiter is checked, and the start of a comment in it, so that
+    // a comment that started and cannot end is reported.
+    quiet_to: Option<usize>,
     label: Option<(usize, &'static str)>,
     // Whether failures are recorded at all.
     tracking: bool,
 }
+
+/// What was not recorded before [`Cx::push_quiet`] or [`Cx::push_comment`].
+#[derive(Clone, Copy, Debug)]
+#[doc(hidden)]
+pub struct SavedQuiet(Option<usize>);
 
 /// The label in effect before [`Cx::push_label`].
 #[derive(Clone, Copy, Debug)]
@@ -212,7 +220,7 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
             err_pos: 0,
             expected: Vec::new(),
             marks: 0,
-            quiet: 0,
+            quiet_to: None,
             label: None,
             tracking: true,
         }
@@ -272,9 +280,15 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     /// Records that `expected` was expected at `pos`.
     #[inline]
     pub fn expect(&mut self, pos: usize, expected: Expected) {
-        if self.tracking && pos >= self.err_pos && self.quiet == 0 {
+        if self.recording(pos) {
             self.record(pos, Some(expected));
         }
+    }
+
+    // Whether a failure at `pos` is recorded.
+    #[inline]
+    fn recording(&self, pos: usize) -> bool {
+        self.tracking && pos >= self.err_pos && !matches!(self.quiet_to, Some(to) if pos <= to)
     }
 
     /// Records a failure at `pos` and returns [`Fail`].
@@ -288,7 +302,7 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     /// reported as "unexpected ...", unless a label is in effect at `pos`.
     #[inline]
     pub fn fail_unexpected(&mut self, pos: usize) -> Fail {
-        if self.tracking && pos >= self.err_pos && self.quiet == 0 {
+        if self.recording(pos) {
             self.record(pos, None);
         }
         Fail
@@ -368,14 +382,26 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     /// Stops recording failures until the matching [`Cx::pop_quiet`].
     #[inline]
     #[doc(hidden)]
-    pub fn push_quiet(&mut self) {
-        self.quiet += 1;
+    pub fn push_quiet(&mut self) -> SavedQuiet {
+        let saved = SavedQuiet(self.quiet_to);
+        self.quiet_to = Some(usize::MAX);
+        saved
+    }
+
+    /// Starts a comment at `pos`, until the matching [`Cx::pop_quiet`]: what is expected at `pos`,
+    /// a comment, is not recorded, but what is expected after it, such as its end, is.
+    #[inline]
+    #[doc(hidden)]
+    pub fn push_comment(&mut self, pos: usize) -> SavedQuiet {
+        let saved = SavedQuiet(self.quiet_to);
+        self.quiet_to = Some(pos);
+        saved
     }
 
     #[inline]
     #[doc(hidden)]
-    pub fn pop_quiet(&mut self) {
-        self.quiet -= 1;
+    pub fn pop_quiet(&mut self, saved: SavedQuiet) {
+        self.quiet_to = saved.0;
     }
 
     /// Reports `label` instead of whatever is expected at `pos`, until the matching

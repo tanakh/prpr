@@ -87,12 +87,12 @@ fn __skip<'i>(
     if let ::core::option::Option::Some(__end) = __m.__skip.get(__pos) {
         return __end;
     }
-    __cx.push_quiet();
+    let __saved = __cx.push_quiet();
     let __end = match __rule_spaces(__cx, __m, __pos) {
         Ok((_, __p)) => __p,
         Err(_) => __pos,
     };
-    __cx.pop_quiet();
+    __cx.pop_quiet(__saved);
     __m.__skip.set(__pos, __end);
     __end
 }
@@ -103,9 +103,9 @@ fn __word_char<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> ::core::option::Option<usize> {
-    __cx.push_quiet();
+    let __saved = __cx.push_quiet();
     let __r = __rule_word_char(__cx, __m, __pos);
-    __cx.pop_quiet();
+    __cx.pop_quiet(__saved);
     match __r {
         Ok((_, __p)) => ::core::option::Option::Some(__p),
         Err(_) => ::core::option::Option::None,
@@ -133,7 +133,7 @@ fn __rule_whitespace<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    __cx.push_quiet();
+    let __saved = __cx.push_quiet();
     let __r = {
         match match __cx.peek_char(__pos) {
             ::core::option::Option::Some(
@@ -158,7 +158,7 @@ fn __rule_whitespace<'i>(
             Err(__f) => Err(__f),
         }
     };
-    __cx.pop_quiet();
+    __cx.pop_quiet(__saved);
     __r
 }
 /// Parses the whole input with the rule `whitespace`.
@@ -174,7 +174,7 @@ fn __rule_comment<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    __cx.push_quiet();
+    let __saved = __cx.push_comment(__pos);
     let __r = {
         match '__l0: {
             if let Ok(__r) = '__l1: {
@@ -183,16 +183,16 @@ fn __rule_comment<'i>(
                     Err(__f) => break '__l1 Err(__f),
                 };
                 let __pos = match {
-                    __cx.push_quiet();
+                    let __saved = __cx.push_quiet();
                     let __r = '__l2: {
                         let __pos = match __cx.lit(__pos, "/") {
                             Ok(__p) => __p,
                             Err(__f) => break '__l2 Err(__f),
                         };
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, "/");
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __pos;
@@ -206,7 +206,7 @@ fn __rule_comment<'i>(
                         };
                         Ok(__pos)
                     };
-                    __cx.pop_quiet();
+                    __cx.pop_quiet(__saved);
                     match __r {
                         Ok(_) => {
                             let __at = __pos;
@@ -225,9 +225,9 @@ fn __rule_comment<'i>(
                         let __pos = __p;
                         match '__l3: {
                             let __pos = match {
-                                __cx.push_quiet();
+                                let __saved = __cx.push_quiet();
                                 let __r = __cx.lit(__pos, "\n");
-                                __cx.pop_quiet();
+                                __cx.pop_quiet(__saved);
                                 match __r {
                                     Ok(_) => {
                                         let __at = __pos;
@@ -279,7 +279,7 @@ fn __rule_comment<'i>(
             Err(__f) => Err(__f),
         }
     };
-    __cx.pop_quiet();
+    __cx.pop_quiet(__saved);
     __r
 }
 /// Parses the whole input with the rule `comment`.
@@ -314,9 +314,9 @@ fn __rule_block_comment<'i>(
                     }
                     '__l6: {
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, "*/");
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __pos;
@@ -900,9 +900,9 @@ fn __rule_doc_comment<'i>(
             Err(__f) => break '__l18 Err(__f),
         };
         let __pos = match {
-            __cx.push_quiet();
+            let __saved = __cx.push_quiet();
             let __r = __cx.lit(__pos, "/");
-            __cx.pop_quiet();
+            __cx.pop_quiet(__saved);
             match __r {
                 Ok(_) => {
                     let __at = __pos;
@@ -922,9 +922,9 @@ fn __rule_doc_comment<'i>(
                 let __pos = __p;
                 match '__l19: {
                     let __pos = match {
-                        __cx.push_quiet();
+                        let __saved = __cx.push_quiet();
                         let __r = __cx.lit(__pos, "\n");
-                        __cx.pop_quiet();
+                        __cx.pop_quiet(__saved);
                         match __r {
                             Ok(_) => {
                                 let __at = __pos;
@@ -1351,9 +1351,9 @@ fn __rule_attr_tokens<'i>(
             let __pos = __p;
             match '__l29: {
                 let __pos = match {
-                    __cx.push_quiet();
+                    let __saved = __cx.push_quiet();
                     let __r = __cx.lit(__pos, "]");
-                    __cx.pop_quiet();
+                    __cx.pop_quiet(__saved);
                     match __r {
                         Ok(_) => {
                             let __at = __pos;
@@ -1686,9 +1686,9 @@ fn __rule_rust_doc_comment<'i>(
                 let __pos = __p;
                 match '__l40: {
                     let __pos = match {
-                        __cx.push_quiet();
+                        let __saved = __cx.push_quiet();
                         let __r = __cx.lit(__pos, "\n");
-                        __cx.pop_quiet();
+                        __cx.pop_quiet(__saved);
                         match __r {
                             Ok(_) => {
                                 let __at = __pos;
@@ -1810,7 +1810,7 @@ fn __rule_semi_item<'i>(
                 Err(__f) => break '__l43 Err(__f),
             };
             let __pos = match {
-                __cx.push_quiet();
+                let __saved = __cx.push_quiet();
                 let __r = '__l44: {
                     if let Ok(__r) = {
                         let __pos = __skip(__cx, __m, __pos);
@@ -1871,7 +1871,7 @@ fn __rule_semi_item<'i>(
                         }
                     }
                 };
-                __cx.pop_quiet();
+                __cx.pop_quiet(__saved);
                 match __r {
                     Ok(_) => {
                         let __at = __skip(__cx, __m, __pos);
@@ -2197,9 +2197,9 @@ fn __rule_rust_to_semi<'i>(
                 let __pos = __p;
                 match '__l49: {
                     let __pos = match {
-                        __cx.push_quiet();
+                        let __saved = __cx.push_quiet();
                         let __r = __cx.lit(__pos, ";");
-                        __cx.pop_quiet();
+                        __cx.pop_quiet(__saved);
                         match __r {
                             Ok(_) => {
                                 let __at = __pos;
@@ -2267,9 +2267,9 @@ fn __rule_rust_to_brace<'i>(
                 let __pos = __p;
                 match '__l51: {
                     let __pos = match {
-                        __cx.push_quiet();
+                        let __saved = __cx.push_quiet();
                         let __r = __cx.lit(__pos, ";");
-                        __cx.pop_quiet();
+                        __cx.pop_quiet(__saved);
                         match __r {
                             Ok(_) => {
                                 let __at = __pos;
@@ -2282,9 +2282,9 @@ fn __rule_rust_to_brace<'i>(
                         Err(__f) => break '__l51 Err(__f),
                     };
                     let __pos = match {
-                        __cx.push_quiet();
+                        let __saved = __cx.push_quiet();
                         let __r = __cx.lit(__pos, "{");
-                        __cx.pop_quiet();
+                        __cx.pop_quiet(__saved);
                         match __r {
                             Ok(_) => {
                                 let __at = __pos;
@@ -2459,9 +2459,9 @@ fn __rule_rust_tt<'i>(
                     let __pos = __p;
                     match '__l57: {
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\n");
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __pos;
@@ -2575,9 +2575,9 @@ fn __rule_rust_group<'i>(
                     let __pos = __p;
                     match '__l62: {
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, ")");
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __pos;
@@ -2634,9 +2634,9 @@ fn __rule_rust_group<'i>(
                     let __pos = __p;
                     match '__l64: {
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, "]");
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __pos;
@@ -2693,9 +2693,9 @@ fn __rule_rust_group<'i>(
                     let __pos = __p;
                     match '__l60: {
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, "}");
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __pos;
@@ -2908,9 +2908,9 @@ fn __rule_rust_char_or_lifetime<'i>(
                         let __pos = __p;
                         match '__l73: {
                             let __pos = match {
-                                __cx.push_quiet();
+                                let __saved = __cx.push_quiet();
                                 let __r = __cx.lit(__pos, "'");
-                                __cx.pop_quiet();
+                                __cx.pop_quiet(__saved);
                                 match __r {
                                     Ok(_) => {
                                         let __at = __pos;
@@ -3117,7 +3117,7 @@ fn __rule_rule<'i>(
                 Err(__f) => break '__l76 Err(__f),
             };
             let __pos = match {
-                __cx.push_quiet();
+                let __saved = __cx.push_quiet();
                 let __r = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ":") {
@@ -3131,7 +3131,7 @@ fn __rule_rule<'i>(
                         Err(__f) => Err(__f),
                     }
                 };
-                __cx.pop_quiet();
+                __cx.pop_quiet(__saved);
                 match __r {
                     Ok(_) => {
                         let __at = __skip(__cx, __m, __pos);
@@ -3164,7 +3164,7 @@ fn __rule_rule<'i>(
                     Err(__f) => break '__l77 Err(__f),
                 };
                 let __pos = match {
-                    __cx.push_quiet();
+                    let __saved = __cx.push_quiet();
                     let __r = match __cx.peek_char(__pos) {
                         ::core::option::Option::Some(
                             (__c, __p),
@@ -3175,7 +3175,7 @@ fn __rule_rule<'i>(
                             )
                         }
                     };
-                    __cx.pop_quiet();
+                    __cx.pop_quiet(__saved);
                     match __r {
                         Ok(_) => {
                             let __at = __pos;
@@ -3279,7 +3279,7 @@ fn __rule_rule_header<'i>(
                 Err(__f) => break '__l79 Err(__f),
             };
             let __pos = match {
-                __cx.push_quiet();
+                let __saved = __cx.push_quiet();
                 let __r = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, ":") {
@@ -3293,7 +3293,7 @@ fn __rule_rule_header<'i>(
                         Err(__f) => Err(__f),
                     }
                 };
-                __cx.pop_quiet();
+                __cx.pop_quiet(__saved);
                 match __r {
                     Ok(_) => {
                         let __at = __skip(__cx, __m, __pos);
@@ -3329,7 +3329,7 @@ fn __rule_rule_header<'i>(
                     Err(__f) => break '__l80 Err(__f),
                 };
                 let __pos = match {
-                    __cx.push_quiet();
+                    let __saved = __cx.push_quiet();
                     let __r = match __cx.peek_char(__pos) {
                         ::core::option::Option::Some(
                             (__c, __p),
@@ -3340,7 +3340,7 @@ fn __rule_rule_header<'i>(
                             )
                         }
                     };
-                    __cx.pop_quiet();
+                    __cx.pop_quiet(__saved);
                     match __r {
                         Ok(_) => {
                             let __at = __pos;
@@ -4092,9 +4092,9 @@ fn __rule_array_len<'i>(
             let __pos = __p;
             match '__l98: {
                 let __pos = match {
-                    __cx.push_quiet();
+                    let __saved = __cx.push_quiet();
                     let __r = __cx.lit(__pos, "]");
-                    __cx.pop_quiet();
+                    __cx.pop_quiet(__saved);
                     match __r {
                         Ok(_) => {
                             let __at = __pos;
@@ -4533,7 +4533,7 @@ fn __rule_generic_arg<'i>(
                 Err(__f) => break '__l107 Err(__f),
             };
             let __pos = match {
-                __cx.push_quiet();
+                let __saved = __cx.push_quiet();
                 let __r = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "=") {
@@ -4547,7 +4547,7 @@ fn __rule_generic_arg<'i>(
                         Err(__f) => Err(__f),
                     }
                 };
-                __cx.pop_quiet();
+                __cx.pop_quiet(__saved);
                 match __r {
                     Ok(_) => {
                         let __at = __skip(__cx, __m, __pos);
@@ -5128,14 +5128,14 @@ fn __rule_choice_sep<'i>(
             Err(__f) => break '__l115 Err(__f),
         };
         let __pos = match {
-            __cx.push_quiet();
+            let __saved = __cx.push_quiet();
             let __r = match __cx.peek_char(__pos) {
                 ::core::option::Option::Some(
                     (__c, __p),
                 ) if ::core::matches!(__c, '/' | '*') => Ok(__p),
                 _ => Err(__cx.fail(__pos, __prpr_runtime::Expected::Class("['/' '*']"))),
             };
-            __cx.pop_quiet();
+            __cx.pop_quiet(__saved);
             match __r {
                 Ok(_) => {
                     let __at = __pos;
@@ -5181,12 +5181,12 @@ fn __rule_sequence<'i>(
                     let __pos = __p;
                     match '__l117: {
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = match __rule_item_start(__cx, __m, __pos) {
                                 Ok((_, __p)) => Ok(__p),
                                 Err(__f) => Err(__f),
                             };
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __skip(__cx, __m, __pos);
@@ -5422,7 +5422,7 @@ fn __rule_bind<'i>(
             Err(__f) => break '__l121 Err(__f),
         };
         let __pos = match {
-            __cx.push_quiet();
+            let __saved = __cx.push_quiet();
             let __r = {
                 let __pos = __skip(__cx, __m, __pos);
                 match __cx.lit(__pos, ":") {
@@ -5436,7 +5436,7 @@ fn __rule_bind<'i>(
                     Err(__f) => Err(__f),
                 }
             };
-            __cx.pop_quiet();
+            __cx.pop_quiet(__saved);
             match __r {
                 Ok(_) => {
                     let __at = __skip(__cx, __m, __pos);
@@ -5498,7 +5498,7 @@ fn __rule_prefix<'i>(
                 Err(__f) => break '__l123 Err(__f),
             };
             let __pos = match {
-                __cx.push_quiet();
+                let __saved = __cx.push_quiet();
                 let __r = {
                     let __pos = __skip(__cx, __m, __pos);
                     match __cx.lit(__pos, "{") {
@@ -5512,7 +5512,7 @@ fn __rule_prefix<'i>(
                         Err(__f) => Err(__f),
                     }
                 };
-                __cx.pop_quiet();
+                __cx.pop_quiet(__saved);
                 match __r {
                     Ok(_) => {
                         let __at = __skip(__cx, __m, __pos);
@@ -5872,9 +5872,9 @@ fn __rule_primary<'i>(
                         Err(__f) => break '__l134 Err(__f),
                     };
                     let __pos = match {
-                        __cx.push_quiet();
+                        let __saved = __cx.push_quiet();
                         let __r = __cx.lit(__pos, ".");
-                        __cx.pop_quiet();
+                        __cx.pop_quiet(__saved);
                         match __r {
                             Ok(_) => {
                                 let __at = __pos;
@@ -6151,12 +6151,12 @@ fn __rule_literal<'i>(
             Err(__f) => break '__l139 Err(__f),
         };
         let __pos = match {
-            __cx.push_quiet();
+            let __saved = __cx.push_quiet();
             let __r = match __rule_ident_continue(__cx, __m, __pos) {
                 Ok((_, __p)) => Ok(__p),
                 Err(__f) => Err(__f),
             };
-            __cx.pop_quiet();
+            __cx.pop_quiet(__saved);
             match __r {
                 Ok(_) => {
                     let __at = __pos;
@@ -6574,9 +6574,9 @@ fn __rule_raw_body<'i>(
                     let __pos = __p;
                     match '__l159: {
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"");
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __pos;
@@ -6637,9 +6637,9 @@ fn __rule_raw_body<'i>(
                     let __pos = __p;
                     match '__l161: {
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"#");
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __pos;
@@ -6700,9 +6700,9 @@ fn __rule_raw_body<'i>(
                     let __pos = __p;
                     match '__l163: {
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"##");
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __pos;
@@ -6763,9 +6763,9 @@ fn __rule_raw_body<'i>(
                     let __pos = __p;
                     match '__l157: {
                         let __pos = match {
-                            __cx.push_quiet();
+                            let __saved = __cx.push_quiet();
                             let __r = __cx.lit(__pos, "\"###");
-                            __cx.pop_quiet();
+                            __cx.pop_quiet(__saved);
                             match __r {
                                 Ok(_) => {
                                     let __at = __pos;
@@ -7577,7 +7577,7 @@ fn __rule_spaces<'i>(
     __m: &mut Memo<'i>,
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
-    __cx.push_quiet();
+    let __saved = __cx.push_quiet();
     let __r = {
         match {
             let mut __p = __pos;
@@ -7613,7 +7613,7 @@ fn __rule_spaces<'i>(
             Err(__f) => Err(__f),
         }
     };
-    __cx.pop_quiet();
+    __cx.pop_quiet(__saved);
     __r
 }
 #[allow(unused, non_snake_case, clippy::all)]
@@ -7623,14 +7623,14 @@ fn __rule_eof<'i>(
     __pos: usize,
 ) -> __prpr_runtime::PResult<()> {
     match {
-        __cx.push_quiet();
+        let __saved = __cx.push_quiet();
         let __r = match __cx.peek_char(__pos) {
             ::core::option::Option::Some((__c, __p)) => Ok(__p),
             ::core::option::Option::None => {
                 Err(__cx.fail(__pos, __prpr_runtime::Expected::Any))
             }
         };
-        __cx.pop_quiet();
+        __cx.pop_quiet(__saved);
         match __r {
             Ok(_) => {
                 let __at = __pos;
@@ -11417,11 +11417,19 @@ pub struct Cx<'i, I: ?Sized> {
     // only kept while a mark is active, so that the state can be rolled back to the mark.
     expected: Vec<(usize, Expected)>,
     marks: u32,
-    quiet: u32,
+    // Failures at positions up to this one are not recorded: `usize::MAX` while whitespace is
+    // skipped or a lookahead or a delimiter is checked, and the start of a comment in it, so that
+    // a comment that started and cannot end is reported.
+    quiet_to: Option<usize>,
     label: Option<(usize, &'static str)>,
     // Whether failures are recorded at all.
     tracking: bool,
 }
+
+/// What was not recorded before [`Cx::push_quiet`] or [`Cx::push_comment`].
+#[derive(Clone, Copy, Debug)]
+#[doc(hidden)]
+pub struct SavedQuiet(Option<usize>);
 
 /// The label in effect before [`Cx::push_label`].
 #[derive(Clone, Copy, Debug)]
@@ -11444,7 +11452,7 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
             err_pos: 0,
             expected: Vec::new(),
             marks: 0,
-            quiet: 0,
+            quiet_to: None,
             label: None,
             tracking: true,
         }
@@ -11504,9 +11512,15 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     /// Records that `expected` was expected at `pos`.
     #[inline]
     pub fn expect(&mut self, pos: usize, expected: Expected) {
-        if self.tracking && pos >= self.err_pos && self.quiet == 0 {
+        if self.recording(pos) {
             self.record(pos, Some(expected));
         }
+    }
+
+    // Whether a failure at `pos` is recorded.
+    #[inline]
+    fn recording(&self, pos: usize) -> bool {
+        self.tracking && pos >= self.err_pos && !matches!(self.quiet_to, Some(to) if pos <= to)
     }
 
     /// Records a failure at `pos` and returns [`Fail`].
@@ -11520,7 +11534,7 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     /// reported as "unexpected ...", unless a label is in effect at `pos`.
     #[inline]
     pub fn fail_unexpected(&mut self, pos: usize) -> Fail {
-        if self.tracking && pos >= self.err_pos && self.quiet == 0 {
+        if self.recording(pos) {
             self.record(pos, None);
         }
         Fail
@@ -11600,14 +11614,26 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     /// Stops recording failures until the matching [`Cx::pop_quiet`].
     #[inline]
     #[doc(hidden)]
-    pub fn push_quiet(&mut self) {
-        self.quiet += 1;
+    pub fn push_quiet(&mut self) -> SavedQuiet {
+        let saved = SavedQuiet(self.quiet_to);
+        self.quiet_to = Some(usize::MAX);
+        saved
+    }
+
+    /// Starts a comment at `pos`, until the matching [`Cx::pop_quiet`]: what is expected at `pos`,
+    /// a comment, is not recorded, but what is expected after it, such as its end, is.
+    #[inline]
+    #[doc(hidden)]
+    pub fn push_comment(&mut self, pos: usize) -> SavedQuiet {
+        let saved = SavedQuiet(self.quiet_to);
+        self.quiet_to = Some(pos);
+        saved
     }
 
     #[inline]
     #[doc(hidden)]
-    pub fn pop_quiet(&mut self) {
-        self.quiet -= 1;
+    pub fn pop_quiet(&mut self, saved: SavedQuiet) {
+        self.quiet_to = saved.0;
     }
 
     /// Reports `label` instead of whatever is expected at `pos`, until the matching

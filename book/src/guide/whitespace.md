@@ -47,7 +47,7 @@ atom comment = []    // never matches: there are no comments
 ```
 
 A grammar can redefine `whitespace`, `comment` or `spaces` itself.
-They must be atoms, and their failures are never reported in error messages.
+They must be atoms, and whitespace and comments are never reported as expected in error messages; only a comment that started and cannot end is, as in [Comments](../cookbook/comments.md#line-and-block-comments).
 
 Most languages only need to define `comment`:
 

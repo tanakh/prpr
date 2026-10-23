@@ -10,7 +10,8 @@ pub const WHITESPACE: &str = "whitespace";
 pub const COMMENT: &str = "comment";
 pub const WORD_CHAR: &str = "word_char";
 const SPECIAL_RULES: &[&str] = &[SPACES, WHITESPACE, COMMENT, WORD_CHAR];
-/// The rules whose failures are never reported.
+/// The rules whose failures are not reported where they start: whitespace is never expected,
+/// but the end of a comment that started is.
 pub const QUIET_RULES: &[&str] = &[SPACES, WHITESPACE, COMMENT];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

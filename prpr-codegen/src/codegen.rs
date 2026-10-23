@@ -320,12 +320,12 @@ impl Gen<'_> {
                 if let ::core::option::Option::Some(__end) = __m.__skip.get(__pos) {
                     return __end;
                 }
-                __cx.push_quiet();
+                let __saved = __cx.push_quiet();
                 let __end = match #spaces(__cx, __m, __pos) {
                     Ok((_, __p)) => __p,
                     Err(_) => __pos,
                 };
-                __cx.pop_quiet();
+                __cx.pop_quiet(__saved);
                 __m.__skip.set(__pos, __end);
                 __end
             }
@@ -338,9 +338,9 @@ impl Gen<'_> {
                 __m: &mut Memo<'i>,
                 __pos: usize,
             ) -> ::core::option::Option<usize> {
-                __cx.push_quiet();
+                let __saved = __cx.push_quiet();
                 let __r = #word_char(__cx, __m, __pos);
-                __cx.pop_quiet();
+                __cx.pop_quiet(__saved);
                 match __r {
                     Ok((_, __p)) => ::core::option::Option::Some(__p),
                     Err(_) => ::core::option::Option::None,
@@ -373,9 +373,9 @@ impl Gen<'_> {
                 out.extend(q! {
                     #[allow(unused, clippy::all)]
                     fn #name<'i>(__cx: &mut #rt::Cx<'i, #input>, __m: &mut Memo<'i>, __pos: usize) -> bool {
-                        __cx.push_quiet();
+                        let __saved = __cx.push_quiet();
                         let __r = #body;
-                        __cx.pop_quiet();
+                        __cx.pop_quiet(__saved);
                         __r.is_ok()
                     }
                 });
@@ -416,12 +416,20 @@ impl Gen<'_> {
             }
             None => body,
         };
-        // Whitespace is never reported as expected, however it is invoked.
-        let body = if crate::analysis::QUIET_RULES.contains(&rule.name.name.as_str()) {
+        // Whitespace is never reported as expected, however it is invoked, and neither is a
+        // comment where it would start; after that, what it expects is, e.g. its end.
+        let body = if rule.name.name == crate::analysis::COMMENT {
             q! {
-                __cx.push_quiet();
+                let __saved = __cx.push_comment(__pos);
                 let __r = { #body };
-                __cx.pop_quiet();
+                __cx.pop_quiet(__saved);
+                __r
+            }
+        } else if crate::analysis::QUIET_RULES.contains(&rule.name.name.as_str()) {
+            q! {
+                let __saved = __cx.push_quiet();
+                let __r = { #body };
+                __cx.pop_quiet(__saved);
                 __r
             }
         } else {
@@ -660,9 +668,9 @@ impl Gen<'_> {
                     q!(__cx.fail_unexpected(__at))
                 };
                 q! {{
-                    __cx.push_quiet();
+                    let __saved = __cx.push_quiet();
                     let __r = #code;
-                    __cx.pop_quiet();
+                    __cx.pop_quiet(__saved);
                     match __r {
                         Ok(_) => {
                             let __at = #at;

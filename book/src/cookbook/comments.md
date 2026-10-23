@@ -22,7 +22,7 @@ fn main() {
 
 A comment separates tokens, as whitespace does, so `a/* b */c` is two words.
 
-An unterminated block comment is not a comment, so the error is reported where it starts:
+A block comment that is not closed is reported at the end of the input, where its end was expected:
 
 ```rust
 # prpr::grammar! {
@@ -34,8 +34,8 @@ An unterminated block comment is not a comment, so the error is reported where i
 # }
 fn main() {
     let e = words("a /* b").unwrap_err();
-    assert_eq!(e.offset(), 2);
-    assert_eq!(e.to_string(), "expected one of `[a-z]` or end of input, found `/`");
+    assert_eq!(e.offset(), 6);
+    assert_eq!(e.to_string(), "expected one of `*/` or any character, found end of input");
 }
 ```
 
