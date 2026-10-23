@@ -166,10 +166,6 @@ fn same_path(a: &Path, b: &Path) -> bool {
             .all(|(x, y)| x.name == y.name)
 }
 
-fn class_contains(class: &Class, c: char) -> bool {
-    class.ranges.iter().any(|&(lo, hi)| lo <= c && c <= hi) != class.negated
-}
-
 impl Gen<'_> {
     fn error(&self, d: Diagnostic) {
         self.diags.borrow_mut().push(d);
@@ -422,16 +418,30 @@ impl Gen<'_> {
         } else {
             body
         };
+        // With `#![profile]`, the rules of the grammar count their calls.
+        let profiled = self.an.profile && !info.builtin;
+        let name_str = &rule.name.name;
         let body = if info.memo {
             let field = memo_field(&rule.name.name);
             let clone = clone_fn(&rule.name.name);
+            let hit =
+                profiled.then(|| q!(__cx.profile_memo_hit(::core::module_path!(), #name_str);));
             q! {
                 if let ::core::option::Option::Some(__r) = __m.#field.get(__pos, Memo::#clone) {
+                    #hit
                     return __r;
                 }
                 let __r = { #body };
                 __m.#field.insert(__pos, &__r, Memo::#clone);
                 __r
+            }
+        } else {
+            body
+        };
+        let body = if profiled {
+            q! {
+                __cx.profile_call(::core::module_path!(), #name_str, __pos);
+                #body
             }
         } else {
             body
@@ -465,14 +475,26 @@ impl Gen<'_> {
         } else {
             q!(__skip)
         };
+        // With `#![lint]`, the compiler reports private rules that neither other rules nor Rust
+        // code use. It only does so for code that looks written at the rule.
+        let unused_check = self.an.lint && rule.vis.is_none() && !info.referenced;
+        let dead_code = if unused_check { q!(deny) } else { q!(allow) };
+        let entry = q! {
+            #[#dead_code(dead_code)]
+            #vis fn #name<'i>(input: &'i #input) -> ::core::result::Result<#ty, #rt::ParseError> {
+                #rt::parse_full(input, #raw, #trailing)
+            }
+        };
+        let entry = if unused_check {
+            respan(entry, name.span())
+        } else {
+            entry
+        };
         q! {
             #raw_fn
 
             #(#[doc = #docs])*
-            #[allow(dead_code)]
-            #vis fn #name<'i>(input: &'i #input) -> ::core::result::Result<#ty, #rt::ParseError> {
-                #rt::parse_full(input, #raw, #trailing)
-            }
+            #entry
         }
     }
 
@@ -714,7 +736,7 @@ impl Gen<'_> {
         };
         let check = match (last, &self.an.word_class) {
             (None, _) => Check::None,
-            (Some(c), Some(class)) if class_contains(class, c) => Check::NoWordAfter,
+            (Some(c), Some(class)) if class.contains(c) => Check::NoWordAfter,
             (Some(_), Some(_)) => Check::None,
             (Some(_), None) => Check::Delimited,
         };
@@ -1266,4 +1288,22 @@ impl Gen<'_> {
         }
         out.into_iter().collect()
     }
+}
+
+// `tokens` with every span replaced with `span`.
+fn respan(tokens: TokenStream, span: TokenSpan) -> TokenStream {
+    tokens
+        .into_iter()
+        .map(|tt| match tt {
+            TokenTree::Group(g) => {
+                let mut group = Group::new(g.delimiter(), respan(g.stream(), span));
+                group.set_span(span);
+                TokenTree::Group(group)
+            }
+            mut tt => {
+                tt.set_span(span);
+                tt
+            }
+        })
+        .collect()
 }

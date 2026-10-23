@@ -176,10 +176,22 @@ If a way to express the check in plain PEG is found (for example with built-in r
 * Memo tables are fields of a per-parse `Memo` struct generated for each grammar, holding only the tables of `#[memo]` rules.
   There is no global or thread-local state and nothing to clear: the struct is dropped when the parse ends.
 * Only memoized rules require `T: Clone`. A missing implementation is reported once, at the rule's type in the grammar.
-* To make *not* caching an informed choice (planned):
-  * A lint warns when alternatives of one choice may invoke the same syntactic rule at the same position and the rule does not have `#[memo]`.
-    An attribute such as `#[no_memo]` would state that a rule is deliberately not memoized and silence the lint; it is to be added together with the lint, since it means nothing without it.
-  * A profiling feature counts calls, re-invocations at the same position and cache hits per rule.
+* To make *not* caching an informed choice:
+  * With `#![lint]`, alternatives of one choice that may parse the same syntactic rule at the same position are errors, unless the rule has `#[memo]` or `#[no_memo]`, which states that it is deliberately not memoized.
+    It looks at rules in a common start of the alternatives, and at rules that both invoke at their start positions after it, through other rules (from `first_calls`, the analysis behind the left recursion check); only the outermost such rule is reported.
+  * With `#![profile]`, rules count their calls, the calls at positions where they were already called, and memo hits, in `Cx` during `runtime::profile`, which returns a `Profile`.
+    Without the attribute, no counting code is generated, so the runtime needs no feature (a `cfg` in `rt.rs` would also be evaluated in the crates it is inlined into).
+
+### Lints
+
+`#![lint]` reports, as errors, mistakes that are easy to make with ordered choice:
+
+* an alternative after one that always succeeds (judged conservatively: tokens in syntactic rules may fail their delimiter checks);
+* an alternative whose start an earlier alternative matches (the earlier one's elements, structurally, with the last possibly a literal that is a prefix of the later one's, unless delimiters tell them apart);
+* rules parsed more than once at the same position (above);
+* unused private rules: their entry functions deny `dead_code` and get the span of the rule's name, so that the compiler reports them unless Rust code uses them. (It does not lint code that looks generated, so this does not work for `include_grammar!`.)
+
+Errors rather than warnings, because stable proc-macros cannot emit warnings; the workaround of using a `#[deprecated]` item reads as a deprecation, which is misleading.
 
 ### Generated code and composability
 
@@ -275,10 +287,8 @@ Entry functions and raw rules have the visibility of their rules; rules without 
 
 1. Runtime core; stage 0 parser; analysis; code generation without memoization; `grammar!`; CLI. (done)
 2. Self-describing grammar and bootstrap. (done)
-3. `#[memo]` and benchmarks (done); the memo lint and profiling.
+3. `#[memo]` and benchmarks, `#![lint]` and `#![profile]` (done).
 4. Byte input, public `SourceText`, cross-grammar references (done); more diagnostics tests.
-
-Next: warnings from the macro (stable proc-macros cannot emit them directly).
 
 Later: cut operator (which would also sharpen errors such as `[z-a]`), left recursion, rules with parameters and user state (needed, e.g., for length-prefixed binary data, and for closing delimiters that repeat the opening one, as in raw strings and heredocs, if a parameter can be matched as a literal), case-insensitive literals, error recovery, back ends for other languages (the IR is kept language-neutral; only actions are Rust).
 

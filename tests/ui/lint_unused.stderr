@@ -1,0 +1,14 @@
+error: function `unused` is never used
+ --> tests/ui/lint_unused.rs:8:9
+  |
+8 |         unused = "y" unused?
+  |         ^^^^^^
+  |
+note: the lint level is defined here
+ --> tests/ui/lint_unused.rs:8:9
+  |
+8 |         unused = "y" unused?
+  |         ^^^^^^
+
+error: aborting due to 1 previous error
+

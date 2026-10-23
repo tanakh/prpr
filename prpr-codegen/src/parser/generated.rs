@@ -9217,7 +9217,9 @@ extern crate alloc;
 // generator can inline it into a generated file as a module.
 
 use alloc::borrow::Cow;
-use alloc::string::ToString;
+use alloc::boxed::Box;
+use alloc::collections::{BTreeMap, BTreeSet};
+use alloc::string::{String, ToString};
 use core::fmt;
 use core::range::Range;
 
@@ -9401,6 +9403,8 @@ pub struct Cx<'i, I: ?Sized> {
     label: Option<(usize, &'static str)>,
     // Whether failures are recorded at all.
     tracking: bool,
+    // The calls of rules, counted by grammars with `#![profile]` during [`profile`].
+    profile: Option<Box<Profile>>,
 }
 
 /// The label in effect before [`Cx::push_label`].
@@ -9427,6 +9431,7 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
             quiet: 0,
             label: None,
             tracking: true,
+            profile: None,
         }
     }
 
@@ -9606,6 +9611,25 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     #[doc(hidden)]
     pub fn pop_label(&mut self, saved: SavedLabel) {
         self.label = saved.0;
+    }
+
+    /// Counts a call of `rule` of the grammar in module `grammar` at `pos`.
+    #[doc(hidden)]
+    #[inline]
+    pub fn profile_call(&mut self, grammar: &'static str, rule: &'static str, pos: usize) {
+        if let Some(profile) = &mut self.profile {
+            profile.call(grammar, rule, pos);
+        }
+    }
+
+    /// Counts a call of `rule` that returned a memoized result.
+    #[doc(hidden)]
+    #[inline]
+    pub fn profile_memo_hit(&mut self, grammar: &'static str, rule: &'static str) {
+        if let Some(profile) = &mut self.profile {
+            let i = profile.entry(grammar, rule);
+            profile.rules[i].memo_hits += 1;
+        }
     }
 
     /// The error for the farthest failure recorded so far.
@@ -9881,6 +9905,140 @@ where
     }
     let mut cx = Cx::new(input);
     rule(&mut cx, &mut M::default(), 0).map_err(|_| cx.error())
+}
+
+/// Runs `rule` from the start of `input`, like [`parse_prefix`], and counts the calls of the
+/// rules of grammars with `#![profile]`. The input is parsed once, recording failures.
+pub fn profile<'i, I, M, T>(
+    input: &'i I,
+    rule: impl Fn(&mut Cx<'i, I>, &mut M, usize) -> PResult<T>,
+) -> (Result<(T, usize), ParseError>, Profile)
+where
+    I: Input + ?Sized,
+    M: Default,
+{
+    let mut cx = Cx::new(input);
+    cx.profile = Some(Box::default());
+    let result = rule(&mut cx, &mut M::default(), 0).map_err(|_| cx.error());
+    let profile = cx.profile.take().map(|p| *p).unwrap_or_default();
+    (result, profile)
+}
+
+/// The calls of rules that [`profile`] counted.
+///
+/// Its `Display` writes a table of the rules, those that were parsed again at the same position
+/// most often first: they are the ones that memoization would speed up.
+#[derive(Clone, Debug, Default)]
+pub struct Profile {
+    rules: Vec<RuleProfile>,
+    index: BTreeMap<(&'static str, &'static str), usize>,
+    // The rules (by index) and positions of the calls so far.
+    seen: BTreeSet<(usize, usize)>,
+}
+
+/// The calls of one rule.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RuleProfile {
+    /// The path of the module of the grammar.
+    pub grammar: &'static str,
+    /// The name of the rule.
+    pub rule: &'static str,
+    /// How many times the rule was invoked.
+    pub calls: u64,
+    /// How many of the calls were at a position where the rule had already been invoked.
+    pub repeated: u64,
+    /// How many of the repeated calls returned a memoized result.
+    pub memo_hits: u64,
+}
+
+impl RuleProfile {
+    /// How many times the rule was parsed again at the same position, which memoization would
+    /// avoid.
+    pub fn reparsed(&self) -> u64 {
+        self.repeated - self.memo_hits
+    }
+}
+
+impl Profile {
+    /// The rules that were invoked, in the order of their first calls.
+    pub fn rules(&self) -> &[RuleProfile] {
+        &self.rules
+    }
+
+    fn entry(&mut self, grammar: &'static str, rule: &'static str) -> usize {
+        let next = self.rules.len();
+        let i = *self.index.entry((grammar, rule)).or_insert(next);
+        if i == next {
+            self.rules.push(RuleProfile {
+                grammar,
+                rule,
+                calls: 0,
+                repeated: 0,
+                memo_hits: 0,
+            });
+        }
+        i
+    }
+
+    fn call(&mut self, grammar: &'static str, rule: &'static str, pos: usize) {
+        let i = self.entry(grammar, rule);
+        self.rules[i].calls += 1;
+        if !self.seen.insert((i, pos)) {
+            self.rules[i].repeated += 1;
+        }
+    }
+}
+
+impl fmt::Display for Profile {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if self.rules.is_empty() {
+            return f.write_str(
+                "no rules were profiled; `#![profile]` makes the rules of a grammar count their calls",
+            );
+        }
+        let mut rules: Vec<&RuleProfile> = self.rules.iter().collect();
+        rules.sort_by_key(|r| {
+            (
+                core::cmp::Reverse(r.reparsed()),
+                core::cmp::Reverse(r.calls),
+            )
+        });
+        // Rules are named by their paths only when they come from several grammars.
+        let qualified = self
+            .rules
+            .iter()
+            .any(|r| r.grammar != self.rules[0].grammar);
+        let name = |r: &RuleProfile| -> String {
+            if qualified {
+                alloc::format!("{}::{}", r.grammar, r.rule)
+            } else {
+                r.rule.to_string()
+            }
+        };
+        let width = rules
+            .iter()
+            .map(|r| name(r).len())
+            .max()
+            .unwrap_or(0)
+            .max(4);
+        write!(
+            f,
+            "{:width$}  {:>10}  {:>10}  {:>10}  {:>10}",
+            "rule", "calls", "repeated", "memo hits", "reparsed"
+        )?;
+        for r in rules {
+            write!(
+                f,
+                "\n{:width$}  {:>10}  {:>10}  {:>10}  {:>10}",
+                name(r),
+                r.calls,
+                r.repeated,
+                r.memo_hits,
+                r.reparsed()
+            )?;
+        }
+        Ok(())
+    }
 }
 
 /// A parse error: what was expected at the farthest position the parser reached.

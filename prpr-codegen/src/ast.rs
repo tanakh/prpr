@@ -160,6 +160,13 @@ impl Expr {
     }
 }
 
+impl Class {
+    /// Whether the class matches `c`.
+    pub fn contains(&self, c: char) -> bool {
+        self.ranges.iter().any(|&(lo, hi)| lo <= c && c <= hi) != self.negated
+    }
+}
+
 impl Rule {
     pub fn attr(&self, name: &str) -> Option<&Attr> {
         self.attrs.iter().find(|a| a.name.name == name)

@@ -65,6 +65,60 @@ fn main() {
 }
 ```
 
+## Finding what to memoize
+
+Two tools help find the rules that are parsed more than once.
+[`#![lint]`](lints.md#rules-parsed-more-than-once) finds rules that alternatives may parse at the same position, from the grammar alone.
+Profiling counts how often each rule is actually parsed again on an input.
+
+With `#![profile]`, the rules of a grammar count their calls, and `prpr::runtime::profile` runs a rule from the start of an input, as `parse_prefix` does, and returns the counts with the result:
+
+```rust
+mod calc {
+    prpr::grammar! {
+        #![profile]
+
+        pub expr: i64 = l:term rs:(("+" / "-") term)* {
+            rs.into_iter().fold(l, |a, (op, b)| if op == "+" { a + b } else { a - b })
+        }
+
+        term: i64 = l:factor rs:(("*" / "/") factor)* {
+            rs.into_iter().fold(l, |a, (op, b)| if op == "*" { a * b } else { a / b })
+        }
+
+        factor: i64 = "(" e:expr ")" "!" { e * 2 } / "(" e:expr ")" { e } / number
+
+        atom number: i64 = s:([0-9]+) { #s.parse().unwrap() }
+    }
+}
+
+fn main() {
+    let (result, profile) = prpr::runtime::profile("((1 + 2) * 3) - 4", calc::Rules::expr);
+    assert_eq!(result, Ok((5, 17)));
+    println!("{profile}");
+#     assert_eq!(profile.rules().iter().find(|r| r.rule == "factor").unwrap().reparsed(), 8);
+}
+```
+
+```text
+rule         calls    repeated   memo hits    reparsed
+factor          14           8           0           8
+term            12           7           0           7
+number          11           7           0           7
+expr             7           4           0           4
+```
+
+* `calls` counts the calls of the rule, and `repeated` those at a position where the rule had already been called.
+* `memo hits` counts the repeated calls that returned a memoized result, and `reparsed` the others, which parsed the input again.
+
+Rules are listed with the most reparsed first.
+Here, the first two alternatives of `factor` both parse `"(" expr ")"`, so every parenthesized expression without `!` is parsed twice, with everything in it.
+Memoizing `factor` or `expr`, or factoring out `"(" e:expr ")"`, removes the reparsing.
+
+`profile.rules()` gives the counts as values, for tests or tools.
+Only grammars with `#![profile]` count their calls, and only during `profile`.
+They pay for a check at each call of a rule otherwise, so remove `#![profile]` when you are done.
+
 ## Writing fast grammars
 
 prpr generates straight-line Rust code, and a few habits help it generate fast code:

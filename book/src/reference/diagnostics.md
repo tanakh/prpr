@@ -75,11 +75,15 @@ Rule names become the names of Rust functions, so they cannot be Rust keywords; 
 
 **`` unknown attribute `name` ``**, **`` unknown grammar attribute `name` ``**
 
-The attributes of rules are listed in [Rules](../guide/rules.md#attributes), and the only grammar attribute is `#![input = ...]`.
+The attributes of rules and grammars are listed in [Rules](../guide/rules.md#attributes).
 
-**`` expected `#[label = "..."]` ``**, **`` expected `#[memo]` without arguments ``**, **`` expected `#[boundary(expression)]` ``**, **`` expected `#![input = str]` or `#![input = bytes]` ``**
+**`` expected `#[label = "..."]` ``**, **`` expected `#[memo]` without arguments ``**, **`` expected `#[boundary(expression)]` ``**, **`` expected `#![input = str]` or `#![input = bytes]` ``**, **`` expected `#![lint]` without arguments ``**
 
 An attribute has the wrong kind of argument.
+
+**`` a rule cannot have both `#[memo]` and `#[no_memo]` ``**
+
+Choose one: `#[memo]` memoizes the rule, and `#[no_memo]` says that it is not memoized on purpose.
 
 **`` `#[boundary]` and `#[no_boundary]` only apply to `atom` rules ``**
 
@@ -111,6 +115,29 @@ Repeat the part that consumes input, as in `"a"*`.
 
 A rule can invoke itself, directly or through other rules (the error lists them), without consuming any input, as in `expr = expr "+" term / term`.
 PEG parsers cannot parse such rules; use repetitions instead, as explained in [Operators and precedence](../cookbook/precedence.md).
+
+## Lints
+
+These are only reported with `#![lint]`; [Lints](../guide/lints.md) explains them with examples.
+
+**`this alternative is never tried, because the one before it always succeeds`**
+
+An alternative of a choice comes after one that cannot fail, such as `"+"?`.
+Remove it, or put it before.
+
+**`` `"<="` never matches here, because `"<"` before it matches its start ``**, **`this alternative never matches, because an alternative before it matches its start`**
+
+Whatever the alternative matches, an alternative before it matches its start first, and the choice is done.
+Put longer alternatives first.
+
+**`` `term` may be parsed more than once at the same position by the alternatives of this choice ``**
+
+Alternatives of a choice may parse the same syntactic rule at the same position, so that the rule is parsed again when the first alternative fails after it.
+Memoize the rule with `#[memo]`, factor out what the alternatives start with, or mark the rule with `#[no_memo]` if parsing it again is fine.
+
+**`` function `name` is never used ``**
+
+Reported by the compiler for a private rule that neither other rules nor Rust code use.
 
 ## Rust code
 

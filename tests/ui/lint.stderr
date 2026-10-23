@@ -1,0 +1,36 @@
+error: `term` may be parsed more than once at the same position by the alternatives of this choice
+       = note: add `#[memo]` to `term`, factor out what the alternatives start with, or add `#[no_memo]` to `term` if this is intended
+ --> tests/ui/lint.rs:9:21
+  |
+9 |             / "(" t:term ")" { t }
+  |                     ^^^^
+
+error: `postfix` may be parsed more than once at the same position by the alternatives of this choice
+       = note: add `#[memo]` to `postfix`, factor out what the alternatives start with, or add `#[no_memo]` to `postfix` if this is intended
+  --> tests/ui/lint.rs:14:35
+   |
+14 |         pub expr = lhs "=" expr / sum
+   |                                   ^^^
+
+error: this alternative is never tried, because the one before it always succeeds
+       = note: this alternative always succeeds, at line 32
+  --> tests/ui/lint.rs:32:24
+   |
+32 |         pub a = "x"? / "y"
+   |                        ^^^
+
+error: `"<="` never matches here, because `"<"` before it matches its start
+       = note: put longer literals first
+  --> tests/ui/lint.rs:42:24
+   |
+42 |         pub op = "<" / "<="
+   |                        ^^^^
+
+error: this alternative never matches, because an alternative before it matches its start
+  --> tests/ui/lint.rs:44:38
+   |
+44 |         pub num: i64 = n:int { n } / n:int "." { n }
+   |                                      ^^^^^^^^^^^^^^^
+
+error: aborting due to 5 previous errors
+

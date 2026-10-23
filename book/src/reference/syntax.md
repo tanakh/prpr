@@ -25,6 +25,8 @@ Grammar attributes come first:
 |---|---|
 | `#![input = str]` | The input is `&str` (the default). |
 | `#![input = bytes]` | The input is `&[u8]`. See [Binary input](../guide/binary-input.md). |
+| `#![lint]` | Check the grammar for common mistakes. See [Lints](../guide/lints.md). |
+| `#![profile]` | Count the calls of rules. See [Finding what to memoize](../guide/memoization.md#finding-what-to-memoize). |
 
 ## Rust items
 
@@ -54,6 +56,7 @@ rule        = attribute* visibility? "atom"? name (":" type)? "=" expression
 | `/// ...`, `#[doc = "..."]` | Documentation of the generated function. |
 | `#[label = "..."]` | The name of the rule in error messages. See [Labels](../guide/errors.md#labels). |
 | `#[memo]` | Memoize the rule. See [Memoization](../guide/memoization.md). |
+| `#[no_memo]` | Do not memoize the rule, on purpose, which [`#![lint]`](../guide/lints.md) takes into account. |
 | `#[boundary(expression)]` | On an atom: what must follow the token. See [Delimiters](../guide/whitespace.md#delimiters). |
 | `#[no_boundary]` | On an atom: nothing needs to follow the token. |
 

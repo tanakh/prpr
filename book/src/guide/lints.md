@@ -1,0 +1,136 @@
+# Lints
+
+Some mistakes are easy to make with PEGs, because choices are ordered and never reconsidered.
+`#![lint]` at the start of a grammar checks it for them, and reports what it finds as errors:
+
+```rust
+prpr::grammar! {
+    #![lint]
+
+    pub list: Vec<i64> = "[" xs:(number, ",")* "]" { xs }
+
+    atom number: i64 = s:([0-9]+) { #s.parse().unwrap() }
+}
+
+fn main() {
+    assert_eq!(list("[1, 2]"), Ok(vec![1, 2]));
+}
+```
+
+The checks only run with `#![lint]`, and they do not change the parser.
+
+## Alternatives that are never tried
+
+An alternative after one that always succeeds is never tried:
+
+```rust,compile_fail
+prpr::grammar! {
+    #![lint]
+    pub sign = "+"? / "-"
+}
+```
+
+```text
+error: this alternative is never tried, because the one before it always succeeds
+       = note: this alternative always succeeds, at line 3
+ --> src/main.rs:3:23
+  |
+3 |     pub sign = "+"? / "-"
+  |                       ^^^
+```
+
+Optional parts, repetitions with `*` and actions without anything before them always succeed.
+
+## Alternatives that never match
+
+An alternative never matches when an alternative before it matches its start, since the choice is then done:
+
+```rust,compile_fail
+prpr::grammar! {
+    #![lint]
+    pub op = "<" / "<="
+    pub num: i64 = n:int { n } / n:int "." { n }
+
+    atom int: i64 = s:([0-9]+) { #s.parse().unwrap() }
+}
+```
+
+```text
+error: `"<="` never matches here, because `"<"` before it matches its start
+       = note: put longer literals first
+ --> src/main.rs:3:20
+  |
+3 |     pub op = "<" / "<="
+  |                    ^^^^
+
+error: this alternative never matches, because an alternative before it matches its start
+ --> src/main.rs:4:34
+  |
+4 |     pub num: i64 = n:int { n } / n:int "." { n }
+  |                                  ^^^^^^^^^^^^^^^
+```
+
+Put longer alternatives first.
+A literal that ends with a word character, as in `"if" / "ifdef"`, is not reported, since `if` must be [delimited](whitespace.md#delimiters) and does not match the start of `ifdef`.
+
+## Rules parsed more than once
+
+When two alternatives of a choice may parse the same syntactic rule at the same position, the second one parses it again:
+
+```rust,compile_fail
+prpr::grammar! {
+    #![lint]
+    pub term: i64
+        = "(" t:term ")" "!" { t + 1 }
+        / "(" t:term ")" { t }
+        / "x" { 0 }
+}
+```
+
+```text
+error: `term` may be parsed more than once at the same position by the alternatives of this choice
+       = note: add `#[memo]` to `term`, factor out what the alternatives start with, or add `#[no_memo]` to `term` if this is intended
+ --> src/main.rs:5:17
+  |
+5 |         / "(" t:term ")" { t }
+  |                 ^^^^
+```
+
+This is reported for rules in what the alternatives start with, as here, and for rules that both alternatives invoke at their start through other rules, such as an expression and an assignment that both start with a `postfix` expression.
+Only the outermost such rule is reported, since memoizing it saves parsing the rules it invokes.
+
+As [Memoization and performance](memoization.md) explains, the remedy is to memoize the rule, or to factor out what the alternatives start with.
+When parsing it again is fine, for example because the first alternative rarely fails, `#[no_memo]` on the rule says so, and the rule is no longer reported.
+Atoms are not reported, since tokens are cheap to parse again.
+
+## Unused rules
+
+A private rule that neither the other rules nor Rust code use is reported by the compiler, as a function that is never used:
+
+```rust,compile_fail
+mod grammar {
+    prpr::grammar! {
+        #![lint]
+        pub list = "[" (item, ",")* "]"
+        item = "x"
+        unused = "y"
+    }
+}
+```
+
+```text
+error: function `unused` is never used
+ --> src/main.rs:6:9
+  |
+6 |         unused = "y"
+  |         ^^^^^^
+  |
+note: the lint level is defined here
+ --> src/main.rs:6:9
+  |
+6 |         unused = "y"
+  |         ^^^^^^
+```
+
+Rules that only Rust code uses, such as private rules used in tests, are not reported.
+Unused rules of grammar files included with [`include_grammar!`](../codegen/cli.md#including-a-grammar-file) are not reported either, since the compiler cannot point into the file.

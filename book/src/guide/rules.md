@@ -115,6 +115,7 @@ See [Whitespace, tokens and delimiters](whitespace.md).
 | `/// ...` | Documentation of the generated function. |
 | `#[label = "..."]` | What to call the rule in error messages. See [Error messages](errors.md). |
 | `#[memo]` | Remember the results of the rule. See [Memoization and performance](memoization.md). |
+| `#[no_memo]` | Do not memoize the rule, on purpose. See [Lints](lints.md#rules-parsed-more-than-once). |
 | `#[boundary(e)]` | On an atom: `e` must match after the token. See [Delimiters](whitespace.md#delimiters). |
 | `#[no_boundary]` | On an atom: no delimiter is required after the token. |
 
@@ -124,6 +125,8 @@ Attributes that apply to the whole grammar are written at its start with `#!`:
 |---|---|
 | `#![input = str]` | The input is text, `&str`. This is the default. |
 | `#![input = bytes]` | The input is binary, `&[u8]`. See [Binary input](binary-input.md). |
+| `#![lint]` | Check the grammar for common mistakes. See [Lints](lints.md). |
+| `#![profile]` | Count the calls of rules. See [Finding what to memoize](memoization.md#finding-what-to-memoize). |
 
 ## Rust items
 

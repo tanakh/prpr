@@ -64,6 +64,7 @@ mod book {
         Whitespace = "guide/whitespace.md",
         Errors = "guide/errors.md",
         Memoization = "guide/memoization.md",
+        Lints = "guide/lints.md",
         BinaryInput = "guide/binary-input.md",
         Composing = "guide/composing.md",
         GeneratedApi = "codegen/api.md",

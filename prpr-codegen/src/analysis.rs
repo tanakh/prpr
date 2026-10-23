@@ -37,6 +37,10 @@ pub struct RuleInfo {
     pub typed: bool,
     pub nullable: bool,
     pub memo: bool,
+    /// `#[no_memo]`: not memoized on purpose, which silences the memoization lint.
+    pub no_memo: bool,
+    /// Whether another rule of the grammar refers to the rule.
+    pub referenced: bool,
     pub label: Option<String>,
     pub boundary: Boundary,
     pub docs: Vec<String>,
@@ -51,6 +55,17 @@ pub struct Analysis {
     /// `word_char` when it is a plain character class, which allows deciding at generation time
     /// whether a literal ends with a word character.
     pub word_class: Option<Class>,
+    /// `#![lint]`: check for mistakes that are easy to make with PEGs.
+    pub lint: bool,
+    /// `#![profile]`: count the calls of rules.
+    pub profile: bool,
+}
+
+/// The attributes of a grammar.
+struct GrammarAttrs {
+    input: InputKind,
+    lint: bool,
+    profile: bool,
 }
 
 impl Analysis {
@@ -110,7 +125,8 @@ fn nullable(e: &Expr, rule_nullable: &dyn Fn(&Path) -> bool) -> bool {
 /// Analyzes a grammar parsed from `text`.
 pub fn analyze(g: &Grammar, text: &str) -> Result<Analysis, Vec<Diagnostic>> {
     let mut diags = Vec::new();
-    let input = grammar_attrs(g, &mut diags);
+    let attrs = grammar_attrs(g, &mut diags);
+    let input = attrs.input;
 
     let mut rules = Vec::new();
     let mut rust_items = Vec::new();
@@ -178,6 +194,8 @@ pub fn analyze(g: &Grammar, text: &str) -> Result<Analysis, Vec<Diagnostic>> {
         input,
         rust_items,
         word_class: None,
+        lint: attrs.lint,
+        profile: attrs.profile,
     };
     an.word_class = match &an.rule(WORD_CHAR).unwrap().rule.body.kind {
         ExprKind::Class(c) => Some(c.clone()),
@@ -196,10 +214,15 @@ pub fn analyze(g: &Grammar, text: &str) -> Result<Analysis, Vec<Diagnostic>> {
     }
 
     compute_nullable(&mut an);
+    compute_references(&mut an);
     for info in &an.rules {
         check_repetitions(&an, &info.rule.body, &mut diags);
     }
     check_left_recursion(&an, &mut diags);
+    // The lints rely on the absence of left recursion.
+    if an.lint && !diags.iter().any(Diagnostic::is_error) {
+        diags.extend(crate::lint::lint(&an));
+    }
 
     if diags.iter().any(Diagnostic::is_error) {
         Err(diags)
@@ -208,16 +231,26 @@ pub fn analyze(g: &Grammar, text: &str) -> Result<Analysis, Vec<Diagnostic>> {
     }
 }
 
-fn grammar_attrs(g: &Grammar, diags: &mut Vec<Diagnostic>) -> InputKind {
-    let mut input = InputKind::Str;
+fn grammar_attrs(g: &Grammar, diags: &mut Vec<Diagnostic>) -> GrammarAttrs {
+    let mut attrs = GrammarAttrs {
+        input: InputKind::Str,
+        lint: false,
+        profile: false,
+    };
     for attr in &g.attrs {
         match (attr.name.name.as_str(), &attr.arg) {
             ("doc", _) => {}
-            ("input", AttrArg::Ident(id)) if id.name == "str" => input = InputKind::Str,
-            ("input", AttrArg::Ident(id)) if id.name == "bytes" => input = InputKind::Bytes,
+            ("input", AttrArg::Ident(id)) if id.name == "str" => attrs.input = InputKind::Str,
+            ("input", AttrArg::Ident(id)) if id.name == "bytes" => attrs.input = InputKind::Bytes,
             ("input", _) => diags.push(Diagnostic::error(
                 attr.span,
                 "expected `#![input = str]` or `#![input = bytes]`",
+            )),
+            ("lint", AttrArg::None) => attrs.lint = true,
+            ("profile", AttrArg::None) => attrs.profile = true,
+            (name @ ("lint" | "profile"), _) => diags.push(Diagnostic::error(
+                attr.span,
+                format!("expected `#![{name}]` without arguments"),
             )),
             (name, _) => diags.push(Diagnostic::error(
                 attr.name.span,
@@ -225,11 +258,12 @@ fn grammar_attrs(g: &Grammar, diags: &mut Vec<Diagnostic>) -> InputKind {
             )),
         }
     }
-    input
+    attrs
 }
 
 fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>) -> RuleInfo {
     let mut memo = false;
+    let mut no_memo = false;
     let mut label = None;
     let mut boundary = Boundary::Default;
     let mut docs = Vec::new();
@@ -237,6 +271,7 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
         match (attr.name.name.as_str(), &attr.arg) {
             ("doc", AttrArg::Lit(Lit::Str(s))) => docs.push(s.clone()),
             ("memo", AttrArg::None) => memo = true,
+            ("no_memo", AttrArg::None) => no_memo = true,
             ("no_boundary", AttrArg::None) => boundary = Boundary::None,
             ("label", AttrArg::Lit(Lit::Str(s))) => label = Some(s.clone()),
             ("boundary", AttrArg::Expr(e)) => boundary = Boundary::Custom(e.clone()),
@@ -244,7 +279,7 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
                 attr.span,
                 format!("expected `#[{name} = \"...\"]`"),
             )),
-            (name @ ("memo" | "no_boundary"), _) => diags.push(Diagnostic::error(
+            (name @ ("memo" | "no_memo" | "no_boundary"), _) => diags.push(Diagnostic::error(
                 attr.span,
                 format!("expected `#[{name}]` without arguments"),
             )),
@@ -258,6 +293,12 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
             )),
         }
     }
+    if memo && no_memo {
+        diags.push(Diagnostic::error(
+            rule.name.span,
+            "a rule cannot have both `#[memo]` and `#[no_memo]`",
+        ));
+    }
     // A rule of type `()` is the same as a rule without a type.
     let typed = rule.ty.is_some_and(|ty| {
         let ty: String = text[ty].chars().filter(|c| !c.is_whitespace()).collect();
@@ -269,6 +310,8 @@ fn rule_info(rule: Rule, builtin: bool, text: &str, diags: &mut Vec<Diagnostic>)
         typed,
         nullable: false,
         memo,
+        no_memo,
+        referenced: false,
         label,
         boundary,
         docs,
@@ -460,9 +503,32 @@ fn check_repetitions(an: &Analysis, e: &Expr, diags: &mut Vec<Diagnostic>) {
     e.for_each_child(|c| check_repetitions(an, c, diags));
 }
 
-// The rules that may be invoked at the start position of `e`, including the implicit
-// whitespace before tokens.
-fn first_calls(an: &Analysis, e: &Expr, skipping: bool, out: &mut Vec<usize>) {
+fn compute_references(an: &mut Analysis) {
+    fn walk(an: &Analysis, e: &Expr, from: usize, out: &mut Vec<usize>) {
+        if let ExprKind::Ref(p) = &e.kind
+            && let Some(id) = p.as_local()
+            && let Some(&i) = an.index.get(&id.name)
+            && i != from
+        {
+            out.push(i);
+        }
+        e.for_each_child(|c| walk(an, c, from, out));
+    }
+    let mut referenced = Vec::new();
+    for (i, info) in an.rules.iter().enumerate() {
+        walk(an, &info.rule.body, i, &mut referenced);
+        if let Boundary::Custom(e) = &info.boundary {
+            walk(an, e, i, &mut referenced);
+        }
+    }
+    for i in referenced {
+        an.rules[i].referenced = true;
+    }
+}
+
+/// The rules that may be invoked at the start position of `e`, including the implicit
+/// whitespace before tokens.
+pub(crate) fn first_calls(an: &Analysis, e: &Expr, skipping: bool, out: &mut Vec<usize>) {
     let spaces = an.index[SPACES];
     match &e.kind {
         ExprKind::Lit(_) | ExprKind::Class(_) | ExprKind::Any => {

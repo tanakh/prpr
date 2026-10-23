@@ -16,6 +16,7 @@
 - [Whitespace, tokens and delimiters](guide/whitespace.md)
 - [Error messages](guide/errors.md)
 - [Memoization and performance](guide/memoization.md)
+- [Lints](guide/lints.md)
 - [Binary input](guide/binary-input.md)
 - [Composing grammars](guide/composing.md)
 

@@ -4,6 +4,12 @@ error: unknown attribute `memoize`
 2 |     #[memoize]
   |       ^^^^^^^
 
+error: a rule cannot have both `#[memo]` and `#[no_memo]`
+  --> tests/ui/attributes.rs:15:5
+   |
+15 |     c = "x"
+   |     ^
+
 error: `#[boundary]` and `#[no_boundary]` only apply to `atom` rules
  --> tests/ui/attributes.rs:6:5
   |
@@ -17,5 +23,11 @@ error: `comment` must be an `atom` rule
 10 |     comment = "//" (!"\n" .)*
    |     ^^^^^^^
 
-error: aborting due to 3 previous errors
+error: expected `#![lint]` without arguments
+  --> tests/ui/attributes.rs:21:9
+   |
+21 |         #![lint(memo)]
+   |         ^^^^^^^^^^^^^^
+
+error: aborting due to 5 previous errors
 

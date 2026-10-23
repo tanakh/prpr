@@ -11,6 +11,7 @@ mod codegen;
 mod diag;
 #[cfg(feature = "build")]
 pub mod file;
+mod lint;
 mod parser;
 mod source;
 
