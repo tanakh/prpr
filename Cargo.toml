@@ -34,6 +34,10 @@ categories = ["parsing", "development-tools::procedural-macro-helpers"]
 # its own, which is not part of this one.
 exclude = [".github", "docs", "tests/ui", "tests/ui.rs"]
 
+# Document everything on docs.rs, including define_proc_macro! and SourceText (proc-macro2).
+[package.metadata.docs.rs]
+all-features = true
+
 [features]
 # `runtime::SourceText`, for parsing the input of proc-macros.
 proc-macro2 = ["prpr-runtime/proc-macro2"]

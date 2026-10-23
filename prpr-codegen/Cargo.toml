@@ -11,6 +11,10 @@ homepage.workspace = true
 keywords = ["peg", "parser", "packrat", "parser-generator", "codegen"]
 categories = ["parsing", "development-tools::build-utils"]
 
+# Document everything on docs.rs, including the modules file and build (build).
+[package.metadata.docs.rs]
+all-features = true
+
 [features]
 # Modules generated from grammar files, as text: `file` for tools, and `build` for build scripts.
 build = ["dep:prettyplease", "dep:syn"]

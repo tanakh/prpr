@@ -11,6 +11,10 @@ homepage.workspace = true
 keywords = ["peg", "parser", "packrat", "runtime"]
 categories = ["parsing", "no-std", "development-tools::procedural-macro-helpers"]
 
+# Document everything on docs.rs, including SourceText (proc-macro2).
+[package.metadata.docs.rs]
+all-features = true
+
 [features]
 # `SourceText`: parsing the input of a proc-macro as text, and mapping positions back to spans.
 proc-macro2 = ["dep:proc-macro2"]
