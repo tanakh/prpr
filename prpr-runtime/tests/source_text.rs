@@ -1,7 +1,7 @@
 #![cfg(feature = "proc-macro2")]
 
 use proc_macro2::TokenStream;
-use prpr_runtime::{SourceText, span};
+use prpr_runtime::{Expected, Found, MacroError, ParseError, SourceText, span};
 
 fn source_text(s: &str) -> SourceText {
     SourceText::new(s.parse::<TokenStream>().unwrap())
@@ -30,8 +30,18 @@ fn maps_offsets_to_tokens() {
 }
 
 #[test]
+fn spans_ranges() {
+    let src = source_text("a bc d");
+    let column = |span: proc_macro2::Span| span.start().column;
+    let (start, end) = src.span_range(span(0, 4));
+    assert_eq!((column(start), column(end)), (0, 2));
+    // An empty range is at the token where it is.
+    let (start, end) = src.span_range(span(5, 5));
+    assert_eq!((column(start), column(end)), (5, 5));
+}
+
+#[test]
 fn reports_errors_of_expansions() {
-    use prpr_runtime::MacroError;
     let input: TokenStream = "1 + x".parse().unwrap();
     let ok = SourceText::with(input.clone(), |src| Ok(src.text().parse().unwrap()));
     assert_eq!(ok.to_string(), "1 + x");
@@ -41,4 +51,11 @@ fn reports_errors_of_expansions() {
     });
     assert!(error.to_string().contains("compile_error"));
     assert!(error.to_string().contains("\"unknown variable\""));
+}
+
+#[test]
+fn converts_parse_errors() {
+    let e = ParseError::new(2, vec![Expected::Literal("x")], Found::Char('y'));
+    let error = MacroError::from(e.clone());
+    assert_eq!(error, MacroError::new(e.span(), "expected `x`, found `y`"));
 }

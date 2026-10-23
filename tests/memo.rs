@@ -57,3 +57,51 @@ fn memo_makes_backtracking_linear() {
     let input = format!("{}x{}", "(".repeat(depth), ")".repeat(depth));
     assert_eq!(nested::expr(&input), Ok(0));
 }
+
+// A memoized rule reports the same errors as a plain one, even where the result was first
+// computed in a context that recorded its failures differently.
+mod plain_errors {
+    prpr::grammar! {
+        pub lookahead = !item "x" / item "!"
+        pub labeled = item "!" / thing
+        #[label = "thing"]
+        thing = item "?"
+        item = "a" "b"
+    }
+}
+
+mod memo_errors {
+    prpr::grammar! {
+        pub lookahead = !item "x" / item "!"
+        pub labeled = item "!" / thing
+        #[label = "thing"]
+        thing = item "?"
+        #[memo]
+        item = "a" "b"
+    }
+}
+
+#[test]
+fn memo_keeps_errors() {
+    let message = |r: Result<(), prpr::ParseError>| r.unwrap_err().to_string();
+    for input in ["", "a", "a c", "ab", "ab?", "c"] {
+        assert_eq!(
+            message(memo_errors::lookahead(input)),
+            message(plain_errors::lookahead(input)),
+            "{input:?}"
+        );
+        assert_eq!(
+            message(memo_errors::labeled(input)),
+            message(plain_errors::labeled(input)),
+            "{input:?}"
+        );
+    }
+    assert_eq!(
+        message(memo_errors::lookahead("a c")),
+        "expected `b`, found `c`"
+    );
+    assert_eq!(
+        message(memo_errors::labeled("c")),
+        "expected one of `a` or thing, found `c`"
+    );
+}

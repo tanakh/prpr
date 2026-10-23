@@ -7643,7 +7643,8 @@ fn __rule_eof<'i>(
         Err(__f) => Err(__f),
     }
 }
-/// The rules of the grammar, as functions that other grammars and Rust code can call.
+/// The rules of the grammar, as functions that parse from a position of the input, for
+/// Rust code that calls them itself or passes them to the functions of the runtime.
 pub enum Rules {}
 impl Rules {
     /// Matches the rule `whitespace` at `pos`, and returns its value and the position after it.
@@ -11268,13 +11269,19 @@ pub struct Fail;
 /// The result of a rule: its value and the position after it.
 pub type PResult<T> = Result<(T, usize), Fail>;
 
-/// The kinds of input a parser runs on: `str` and `[u8]`.
-pub trait Input {
+/// The kinds of input a parser runs on: `str` and `[u8]`. Other types cannot implement it.
+pub trait Input: sealed::Sealed {
     /// The input as bytes; positions in the input are byte offsets.
     fn as_bytes(&self) -> &[u8];
 
     /// What is found at a byte position, for error messages.
     fn found_at(&self, pos: usize) -> Found;
+}
+
+mod sealed {
+    pub trait Sealed {}
+    impl Sealed for str {}
+    impl Sealed for [u8] {}
 }
 
 impl Input for str {
@@ -11372,7 +11379,7 @@ fn write_escaped(f: &mut fmt::Formatter<'_>, c: char) -> fmt::Result {
 }
 
 /// What was found at the error position.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum Found {
     /// A character of text input.
     Char(char),
@@ -11414,13 +11421,13 @@ pub struct Cx<'i, I: ?Sized> {
     // The farthest position of a failure.
     err_pos: usize,
     // What was expected, with positions in non-decreasing order and whether a comment expected
-    // it. Entries before `err_pos` are only kept while a mark is active, so that the state can be
-    // rolled back to the mark.
+    // it. Entries before `err_pos` are cleared when `err_pos` advances while no mark is active;
+    // while a mark is, they are kept, so that the state can be rolled back to it.
     expected: Vec<(usize, Expected, bool)>,
     marks: u32,
     // Failures at positions up to this one are not recorded: `usize::MAX` while whitespace is
-    // skipped or a lookahead or a delimiter is checked, and the start of a comment in it, so that
-    // a comment that started and cannot end is reported.
+    // skipped, a negative lookahead or a delimiter is checked, and the start of a comment while it
+    // is skipped, so that a comment that started and cannot end is reported.
     quiet_to: Option<usize>,
     label: Option<(usize, &'static str)>,
     // Whether failures are recorded at all.
@@ -11437,8 +11444,9 @@ pub struct SavedQuiet(Option<usize>);
 #[doc(hidden)]
 pub struct SavedLabel(Option<(usize, &'static str)>);
 
-/// The error state at [`Cx::mark`].
-#[derive(Clone, Copy, Debug)]
+/// The error state at [`Cx::mark`]. Each mark is committed or rolled back once, the last one
+/// first.
+#[derive(Debug)]
 pub struct ErrorMark {
     err_pos: usize,
     len: usize,
@@ -11551,17 +11559,16 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
             }
         }
         let expected = match (self.label, expected) {
+            // A label does not hide the message of a predicate, which says more.
+            (_, Some(message @ Expected::Message(_))) => message,
             (Some((label_pos, label)), _) if label_pos == pos => Expected::Label(label),
             (_, Some(expected)) => expected,
             (_, None) => return,
         };
         // Failures are only recorded in a comment after it started.
         let in_comment = self.quiet_to.is_some();
-        let recorded = self.expected.iter().rev().take_while(|(p, ..)| *p == pos);
-        if !recorded
-            .into_iter()
-            .any(|(_, e, c)| *e == expected && *c == in_comment)
-        {
+        let mut recorded = self.expected.iter().rev().take_while(|(p, ..)| *p == pos);
+        if !recorded.any(|(_, e, c)| *e == expected && *c == in_comment) {
             self.expected.push((pos, expected, in_comment));
         }
     }
@@ -11599,22 +11606,40 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
     /// a filter.
     #[cold]
     #[doc(hidden)]
-    pub fn fail_predicate(
+    pub fn fail_predicate<M: fmt::Display>(
         &mut self,
         mark: ErrorMark,
         pos: usize,
-        message: Option<Cow<'static, str>>,
+        message: Option<M>,
     ) -> Fail {
         match message {
             Some(message) => {
                 self.rollback(mark);
-                self.fail(pos, Expected::Message(message))
+                if self.recording(pos) {
+                    let message = Expected::Message(Cow::Owned(message.to_string()));
+                    self.record(pos, Some(message));
+                }
+                Fail
             }
             None => {
                 self.commit(mark);
                 self.fail_unexpected(pos)
             }
         }
+    }
+
+    /// Whether a rule at `pos` may use and store memoized results now: when failures are not
+    /// recorded, or when what a rule records there is kept as it is, with no mark to roll it
+    /// back, no quiet region or comment, and no label at `pos`. A memoized result records
+    /// nothing, so it is only used where the rule would have recorded the same as when the
+    /// result was stored.
+    #[inline]
+    #[doc(hidden)]
+    pub fn memo_plain(&self, pos: usize) -> bool {
+        !self.tracking
+            || (self.marks == 0
+                && self.quiet_to.is_none()
+                && !matches!(self.label, Some((at, _)) if at == pos))
     }
 
     /// Stops recording failures until the matching [`Cx::pop_quiet`].
@@ -11668,12 +11693,10 @@ impl<'i, I: Input + ?Sized> Cx<'i, I> {
         // What a comment expected is reported only where nothing else was expected, i.e. for a
         // comment that cannot end; otherwise it is about a comment that matched before.
         let only_comments = here().all(|(_, _, in_comment)| *in_comment);
-        let mut expected: Vec<Expected> = here()
+        let expected: Vec<Expected> = here()
             .filter(|(_, _, in_comment)| only_comments || !in_comment)
             .map(|(_, e, _)| e.clone())
             .collect();
-        expected.sort();
-        expected.dedup();
         ParseError::new(self.err_pos, expected, self.input.found_at(self.err_pos))
     }
 }
@@ -11693,6 +11716,9 @@ impl<'i> Cx<'i, str> {
     /// The position where the character that ends at `pos` starts.
     #[inline]
     pub fn char_start_before(&self, pos: usize) -> Option<usize> {
+        if pos > self.bytes.len() {
+            return None;
+        }
         let mut start = pos.checked_sub(1)?;
         while start > 0 && (self.bytes[start] & 0xc0) == 0x80 {
             start -= 1;
@@ -11717,6 +11743,9 @@ impl<'i> Cx<'i, [u8]> {
     /// The position where the byte that ends at `pos` starts.
     #[inline]
     pub fn char_start_before(&self, pos: usize) -> Option<usize> {
+        if pos > self.bytes.len() {
+            return None;
+        }
         pos.checked_sub(1)
     }
 
@@ -11731,35 +11760,40 @@ impl<'i> Cx<'i, [u8]> {
 #[doc(hidden)]
 pub trait Predicate {
     type Output;
+    /// What a failed predicate reports, formatted only when failures are recorded.
+    type Message: fmt::Display;
 
     /// `Err(Some(message))` reports the message as expected; `Err(None)` reports nothing.
-    fn into_outcome(self) -> Result<Self::Output, Option<Cow<'static, str>>>;
+    fn into_outcome(self) -> Result<Self::Output, Option<Self::Message>>;
 }
 
 impl Predicate for bool {
     type Output = ();
+    type Message = core::convert::Infallible;
 
     #[inline]
-    fn into_outcome(self) -> Result<(), Option<Cow<'static, str>>> {
+    fn into_outcome(self) -> Result<(), Option<Self::Message>> {
         if self { Ok(()) } else { Err(None) }
     }
 }
 
 impl<T> Predicate for Option<T> {
     type Output = T;
+    type Message = core::convert::Infallible;
 
     #[inline]
-    fn into_outcome(self) -> Result<T, Option<Cow<'static, str>>> {
+    fn into_outcome(self) -> Result<T, Option<Self::Message>> {
         self.ok_or(None)
     }
 }
 
 impl<T, E: fmt::Display> Predicate for Result<T, E> {
     type Output = T;
+    type Message = E;
 
     #[inline]
-    fn into_outcome(self) -> Result<T, Option<Cow<'static, str>>> {
-        self.map_err(|e| Some(Cow::Owned(e.to_string())))
+    fn into_outcome(self) -> Result<T, Option<E>> {
+        self.map_err(Some)
     }
 }
 
@@ -11887,14 +11921,14 @@ impl<T> MemoTable<T> {
 
 /// A rule as other grammars use it: generated for each rule, as the type of a constant named after
 /// the rule, so that a reference to the rule refers to one name.
+///
+/// The value of the rule, `T`, is a parameter rather than an associated type, so that the impl is
+/// no more visible than the value, which may be private.
 #[doc(hidden)]
 #[diagnostic::on_unimplemented(
     message = "this rule of another grammar parses another kind of input than this grammar",
     note = "grammars that use each other's rules must parse the same kind of input, `str` or `bytes`"
 )]
-///
-/// The value of the rule, `T`, is a parameter rather than an associated type, so that the impl is
-/// no more visible than the value, which may be private.
 pub trait ForeignRule<'i, I: ?Sized, T> {
     type Memo;
 
@@ -12022,6 +12056,7 @@ pub struct Profile {
 
 /// The calls of one rule.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct RuleProfile {
     /// The name of the rule.
     pub rule: &'static str,
@@ -12037,7 +12072,7 @@ impl RuleProfile {
     /// How many times the rule was parsed again at the same position, which memoization would
     /// avoid.
     pub fn reparsed(&self) -> u64 {
-        self.repeated - self.memo_hits
+        self.repeated.saturating_sub(self.memo_hits)
     }
 }
 
@@ -12110,7 +12145,7 @@ impl fmt::Display for Profile {
 }
 
 /// A parse error: what was expected at the farthest position the parser reached.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct ParseError {
     offset: usize,
     expected: Vec<Expected>,
@@ -12118,8 +12153,11 @@ pub struct ParseError {
 }
 
 impl ParseError {
-    /// An error at byte offset `offset`, where `found` was found instead of what was `expected`.
-    pub fn new(offset: usize, expected: Vec<Expected>, found: Found) -> Self {
+    /// An error at byte offset `offset`, where `found` was found instead of what was `expected`,
+    /// which is sorted and deduplicated.
+    pub fn new(offset: usize, mut expected: Vec<Expected>, found: Found) -> Self {
+        expected.sort();
+        expected.dedup();
         Self {
             offset,
             expected,
@@ -12222,6 +12260,7 @@ fn floor_char_boundary(src: &str, offset: usize) -> usize {
 /// 1 | foo baz
 ///   |     ^
 /// ```
+#[derive(Clone, Copy)]
 pub struct Snippet<'a> {
     /// The word before the message, e.g. `error` or `warning`.
     pub level: &'a str,

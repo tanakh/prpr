@@ -221,6 +221,9 @@ impl Gen<'_> {
                 .rule
                 .ty
                 .map_or(TokenSpan::call_site(), |t| self.src.token_span(t));
+            // Located at the type, but resolved where the macro is, so that `::core` is found
+            // in every edition.
+            let span = TokenSpan::mixed_site().located_at(span);
             let clone = quote_spanned!(span=> <#ty as ::core::clone::Clone>::clone);
             q! {
                 #[inline]
@@ -443,12 +446,17 @@ impl Gen<'_> {
             let clone = clone_fn(&rule.name.name);
             let hit = profiled.then(|| q!(__m.__profile.record_memo_hit(#name_str);));
             q! {
-                if let ::core::option::Option::Some(__r) = __m.#field.get(__pos, Memo::#clone) {
-                    #hit
-                    return __r;
+                let __plain = __cx.memo_plain(__pos);
+                if __plain {
+                    if let ::core::option::Option::Some(__r) = __m.#field.get(__pos, Memo::#clone) {
+                        #hit
+                        return __r;
+                    }
                 }
                 let __r = { #body };
-                __m.#field.insert(__pos, &__r, Memo::#clone);
+                if __plain {
+                    __m.#field.insert(__pos, &__r, Memo::#clone);
+                }
                 __r
             }
         } else {
@@ -606,7 +614,8 @@ impl Gen<'_> {
         let (functions, (foreigns, constants)): (Vec<_>, (Vec<_>, Vec<_>)) =
             items.map(|(f, r, c)| (f, (r, c))).unzip();
         q! {
-            /// The rules of the grammar, as functions that other grammars and Rust code can call.
+            /// The rules of the grammar, as functions that parse from a position of the input, for
+            /// Rust code that calls them itself or passes them to the functions of the runtime.
             pub enum Rules {}
 
             impl Rules {

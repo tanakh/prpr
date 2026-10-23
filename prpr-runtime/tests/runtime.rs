@@ -38,6 +38,20 @@ fn errors() {
         found("?"),
     );
     assert_eq!(e.to_string(), "expected one of `a` or number, found `?`");
+    // In order, once each.
+    let e = ParseError::new(
+        0,
+        vec![
+            Expected::Literal("b"),
+            Expected::Literal("a"),
+            Expected::Literal("b"),
+        ],
+        found("?"),
+    );
+    assert_eq!(
+        e.expected(),
+        [Expected::Literal("a"), Expected::Literal("b")]
+    );
     let e = ParseError::new(
         0,
         vec![Expected::Class("[a-z]"), Expected::Any, Expected::Eof],
@@ -65,6 +79,18 @@ error: expected `x`, found `s`
     );
     let at_end = ParseError::new(src.len(), vec![], Found::Eof);
     assert_eq!(at_end.line_col(src), LineCol { line: 3, column: 1 });
+}
+
+#[test]
+fn char_starts() {
+    let cx = Cx::new("a\u{e9}");
+    assert_eq!(cx.char_start_before(0), None);
+    assert_eq!(cx.char_start_before(1), Some(0));
+    assert_eq!(cx.char_start_before(3), Some(1));
+    assert_eq!(cx.char_start_before(4), None);
+    let cx = Cx::new(&b"ab"[..]);
+    assert_eq!(cx.char_start_before(2), Some(1));
+    assert_eq!(cx.char_start_before(3), None);
 }
 
 #[test]

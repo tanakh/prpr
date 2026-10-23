@@ -8,6 +8,9 @@ prpr::grammar! {
     even: i64 = d:decimal &{ if d % 2 == 0 { Ok(d) } else { Err("an even number") } }
 
     small = d:decimal &{ d < 10 }
+
+    #[label = "number"]
+    labeled_even: i64 = d:decimal &{ if d % 2 == 0 { Ok(d) } else { Err("an even number") } }
 }
 
 #[test]
@@ -26,6 +29,13 @@ fn result() {
     let e = even("  41").unwrap_err();
     assert_eq!(e.to_string(), "expected an even number, found `4`");
     assert_eq!(e.offset(), 2);
+    // A label does not hide the message.
+    let e = labeled_even("41").unwrap_err();
+    assert_eq!(e.to_string(), "expected an even number, found `4`");
+    assert_eq!(
+        labeled_even("x").unwrap_err().to_string(),
+        "expected number, found `x`"
+    );
 }
 
 #[test]

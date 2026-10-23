@@ -2,8 +2,6 @@
 #![no_std]
 
 extern crate alloc;
-#[cfg(feature = "proc-macro2")]
-extern crate std;
 
 mod rt;
 pub use rt::*;

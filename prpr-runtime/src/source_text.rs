@@ -26,14 +26,23 @@ use proc_macro2::{
 /// ```
 ///
 /// The layout of the original source is reproduced from `Span::start` and `Span::end`, except
-/// that comments become spaces. Where token positions are unavailable or inconsistent (e.g. for
-/// tokens produced by `macro_rules!`), tokens are separated by single spaces, and joint
-/// punctuation is kept together.
+/// that comments become spaces. Documentation comments, which the compiler turns into
+/// attributes, become the text of the attributes, such as `# [doc = " text"]`. Where token
+/// positions are unavailable or inconsistent (e.g. for tokens produced by `macro_rules!`), tokens
+/// are separated by single spaces, and joint punctuation is kept together.
 pub struct SourceText {
     text: String,
     nodes: Vec<Node>,
     // Every token and delimiter in text order.
     marks: Vec<(Range<usize>, TokenSpan)>,
+}
+
+impl core::fmt::Debug for SourceText {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        f.debug_struct("SourceText")
+            .field("text", &self.text)
+            .finish_non_exhaustive()
+    }
 }
 
 enum Node {
@@ -76,7 +85,8 @@ impl SourceText {
     }
 
     /// The span of the token at `offset` of the text, or of the next token if `offset` is
-    /// between tokens.
+    /// between tokens: of the last token past the end of the text, and the span of the macro
+    /// call if there are no tokens.
     pub fn span(&self, offset: usize) -> TokenSpan {
         let i = self.marks.partition_point(|(r, _)| r.end <= offset);
         match self.marks.get(i).or(self.marks.last()) {
