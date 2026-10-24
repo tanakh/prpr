@@ -5,7 +5,7 @@ The crates of the workspace (`prpr`, `prpr-runtime`, `prpr-macros`, `prpr-codege
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2026-10-24
 
 The first release.
 [The prpr Book](https://tanakh.github.io/prpr/) explains how to use it.
@@ -42,3 +42,5 @@ prpr requires Rust 1.96 or later.
 - `prpr_codegen::build` for build scripts, whose modules `prpr_runtime::include_parser!` includes, and `prpr_codegen::file` for other tools.
 - `define_proc_macro!` and `SourceText` (feature `proc-macro2`), which define proc-macros that parse their input with a grammar, and report errors at the tokens of the input.
 - The code that prpr generates, including the runtime, may be used under any terms.
+
+[0.1.0]: https://github.com/tanakh/prpr/releases/tag/v0.1.0
